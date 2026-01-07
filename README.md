@@ -23,10 +23,10 @@ This theme is a bespoke Full Site Editing (FSE) theme developed specifically for
 - **Editor:** WordPress Site Editor
 - **Version control:** Git / GitHub
 
----
+
 
 ## Project Structure
-
+```
 icts-europe/
 ├── parts/ # Template parts (header, footer, etc.)
 ├── templates/ # Page templates
@@ -36,7 +36,7 @@ icts-europe/
 ├── functions.php # Theme setup
 └── style.css # Theme metadata
 
----
+```
 
 ## Development Notes
 
