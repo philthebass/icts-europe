@@ -10,6 +10,9 @@
 
 namespace ICTS_Europe;
 
+// Load custom ACF / PHP-rendered blocks.
+require_once __DIR__ . '/inc/blocks.php';
+
 /**
  * Set up theme defaults and register various WordPress features.
  */

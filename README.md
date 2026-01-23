@@ -23,42 +23,79 @@ This theme is a bespoke Full Site Editing (FSE) theme developed specifically for
 - **Editor:** WordPress Site Editor
 - **Version control:** Git / GitHub
 
-
+---
 
 ## Project Structure
+
 ```
 icts-europe/
-├── parts/ # Template parts (header, footer, etc.)
-├── templates/ # Page templates
-├── patterns/ # Custom block patterns
-├── styles/ # Style variations
-├── theme.json # Global styles and settings
-├── functions.php # Theme setup
-└── style.css # Theme metadata
-
+├── assets/
+│   ├── js/
+│   ├── styles/
+│   └── vendor/
+├── inc/
+│   └── blocks.php
+├── parts/
+├── patterns/
+├── styles/
+├── template-parts/
+│   └── blocks/
+│       └── client-logos-slider.php
+├── templates/
+├── functions.php
+├── theme.json
+├── style.css
+└── README.md
 ```
-
-## Development Notes
-
-- This theme is developed locally using LocalWP
-- Version-controlled via GitHub
-- No build step required unless tooling is introduced later
-- Changes should be committed frequently with clear messages
 
 ---
 
-## Attribution
+## Development Notes
 
-This theme is based on the **Ollie** WordPress block theme.
+- Developed locally using **LocalWP**
+- Version-controlled via **GitHub**
+- No build step required
+- Changes should be committed frequently with clear commit messages
 
-Ollie is created and maintained by:
-- Mike McAlister — https://mikemcalister.com
-- Patrick Posner — https://patrickposner.com
+---
 
-Original project:  
-https://github.com/OllieWP/ollie
+## Custom Blocks
 
-Ollie is licensed under the GNU General Public License (GPL).
+### Client Logos Slider
+
+**Handle:** `client-logos-slider`  
+**Location:** `template-parts/blocks/client-logos-slider.php`  
+**Type:** ACF block using Flickity (continuous marquee-style carousel)
+
+---
+
+### Purpose
+
+Displays a full-width, continuously scrolling strip of client logos.
+
+Logos are managed centrally via an ACF Options Page so the same logo carousel can be reused consistently across pages and templates without duplication.
+
+The slider behaves as a **continuous ticker** (no snapping), pauses on hover, and respects reduced motion preferences.
+
+---
+
+### Dependencies
+
+- **Advanced Custom Fields Pro**  
+  https://www.advancedcustomfields.com/
+
+- **ACF Options Page**  
+  Menu slug: `client-logos`
+
+- **Optional:** Polylang  
+  https://polylang.pro/
+
+- **Flickity** v2.x  
+  - CSS: `assets/vendor/flickity/flickity.min.css`
+  - JS: `assets/vendor/flickity/flickity.pkgd.min.js`
+
+- **Block JavaScript:**  
+  `assets/js/client-logos-flickity.js`
 
 ---
 
