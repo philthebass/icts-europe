@@ -212,4 +212,104 @@ function template_part_areas( array $areas ) {
 
 	return $areas;
 }
+
+
 add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_areas' );
+
+/**
+ * Admin: Customers list – show a small logo next to the title.
+ */
+\add_filter(
+    'manage_customers_posts_columns',
+    function ( $columns ) {
+
+        $new = [];
+
+        foreach ( $columns as $key => $label ) {
+            // Insert our column before the Title column so it appears as second column.
+            if ( 'title' === $key ) {
+                $new['customer_logo'] = __( 'Logo', 'icts-europe' );
+            }
+
+            $new[ $key ] = $label;
+        }
+
+        return $new;
+    }
+);
+
+\add_action(
+    'manage_customers_posts_custom_column',
+    function ( $column, $post_id ) {
+
+        if ( 'customer_logo' !== $column ) {
+            return;
+        }
+
+        // ACF field on the Customers CPT.
+        $logo = \get_field( 'customer_logo', $post_id );
+
+        $image_id = 0;
+        $src      = '';
+
+        if ( \is_array( $logo ) ) {
+            if ( isset( $logo['ID'] ) ) {
+                $image_id = (int) $logo['ID'];
+            } elseif ( isset( $logo['id'] ) ) {
+                $image_id = (int) $logo['id'];
+            } elseif ( isset( $logo['url'] ) ) {
+                $src = esc_url( $logo['url'] );
+            }
+        } elseif ( \is_numeric( $logo ) ) {
+            $image_id = (int) $logo;
+        } elseif ( \is_string( $logo ) && '' !== $logo ) {
+            $src = esc_url( $logo );
+        }
+
+        // Prefer the attachment ID when we have it.
+        if ( $image_id ) {
+            $thumb = \wp_get_attachment_image(
+                $image_id,
+                'thumbnail',
+                false,
+                [
+                    'style' => 'max-width:60px;height:auto;display:block;margin:0 auto;',
+                    'alt'   => '',
+                ]
+            );
+
+            if ( $thumb ) {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo $thumb;
+                return;
+            }
+        }
+
+        if ( $src ) {
+            echo '<img src="' . $src . '" alt="" style="max-width:60px;height:auto;display:block;margin:0 auto;" />';
+        } else {
+            // Little dash so you can easily see "no logo".
+            echo '<span aria-hidden="true">—</span>';
+        }
+    },
+    10,
+    2
+);
+
+\add_action(
+    'admin_head-edit.php',
+    function () {
+        $screen = \get_current_screen();
+
+        if ( 'edit-customers' !== $screen->id ) {
+            return;
+        }
+
+        echo '<style>
+            .column-customer_logo {
+                width: 80px;
+                text-align: center;
+            }
+        </style>';
+    }
+);

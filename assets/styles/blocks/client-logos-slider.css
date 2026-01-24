@@ -2,7 +2,9 @@
    Client Logos Slider (Flickity)
    ================================ */
 
-/* Full-width band for alignfull */
+/* Full-width band for alignfull (front end + editor) */
+.wp-block-acf-client-logos-slider[data-align="full"],
+.wp-block-acf-client-logos-slider.alignfull,
 .client-logos-slider.alignfull {
     width: 100vw;
     max-width: 100vw;
@@ -37,6 +39,15 @@
 
 /* Once JS adds .is-ready we show it */
 .client-logos-slider__carousel.is-ready {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Static mode: Flickity destroyed, simple centred row */
+.client-logos-slider__carousel.client-logos-slider__carousel--static {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     opacity: 1;
     visibility: visible;
 }
@@ -88,3 +99,4 @@
     opacity: 1;
     transform: translateY(-1px);
 }
+
