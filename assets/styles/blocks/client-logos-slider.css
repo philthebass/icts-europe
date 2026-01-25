@@ -15,21 +15,17 @@
 }
 
 /* Outer band */
-/* Outer band */
 .client-logos-slider {
-    background-color: #fff;      /* TEMP: for testing */
+    background-color: #fff;        /* keep band white */
     overflow: hidden;
-
-    /* FIXED height: no more “settling” */
-    height: 120px;                /* 👈 tweak to taste */
+    height: 120px;                 /* overall band height */
     padding: 0;
-
     display: flex;
     align-items: center;
     line-height: 0;
 }
 
-/* Hide carousel until Flickity has initialised to avoid FOUC */
+/* Hide carousel until Flickity has initialised (front end only) */
 .client-logos-slider__carousel {
     width: 100%;
     opacity: 0;
@@ -37,13 +33,13 @@
     transition: opacity 0.25s ease;
 }
 
-/* Once JS adds .is-ready we show it */
+/* Front-end: once JS adds .is-ready we show it */
 .client-logos-slider__carousel.is-ready {
     opacity: 1;
     visibility: visible;
 }
 
-/* Static mode: Flickity destroyed, simple centred row */
+/* Front-end: static mode (Flickity destroyed) */
 .client-logos-slider__carousel.client-logos-slider__carousel--static {
     display: flex;
     justify-content: center;
@@ -52,37 +48,53 @@
     visibility: visible;
 }
 
+/* Flickity viewport – keep things vertically centred */
 .client-logos-slider .flickity-viewport {
     width: 100%;
-    height: 100%;          /* fill the band */
-    display: flex;
-    align-items: center;   /* vertical centring of cells */
-}
-/* Individual cells (logos) */
-.client-logos-slider__cell {
-    width: auto;                  /* width comes from logo */
-    margin: 0 32px;               /* horizontal spacing between logos */
+    height: 100%;
     display: flex;
     align-items: center;
+}
+
+/* =========================================================
+   CORE LAYOUT (front end + editor)
+   Match old-site behaviour: fixed cells, centred logos
+   ========================================================= */
+
+/* Each logo “cell” – fixed box, centred content */
+.client-logos-slider__cell {
+    /* Fixed box similar to old slider */
+    width: 156px;              /* old-site width */
+    height: 100px;             /* old-site height */
+    flex: 0 0 auto;            /* don’t stretch or shrink */
+
+    /* Spacing between logos (≈ old 96px total gap) */
+    margin: 0 48px;
+
+    /* Centre the logo inside the box */
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+
     box-sizing: border-box;
 }
 
-/* Logo images */
+/* Logo images – scale inside the box */
 .client-logos-slider__logo-image {
     display: block;
-    max-height: 30px;             /* increase size to match old site */
-    width: auto;
-    max-width: 100%;
-    flex-shrink: 0;
-    object-fit: contain;
 
-    /* Rest state: grayscale and slightly dimmed */
+    /* Normalised “logo box” like old slider */
+    max-height: 80px;          /* logo height cap */
+    max-width: 100%;           /* don’t overflow cell width */
+    width: auto;
+    height: auto;
+    object-fit: contain;       /* preserve aspect ratio, no cropping */
+    flex-shrink: 0;
+
+    /* Existing styling */
     filter: grayscale(100%);
     -webkit-filter: grayscale(100%);
-    /*opacity: 0.75;*.
-
-    /* Smooth transition on hover */
     transition:
         filter 0.25s ease-in-out,
         -webkit-filter 0.25s ease-in-out,
@@ -100,3 +112,54 @@
     transform: translateY(-1px);
 }
 
+/* =========================================
+   Block editor: static centred preview
+   ========================================= */
+
+/* In the editor, let the container size itself and show content */
+.block-editor-page .client-logos-slider {
+    height: auto;
+    overflow: visible;
+    justify-content: center;
+}
+
+/* Editor preview: single centred row (still using fixed cells above) */
+.block-editor-page .client-logos-slider__carousel {
+    display: flex !important;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Optional: limit number shown in editor so it does not feel crammed */
+.block-editor-page .client-logos-slider__cell:nth-child(n + 13) {
+    display: none !important;
+}
+
+/* Ensure cells render as flex items in the editor too */
+.block-editor-page .client-logos-slider__cell {
+    display: flex !important;
+}
+
+/* =========================================================
+   Block editor ONLY: visually centre alignfull preview
+   ========================================================= */
+
+.block-editor-page .wp-block-acf-client-logos-slider.alignfull {
+    max-width: 1200px;           /* match theme container width */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.block-editor-page
+.wp-block-acf-client-logos-slider.alignfull
+.client-logos-slider__carousel {
+    justify-content: center;
+}
+
+.block-editor-page .wp-block-acf-client-logos-slider {
+    padding-left: 24px;
+    padding-right: 24px;
+}
