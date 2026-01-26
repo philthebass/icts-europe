@@ -1,0 +1,137 @@
+{
+    "key": "group_6974d43e4e62e",
+    "title": "Client Logos Slider (Block Controls)",
+    "fields": [
+        {
+            "key": "field_6974d43ea3c00",
+            "label": "Customer Type Filter",
+            "name": "customer_type_filter",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "all": "Show all customer types",
+                "specific": "Filter by customer type"
+            },
+            "default_value": "all",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": "all"
+        },
+        {
+            "key": "field_6974d57177d81",
+            "label": "Customer Type",
+            "name": "customer_type_term",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "customer-type",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "field_type": "select",
+            "allow_null": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_6974d640d64a6",
+            "label": "Product Filter Mode",
+            "name": "product_filter_mode",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "all": "Show all products",
+                "specific": "Filter by product"
+            },
+            "default_value": "all",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": "all"
+        },
+        {
+            "key": "field_6974d66f54b29",
+            "label": "Product (taxonomy)",
+            "name": "product_taxonomy",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "product",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "field_type": "select",
+            "allow_null": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/client-logos-slider"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "This adds filters to the client slider block",
+    "show_in_rest": 0,
+    "display_title": "",
+    "pll_display_field_instructions": 1,
+    "modified": 1769430169
+}
