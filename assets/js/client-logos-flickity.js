@@ -86,39 +86,47 @@
                 }
             });
 
-            function startTicker() {
-                // Decide: static vs ticker, based purely on number of logos
-                var staticMaxCells = 12; // ≤ 12 logos -> static, > 12 -> marquee
-                var cellCount = flkty.cells ? flkty.cells.length : 0;
+                    function startTicker() {
+            // -----------------------------------------------------------------
+            // 1) Ensure we have enough cells by repeating the existing logos
+            // -----------------------------------------------------------------
+            var minCells = 12; // tweak this – 10–14 usually feels good
+            var currentCells = flkty.getCellElements(); // DOM elements Flickity knows about
 
-                if (cellCount && cellCount <= staticMaxCells) {
-                    // STATIC MODE
-                    tickerEnabled = false;
+            if (currentCells.length && currentCells.length < minCells) {
+                // Take a snapshot of the original cells
+                var originals = Array.prototype.slice.call(currentCells);
 
-                    // Remove Flickity so it stops controlling layout
-                    flkty.destroy();
+                // Keep duplicating until we reach at least minCells
+                while (flkty.getCellElements().length < minCells) {
+                    originals.forEach(function (elem) {
+                        // Clone the cell (including image + link)
+                        var clone = elem.cloneNode(true);
 
-                    // Mark carousel as static and visible
-                    carousel.classList.add(
-                        'is-ready',
-                        'client-logos-slider__carousel--static'
-                    );
+                        // Append to the DOM
+                        carousel.appendChild(clone);
 
-                    return; // done
-                }
-
-                // Otherwise: ticker mode
-                tickerEnabled = true;
-
-                // Reveal carousel
-                carousel.classList.add('is-ready');
-
-                // Only run ticker if user does not prefer reduced motion
-                if (!prefersReducedMotion && tickerEnabled) {
-                    isPaused = false;
-                    window.requestAnimationFrame(updateTicker);
+                        // Tell Flickity about the new cell
+                        flkty.append(clone);
+                    });
                 }
             }
+
+            // -----------------------------------------------------------------
+            // 2) Normal ticker behaviour as before
+            // -----------------------------------------------------------------
+
+            tickerEnabled = true;
+
+            // Reveal carousel
+            carousel.classList.add('is-ready');
+
+            // Only run ticker if user does not prefer reduced motion
+            if (!prefersReducedMotion && tickerEnabled) {
+                isPaused = false;
+                window.requestAnimationFrame(updateTicker);
+            }
+        }
 
             // Normal path: wait for Flickity's ready event.
             flkty.on('ready', startTicker);

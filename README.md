@@ -77,6 +77,35 @@ Logos are managed centrally via an ACF Options Page so the same logo carousel ca
 
 The slider behaves as a **continuous ticker** (no snapping), pauses on hover, and respects reduced motion preferences.
 
+Client Logos Slider – Behaviour Notes
+
+The Client Logos Slider uses a single continuous Flickity marquee implementation for all scenarios.
+
+Key behaviour
+	•	Logos always scroll continuously on the front end, regardless of how many logos are available.
+	•	When there are only a small number of logos, the block duplicates the logo set automatically to ensure:
+	•	Even spacing
+	•	No visual gaps
+	•	A smooth, uninterrupted loop
+	•	This avoids the need for a separate “static” slider mode and keeps the implementation lightweight and predictable.
+
+Editor preview behaviour
+	•	In the WordPress block editor, the slider renders as a static, centred preview:
+	•	No animation
+	•	Single horizontal row
+	•	Limited number of logos shown for clarity
+	•	This is intentional and improves editor UX while avoiding unnecessary JS execution in the editor.
+	•	The front-end behaviour is unaffected.
+
+Logo sizing
+	•	Logos are visually normalised using a fixed-height flex container and constrained image dimensions.
+	•	This ensures a consistent appearance across logos with very different aspect ratios (e.g. wide wordmarks vs tall symbols), matching the behaviour of the legacy site.
+
+Accessibility & performance
+	•	The slider respects prefers-reduced-motion.
+	•	Animation is driven via requestAnimationFrame for smooth, GPU-friendly motion.
+	•	No duplicate slider logic or conditional layout branches are used.
+
 ---
 
 ### Dependencies
