@@ -16,6 +16,7 @@ namespace ICTS_Europe;
 			return;
 		}
 
+		// Client Logos Slider block.
 		\acf_register_block_type(
 			[
 				'name'            => 'client-logos-slider',
@@ -71,5 +72,24 @@ namespace ICTS_Europe;
 				},
 			]
 		);
+
+		// Team Member Card block.
+		\acf_register_block_type(
+			[
+				'name'            => 'team-member-card',
+				'title'           => __( 'Team Member Card', 'icts-europe' ),
+				'description'     => __( 'Displays a Management Team member card.', 'icts-europe' ),
+				'render_template' => \get_template_directory() . '/template-parts/blocks/team-member-card.php',
+				'category'        => 'theme',
+				'icon'            => 'id-alt',
+				'keywords'        => [ 'team', 'member', 'people', 'staff' ],
+				'supports'        => [
+					'align'  => false,
+					'anchor' => true,
+				],
+				// No enqueue_assets needed for now – we’ll just style via theme CSS.
+			]
+		);
+
 	}
 );
