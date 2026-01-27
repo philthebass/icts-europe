@@ -313,3 +313,138 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
         </style>';
     }
 );
+// Polylang: Register Team Member archive slug for translation.
+\add_action( 'init', function () {
+    if ( \function_exists( 'pll_register_string' ) ) {
+        \pll_register_string(
+            'team_member_archive_slug',
+            'management-team',
+            'CPT Archives'
+        );
+    }
+} 
+);
+
+\add_filter( 'register_post_type_args', function ( $args, $post_type ) {
+
+    if ( 'team-member' !== $post_type ) {
+        return $args;
+    }
+
+    if ( \function_exists( 'pll__' ) ) {
+        $args['has_archive'] = \pll__( 'management-team' );
+        $args['rewrite'] = [
+            'slug'       => \pll__( 'management-team' ),
+            'with_front' => true,
+        ];
+    }
+
+    return $args;
+}, 10, 2 );
+
+/**
+ * Admin: Team Member list – show a small portrait next to the title.
+ */
+\add_filter(
+    'manage_team-member_posts_columns',
+    function ( $columns ) {
+
+        $new = [];
+
+        foreach ( $columns as $key => $label ) {
+            // Insert our column before the Title column so it appears as second column.
+            if ( 'title' === $key ) {
+                $new['team_photo'] = __( 'Photo', 'icts-europe' );
+            }
+
+            $new[ $key ] = $label;
+        }
+
+        return $new;
+    }
+);
+
+\add_action(
+    'manage_team-member_posts_custom_column',
+    function ( $column, $post_id ) {
+
+        if ( 'team_photo' !== $column ) {
+            return;
+        }
+
+        $thumb = \get_the_post_thumbnail(
+            $post_id,
+            'thumbnail',
+            [
+                'style' => 'max-width:60px;height:auto;display:block;margin:0 auto;border-radius:4px;',
+                'alt'   => '',
+            ]
+        );
+
+        if ( $thumb ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo $thumb;
+        } else {
+            echo '<span aria-hidden="true">—</span>';
+        }
+    },
+    10,
+    2
+);
+
+namespace ICTS_Europe;
+
+
+/**
+ * When a Team Member in the default language is saved,
+ * propagate its featured image to translations that don't have one.
+ */
+\add_action(
+    'save_post_team-member',
+    function ( $post_id, $post, $update ) {
+
+        // Avoid autosaves / revisions.
+        if ( \wp_is_post_autosave( $post_id ) || \wp_is_post_revision( $post_id ) ) {
+            return;
+        }
+
+        if ( ! \function_exists( 'pll_get_post_language' ) || ! \function_exists( 'pll_get_post_translations' ) ) {
+            return;
+        }
+
+        $default_lang = \pll_default_language();
+        $post_lang    = \pll_get_post_language( $post_id );
+
+        // Only act on the default language version.
+        if ( $post_lang !== $default_lang ) {
+            return;
+        }
+
+        $thumb_id = \get_post_thumbnail_id( $post_id );
+        if ( ! $thumb_id ) {
+            return;
+        }
+
+        $translations = \pll_get_post_translations( $post_id );
+        if ( empty( $translations ) || ! \is_array( $translations ) ) {
+            return;
+        }
+
+        foreach ( $translations as $lang => $tr_id ) {
+            $tr_id = (int) $tr_id;
+
+            if ( $lang === $default_lang ) {
+                continue;
+            }
+
+            // Only set if the translation has no image yet.
+            if ( \has_post_thumbnail( $tr_id ) ) {
+                continue;
+            }
+
+            \set_post_thumbnail( $tr_id, $thumb_id );
+        }
+    },
+    10,
+    3
+);

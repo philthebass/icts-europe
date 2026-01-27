@@ -91,5 +91,22 @@ namespace ICTS_Europe;
 			]
 		);
 
+		        // Team Member Profile block (single profile layout).
+        \acf_register_block_type(
+            [
+                'name'            => 'team-member-profile',
+                'title'           => __( 'Team Member Profile', 'icts-europe' ),
+                'description'     => __( 'Displays a full Management Team member profile.', 'icts-europe' ),
+                'render_template' => \get_template_directory() . '/template-parts/blocks/team-member-profile.php',
+                'category'        => 'theme',
+                'icon'            => 'id-alt',
+                'keywords'        => [ 'team', 'member', 'profile', 'staff' ],
+                'supports'        => [
+                    'align'  => false,
+                    'anchor' => true,
+                ],
+            ]
+        );
+
 	}
 );

@@ -62,8 +62,9 @@
                 "class": "",
                 "id": ""
             },
-            "relevanssi_exclude": 0,
             "default_value": "",
+            "translations": "sync",
+            "allow_in_bindings": 1,
             "placeholder": "",
             "pll_default_value": ""
         },
@@ -74,16 +75,16 @@
             "aria-label": "",
             "type": "image",
             "instructions": "",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "relevanssi_exclude": 0,
             "return_format": "id",
             "library": "all",
+            "translations": "copy_once",
             "min_width": "",
             "min_height": "",
             "min_size": "",
@@ -91,6 +92,7 @@
             "max_height": "",
             "max_size": "",
             "mime_types": "",
+            "allow_in_bindings": 1,
             "preview_size": "medium"
         }
     ],
@@ -128,5 +130,5 @@
     "show_in_rest": 0,
     "display_title": "",
     "pll_display_field_instructions": 1,
-    "modified": 1769450609
+    "modified": 1769527841
 }
