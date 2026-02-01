@@ -73,44 +73,81 @@ if ( ! $query->have_posts() ) {
 // No fallback to post title for $company – we don't want titles in the slider.
 ?>
 
-            <article class="testimonial-slide">
-                <?php if ( $testimonial_text ) : ?>
-                    <blockquote class="testimonial-quote">
-                        <?php echo wp_kses_post( wpautop( $testimonial_text ) ); ?>
-                    </blockquote>
-                <?php endif; ?>
+    <article class="testimonial-slide">
+        <div class="testimonial-inner">
 
-                <div class="testimonial-meta">
-                    <?php if ( $testimonial_name ) : ?>
-                        <p class="testimonial-name"><?php echo esc_html( $testimonial_name ); ?></p>
-                    <?php endif; ?>
+          <div class="testimonial-quote-icon testimonial-quote-icon--open" aria-hidden="true">
+            <svg class="testimonial-quote-svg"
+         xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 78 252"
+         role="img"
+         focusable="false">
+        <text transform="translate(6 3)"
+              fill="#ffffff"
+              stroke="currentColor"
+              stroke-width="3"
+              font-size="180"
+              font-family="NunitoSans-Regular, 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+            <tspan x="-2.1" y="182">“</tspan>
+        </text>
+    </svg>
+            </div>
 
-                    <?php if ( $job_title ) : ?>
-                        <p class="testimonial-job-title"><?php echo esc_html( $job_title ); ?></p>
-                    <?php endif; ?>
+            <?php if ( $testimonial_text ) : ?>
+                <blockquote class="testimonial-quote">
+                    <?php echo wp_kses_post( wpautop( $testimonial_text ) ); ?>
+                </blockquote>
+            <?php endif; ?>
 
-                    
+            <?php if ( $testimonial_name || $job_title ) : ?>
+                <p class="testimonial-person">
+                    <?php
+                    echo esc_html( $testimonial_name );
+                    if ( $testimonial_name && $job_title ) {
+                        echo ' – ';
+                    }
+                    echo esc_html( $job_title );
+                    ?>
+                </p>
+            <?php endif; ?>
+
+            <?php if ( $client_logo_id ) : ?>
+                <div class="testimonial-logo">
+                    <?php
+                    $alt = get_post_meta( $client_logo_id, '_wp_attachment_image_alt', true );
+                    if ( '' === $alt ) {
+                        $alt = $company ?: get_the_title( $post_id );
+                    }
+
+                    echo wp_get_attachment_image(
+                        $client_logo_id,
+                        'medium',
+                        false,
+                        [ 'alt' => esc_attr( $alt ) ]
+                    );
+                    ?>
                 </div>
+            <?php endif; ?>
 
-                <?php if ( $client_logo_id ) : ?>
-                    <div class="testimonial-logo">
-                        <?php
-                        // Build a sensible alt attribute.
-                        $alt = get_post_meta( $client_logo_id, '_wp_attachment_image_alt', true );
-                        if ( '' === $alt ) {
-                            $alt = $company ?: get_the_title( $post_id );
-                        }
+            <div class="testimonial-quote-icon testimonial-quote-icon--close" aria-hidden="true">
+            <svg class="testimonial-quote-svg"
+         xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 78 252"
+         role="img"
+         focusable="false">
+        <text transform="translate(6 3)"
+              fill="#ffffff"
+              stroke="currentColor"
+              stroke-width="3"
+              font-size="180"
+              font-family="NunitoSans-Regular, 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+            <tspan x="-2.1" y="182">”</tspan>
+        </text>
+    </svg>
+        </div>
 
-                        echo wp_get_attachment_image(
-                            $client_logo_id,
-                            'medium',
-                            false,
-                            [ 'alt' => esc_attr( $alt ) ]
-                        );
-                        ?>
-                    </div>
-                <?php endif; ?>
-            </article>
+        </div>
+    </article>
 
         <?php endwhile; ?>
     </div>

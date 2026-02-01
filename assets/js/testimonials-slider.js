@@ -25,27 +25,29 @@
 
             // eslint-disable-next-line no-new
             new Flickity(slider, {
-                cellAlign: 'left',
-                contain: true,
+                cellAlign: 'center',
+                contain: false,
                 wrapAround: true,
                 pageDots: true,
                 prevNextButtons: true,
-                adaptiveHeight: true
+                adaptiveHeight: true,
+                // autoplay every 5 seconds
+                autoPlay: 5000,
+                pauseAutoPlayOnHover: true
             });
         });
     }
 
-    // Front-end: run after DOM is ready.
+    // Front end.
     document.addEventListener('DOMContentLoaded', function () {
         initTestimonialsSliders(document);
     });
 
-    // Block editor (ACF): run whenever the block preview is rendered.
+    // Block editor (ACF preview).
     if (window.acf && typeof window.acf.addAction === 'function') {
         window.acf.addAction(
             'render_block_preview/type=testimonials-slider',
             function ($block) {
-                // $block is a jQuery object in the editor.
                 if ($block && $block[0]) {
                     initTestimonialsSliders($block[0]);
                 }

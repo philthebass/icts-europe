@@ -1,1 +1,109 @@
-/* Testimonials Slider block styles – to be finalised by design */
+/* Testimonials Slider block styles
+   ------------------------------- */
+
+.block-testimonials-slider {
+    padding: 4rem 0 5rem; /* extra bottom space above footer */
+}
+
+/* Constrain the Flickity track to page width */
+.block-testimonials-slider .testimonials-slider {
+    max-width: 960px;           /* adjust to match your content width */
+    margin: 0 auto;
+    position: relative;
+}
+
+/* One slide per viewport */
+.block-testimonials-slider .testimonials-slider .testimonial-slide {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Inner layout for each testimonial (text + logo + quotes) */
+.block-testimonials-slider .testimonial-inner {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+
+    /* Scale with the fluid font size: em = “multiples of current font-size” */
+    padding: 3em 1.5rem 3.5em;
+}
+
+.block-testimonials-slider .testimonial-quote {
+    margin: 0 0 2rem;
+}
+
+/* Name + Job Title (single line) */
+.block-testimonials-slider .testimonial-person {
+    margin-top: 1.5rem;
+    font-weight: 900;      /* slightly heavier than body text */
+    font-size: 1.05rem;
+    line-height: 1.4;
+}
+
+.block-testimonials-slider .testimonial-logo {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Constrain logo size without distorting it */
+.block-testimonials-slider .testimonial-logo img {
+        width: auto;
+    height: auto;
+    object-fit: contain;
+    /* Scales with both font size and viewport width */
+    max-width: min(14em, 60vw);
+    max-height: 5em;
+}
+
+/* Quote icons wrapper – position only, no fixed size */
+.block-testimonials-slider .testimonial-quote-icon {
+    position: absolute;
+    color: var(--wp--preset--color--brand-primary);
+    pointer-events: none;
+}
+
+/* Opening quote top-left */
+.block-testimonials-slider .testimonial-quote-icon--open {
+    top: 0.75em;
+    left: 0.75em;
+}
+
+/* Closing quote bottom-right */
+.block-testimonials-slider .testimonial-quote-icon--close {
+    bottom: 0.75em;
+    right: 0.75em;
+}
+
+/* Size the SVG itself, preserving aspect ratio from XD (78×252) */
+.block-testimonials-slider .testimonial-quote-svg {
+    display: block;
+    width: 2.5em;  /* about 2½ lines worth – scales with font */
+    height: auto;
+}
+
+/* Flickity navigation tweaks */
+
+.block-testimonials-slider .flickity-prev-next-button {
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Move arrows outside the text column */
+.block-testimonials-slider .flickity-prev-next-button.previous {
+    left: 1rem;
+    transform: translate(-150%, -50%);
+}
+
+.block-testimonials-slider .flickity-prev-next-button.next {
+    right: 1rem;
+    transform: translate(150%, -50%);
+}
+
+/* Dots spacing */
+.block-testimonials-slider .flickity-page-dots {
+    bottom: -2rem;
+}
