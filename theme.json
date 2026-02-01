@@ -49,6 +49,21 @@
 					"slug": "brand-secondary"
 				},
 				{
+					"color": "rgb(251 190 98)",
+					"name": "Brand Terciary",
+					"slug": "brand-terciary"
+				},
+				{
+					"color": "rgb(255, 127, 39)",
+					"name": "Orange",
+					"slug": "orange"
+				},
+				{
+					"color": "rgb(255, 242, 0)",
+					"name": "Yellow",
+					"slug": "yellow"
+				},
+				{
 					"color": "rgb(101, 75, 120)",
 					"name": "Purple",
 					"slug": "purple"
