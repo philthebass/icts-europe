@@ -68,6 +68,60 @@ namespace ICTS_Europe;
             ]
         );
 
+        // Hero Slider block.
+        \acf_register_block_type(
+            [
+                'name'            => 'hero-slider',
+                'title'           => __( 'Hero Slider', 'icts-europe' ),
+                'description'     => __( 'Displays a full-width hero slider for page headers.', 'icts-europe' ),
+                'render_template' => \get_template_directory() . '/template-parts/blocks/hero-slider.php',
+                'category'        => 'theme',
+                'icon'            => 'images-alt2',
+                'keywords'        => [ 'hero', 'slider', 'banner' ],
+                'align'           => 'full',
+                'supports'        => [
+                    'align'  => [ 'full' ],
+                    'anchor' => true,
+                ],
+                'enqueue_assets'  => function () {
+
+                    $theme_uri = \get_template_directory_uri();
+
+                    // Block-specific CSS.
+                    \wp_enqueue_style(
+                        'icts-hero-slider',
+                        $theme_uri . '/assets/styles/blocks/hero-slider.css',
+                        [],
+                        '1.0.0'
+                    );
+
+                    // Re-use Flickity (same handles as other sliders).
+                    \wp_enqueue_style(
+                        'flickity',
+                        $theme_uri . '/assets/vendor/flickity/flickity.min.css',
+                        [],
+                        '2.3.0'
+                    );
+
+                    \wp_enqueue_script(
+                        'flickity',
+                        $theme_uri . '/assets/vendor/flickity/flickity.pkgd.min.js',
+                        [],
+                        '2.3.0',
+                        true
+                    );
+
+                    \wp_enqueue_script(
+                        'icts-hero-slider',
+                        $theme_uri . '/assets/js/hero-slider.js',
+                        [ 'flickity' ],
+                        '1.0.0',
+                        true
+                    );
+                },
+            ]
+        );
+
         // Team Member Card block.
         \acf_register_block_type(
             [
@@ -102,7 +156,7 @@ namespace ICTS_Europe;
             ]
         );
 
-        // ✅ Testimonials Slider block (ADD THIS INSIDE THE CALLBACK).
+        // Testimonials Slider block.
         \acf_register_block_type(
             [
                 'name'            => 'testimonials-slider',
@@ -121,7 +175,6 @@ namespace ICTS_Europe;
 
                     $theme_uri = \get_template_directory_uri();
 
-                    // Block-specific CSS (can be a stub for now).
                     \wp_enqueue_style(
                         'icts-testimonials-slider',
                         $theme_uri . '/assets/styles/blocks/testimonials-slider.css',
@@ -129,7 +182,6 @@ namespace ICTS_Europe;
                         '1.0.0'
                     );
 
-                    // Re-use Flickity.
                     \wp_enqueue_style(
                         'flickity',
                         $theme_uri . '/assets/vendor/flickity/flickity.min.css',

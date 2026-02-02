@@ -1,0 +1,238 @@
+/* =========================================================
+   Hero Slider Block – full-width wrapper
+   ========================================================= */
+
+/* Break out of constrained layouts (front-end + editor) */
+.icts-hero-slider-block.alignfull {
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+}
+
+/* Prevent parent layout from re-centering */
+.icts-hero-slider-block.alignfull > .icts-hero-slider {
+    margin: 0;
+}
+
+/* =========================================================
+   Base hero slider container
+   ========================================================= */
+
+.icts-hero-slider {
+    position: relative;
+    width: 100%;
+    color: var(--wp--preset--color--base, #ffffff);
+}
+
+/* Track / slide area */
+.icts-hero-slider__track {
+    width: 100%;
+    height: min(80vh, 640px);
+}
+
+/* Flickity cells must fill width */
+.icts-hero-slider__track .icts-hero-slider__slide {
+    width: 100%;
+}
+
+.icts-hero-slider__slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* =========================================================
+   Background image + overlay
+   ========================================================= */
+
+.icts-hero-slider__media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.icts-hero-slider__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.icts-hero-slider__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.45) 35%,
+        rgba(0, 0, 0, 0.2) 60%,
+        rgba(0, 0, 0, 0) 100%
+    );
+}
+
+/* =========================================================
+   Content area (page-width aligned, anchored low-left)
+   ========================================================= */
+
+.icts-hero-slider__content {
+    position: relative;
+    z-index: 3;
+
+    width: 100%;
+    max-width: var(--wp--style--global--content-size, 1200px);
+    margin-inline: auto;
+
+    padding-inline: 0;
+    padding-block: clamp(3rem, 7vh, 4rem);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;      /* push stack towards bottom */
+    align-items: flex-start;        /* left align */
+    gap: 1.25rem;                    /* equal-ish spacing in the stack */
+
+    min-height: 100%;               /* IMPORTANT: use full slide height */
+}
+
+.icts-hero-slider__title {
+    margin: 0;
+    font-weight: 600;
+}
+
+.icts-hero-slider__text {
+    margin: 0;
+}
+
+/* Text column width – wider on desktop, full width on mobile */
+.icts-hero-slider__title,
+.icts-hero-slider__text,
+.icts-hero-slider__button {
+    max-width: 46rem; /* ~half page on typical desktop */
+}
+
+@media (max-width: 768px) {
+    .icts-hero-slider__title,
+    .icts-hero-slider__text,
+    .icts-hero-slider__button {
+        max-width: 100%;
+    }
+}
+
+/* =========================================================
+   CTA Button – inverted brand style
+   ========================================================= */
+
+.icts-hero-slider__button.wp-element-button {
+    align-self: flex-start;
+    margin-top: 0;
+
+    background-color: var(--wp--preset--color--white);
+    color: var(--wp--preset--color--brand-primary);
+    border: 2px solid var(--wp--preset--color--white);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.icts-hero-slider__button.wp-element-button:hover,
+.icts-hero-slider__button.wp-element-button:focus-visible {
+    background-color: var(--wp--preset--color--brand-primary);
+    color: var(--wp--preset--color--white);
+    border-color: var(--wp--preset--color--brand-primary);
+}
+
+.icts-hero-slider__button.wp-element-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================================
+   Slide indicators (dashes) – content aligned
+   ========================================================= */
+
+.icts-hero-slider__indicators {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2rem;
+    width: 100%;
+    max-width: var(--wp--style--global--content-size, 1200px);
+    margin-inline: auto;
+    padding-inline: 0; /* align with hero content */
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    z-index: 4;
+}
+
+.icts-hero-slider__indicator {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.icts-hero-slider__indicator-bar {
+    width: 72px;
+    height: 4px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    box-sizing: border-box;
+    opacity: 0.7;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+/* Active slide */
+.icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    opacity: 1;
+}
+
+/* Hover / focus */
+.icts-hero-slider__indicator:hover .icts-hero-slider__indicator-bar,
+.icts-hero-slider__indicator:focus-visible .icts-hero-slider__indicator-bar {
+    opacity: 1;
+}
+
+/* =========================================================
+   Responsive adjustments
+   ========================================================= */
+
+
+
+@media (max-width: 960px) {
+    .icts-hero-slider__track {
+        height: min(70vh, 480px);
+        min-height: 360px;
+    }
+
+    .icts-hero-slider__content {
+        padding-inline: 1.5rem;
+        padding-block: 2.5rem 3.5rem; /* slightly tighter on small screens */
+    }
+
+    .icts-hero-slider__indicators {
+        bottom: 1.25rem;
+        padding-inline: 1.5rem;
+    }
+
+    .icts-hero-slider__indicator-bar {
+        width: 48px;
+        height: 3px;
+        border-width: 1.5px;
+    }
+}
