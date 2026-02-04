@@ -29,7 +29,8 @@
 /* Track / slide area */
 .icts-hero-slider__track {
     width: 100%;
-    height: min(80vh, 640px);
+    /* XD spec height for desktop */
+    height: 743px;
 }
 
 /* Flickity cells must fill width */
@@ -82,6 +83,7 @@
     z-index: 3;
 
     width: 100%;
+    /* Align to global content width (theme.json layout.contentSize) */
     max-width: var(--wp--style--global--content-size, 1200px);
     margin-inline: auto;
 
@@ -107,11 +109,10 @@
 }
 
 /* Text column width – wider on desktop, full width on mobile */
-.icts-hero-slider__title,
-.icts-hero-slider__text,
-.icts-hero-slider__button {
-    max-width: 46rem; /* ~half page on typical desktop */
-}
+/* Tighter reading measures to match design */
+.icts-hero-slider__title { max-width: 28ch; }
+.icts-hero-slider__text { max-width: 60ch; }
+.icts-hero-slider__button { max-width: none; }
 
 @media (max-width: 768px) {
     .icts-hero-slider__title,
@@ -132,6 +133,10 @@
     background-color: var(--wp--preset--color--white);
     color: var(--wp--preset--color--brand-primary);
     border: 2px solid var(--wp--preset--color--white);
+
+    /* Slimmer vertical, slightly wider horizontal per comp */
+    padding-block: 0.5em;
+    padding-inline: 1.4em;
 
     transition:
         background-color 0.2s ease,
