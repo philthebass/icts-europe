@@ -1,0 +1,49 @@
+/* Editor-only preview tweaks for Hero Slider */
+
+/* Reduce the visual height in the editor but allow stacking without overlap */
+.block-editor-page .icts-hero-slider__track { height: auto; min-height: 0; }
+/* Give each stacked slide its own fixed editing height */
+.block-editor-page .icts-hero-slider__slide { height: 520px; }
+
+/* When a child slide is selected, show only that slide for stable editing */
+.block-editor-page .wp-block[data-type="icts-europe/hero-slider"].has-child-selected .wp-block[data-type="icts-europe/hero-slide"] { opacity: .45; }
+.block-editor-page .wp-block[data-type="icts-europe/hero-slider"].has-child-selected .wp-block[data-type="icts-europe/hero-slide"].is-selected { opacity: 1; }
+
+/* Overlays shouldn’t block typing/selection in the editor */
+.block-editor-page .icts-hero-slider__overlay { pointer-events: none; }
+
+/* Preview state: add a subtle dashed outline so it’s obvious */
+.block-editor-page .icts-hero-slider.is-previewing {
+  outline: 2px dashed var(--wp-admin-theme-color, #3858e9);
+  outline-offset: -2px;
+}
+
+/* In preview mode, show only the first slide (no JS required) */
+.block-editor-page .icts-hero-slider.is-previewing .icts-hero-slider__track > *:not(:first-child) {
+  display: none !important;
+}
+
+/* Reset full-width breakout in the editor to avoid overlapping meta boxes */
+.block-editor-page .icts-hero-slider-block.alignfull {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 24px;
+}
+
+/* Keep editor stacking contained */
+.block-editor-page .icts-hero-slider { z-index: 0; }
+
+/* Inspector spacing for CTA group */
+.components-panel__body .icts-hero-cta-group > * + * { margin-top: 10px; }
+
+/* Modal layout */
+.icts-hero-cta-modal .components-base-control + .components-base-control { margin-top: 12px; }
+.icts-hero-cta-modal__actions { margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px; }
+.icts-hero-cta-summary__row { display: grid; grid-template-columns: 80px 1fr; gap: 8px; margin-top: 6px; }
+.icts-hero-cta-summary__label { color: #666; }
+
+/* Keep CTA modal at a sensible width even when LinkControl is focused */
+.icts-hero-cta-modal-frame.components-modal__frame { max-width: 560px; width: 560px; }
+.icts-hero-cta-modal .block-editor-link-control { max-width: 100%; }

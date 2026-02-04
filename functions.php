@@ -12,6 +12,68 @@ namespace ICTS_Europe;
 
 // Load custom ACF / PHP-rendered blocks.
 require_once __DIR__ . '/inc/blocks.php';
+// Register native (JS) blocks assets.
+\add_action( 'init', function () {
+    // Editor script for native hero blocks (no build step; uses wp globals).
+    $handle = 'icts-hero-blocks-editor';
+    \wp_register_script(
+        $handle,
+        get_template_directory_uri() . '/assets/blocks/hero-slider/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
+        \wp_get_theme()->get( 'Version' ),
+        true
+    );
+
+    // Front-end assets (shared with editor preview if needed).
+    $ver = \wp_get_theme()->get( 'Version' );
+    \wp_register_style(
+        'icts-hero-slider-style',
+        get_template_directory_uri() . '/assets/styles/blocks/hero-slider.css',
+        [],
+        $ver
+    );
+    \wp_register_style(
+        'flickity',
+        get_template_directory_uri() . '/assets/vendor/flickity/flickity.min.css',
+        [],
+        '2.3.0'
+    );
+    \wp_register_script(
+        'flickity',
+        get_template_directory_uri() . '/assets/vendor/flickity/flickity.pkgd.min.js',
+        [],
+        '2.3.0',
+        true
+    );
+    \wp_register_script(
+        'icts-hero-slider-frontend',
+        get_template_directory_uri() . '/assets/js/hero-slider.js',
+        [ 'flickity' ],
+        $ver,
+        true
+    );
+
+    \register_block_type( 'icts-europe/hero-slider', [
+        'editor_script' => $handle,
+        'style'         => [ 'icts-hero-slider-style', 'flickity' ],
+        'view_script'   => [ 'flickity', 'icts-hero-slider-frontend' ],
+    ] );
+
+    \register_block_type( 'icts-europe/hero-slide', [
+        'editor_script' => $handle,
+        'parent'        => [ 'icts-europe/hero-slider' ],
+    ] );
+} );
+
+// Editor-only CSS for better hero slider preview
+\add_action( 'enqueue_block_editor_assets', function () {
+    \wp_enqueue_style(
+        'icts-hero-slider-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/hero-slider-editor.css',
+        [],
+        \wp_get_theme()->get( 'Version' )
+    );
+} );
 
 /**
  * Set up theme defaults and register various WordPress features.
