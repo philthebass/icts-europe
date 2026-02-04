@@ -21,6 +21,9 @@ function setup() {
 	// Enqueue editor styles and fonts.
 	\add_editor_style( 'style.css' );
 
+	// Load translations from the theme's languages directory.
+	\load_theme_textdomain( 'icts-europe', get_template_directory() . '/languages' );
+
 	// Remove core block patterns.
 	\remove_theme_support( 'core-block-patterns' );
 }
@@ -29,7 +32,8 @@ function setup() {
  * Enqueue styles.
  */
 function enqueue_style_sheet() {
-	wp_enqueue_style( sanitize_title( __NAMESPACE__ ), get_template_directory_uri() . '/style.css', array(), wp_get_theme()->get( 'Version' ) );
+	$handle = 'icts-europe';
+	wp_enqueue_style( $handle, get_stylesheet_uri(), array(), wp_get_theme()->get( 'Version' ) );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
 
@@ -190,10 +194,11 @@ add_action( 'init', __NAMESPACE__ . '\pattern_categories', 9 );
  * Remove last separator on blog/archive if no pagination exists.
  */
 function is_paginated() {
-	global $wp_query;
-	if ( $wp_query->max_num_pages < 2 ) {
-		echo '<style>.blog .wp-block-post-template .wp-block-post:last-child .entry-content + .wp-block-separator, .archive .wp-block-post-template .wp-block-post:last-child .entry-content + .wp-block-separator, .blog .wp-block-post-template .wp-block-post:last-child .entry-content + .wp-block-separator, .search .wp-block-post-template .wp-block-post:last-child .wp-block-post-excerpt + .wp-block-separator { display: none; }</style>';
-	}
+    global $wp_query;
+    if ( $wp_query->max_num_pages < 2 ) {
+        $css = '.blog .wp-block-post-template .wp-block-post:last-child .entry-content + .wp-block-separator, .archive .wp-block-post-template .wp-block-post:last-child .entry-content + .wp-block-separator, .blog .wp-block-post-template .wp-block-post:last-child .entry-content + .wp-block-separator, .search .wp-block-post-template .wp-block-post:last-child .wp-block-post-excerpt + .wp-block-separator { display: none; }';
+        \wp_add_inline_style( 'icts-europe', $css );
+    }
 }
 add_action( 'wp_head', __NAMESPACE__ . '\is_paginated' );
 
