@@ -77,21 +77,11 @@ if ( ! $query->have_posts() ) {
         <div class="testimonial-inner">
 
           <div class="testimonial-quote-icon testimonial-quote-icon--open" aria-hidden="true">
-            <svg class="testimonial-quote-svg"
-         xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 78 252"
-         role="img"
-         focusable="false">
-        <text transform="translate(6 3)"
-              fill="#ffffff"
-              stroke="currentColor"
-              stroke-width="3"
-              font-size="180"
-              font-family="NunitoSans-Regular, 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-            <tspan x="-2.1" y="182">“</tspan>
-        </text>
-    </svg>
-            </div>
+            <svg class="testimonial-quote-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 307.1 259.5" role="img" focusable="false">
+              <path class="testimonial-quote-path" d="M240.94,124.5h59.16v128h-130.4v-81.6c0-20.26,2.4-39.32,7.2-57.2,4.8-17.86,12.4-35.33,22.8-52.4,10.4-17.06,24.4-34.4,42-52l48.8,37.6c-12.8,12.8-23.07,24.94-30.8,36.4-7.74,11.48-13.34,22.8-16.8,34-1.36,4.37-3.78,9.3-3.78,14.2"/>
+              <path class="testimonial-quote-path" d="M78.24,124.5h59.16v128H7v-81.6c0-20.26,2.4-39.32,7.2-57.2,4.8-17.86,12.4-35.33,22.8-52.4,10.4-17.06,24.4-34.4,42-52l48.8,37.6c-12.8,12.8-23.07,24.94-30.8,36.4-7.74,11.48-13.34,22.8-16.8,34-1.36,4.37-3.78,9.3-3.78,14.2"/>
+            </svg>
+          </div>
 
             <?php if ( $testimonial_text ) : ?>
                 <blockquote class="testimonial-quote">
@@ -130,20 +120,10 @@ if ( ! $query->have_posts() ) {
             <?php endif; ?>
 
             <div class="testimonial-quote-icon testimonial-quote-icon--close" aria-hidden="true">
-            <svg class="testimonial-quote-svg"
-         xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 78 252"
-         role="img"
-         focusable="false">
-        <text transform="translate(6 3)"
-              fill="#ffffff"
-              stroke="currentColor"
-              stroke-width="3"
-              font-size="180"
-              font-family="NunitoSans-Regular, 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-            <tspan x="-2.1" y="182">”</tspan>
-        </text>
-    </svg>
+            <svg class="testimonial-quote-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 307.1 259.5" role="img" focusable="false">
+              <path class="testimonial-quote-path" d="M240.94,124.5h59.16v128h-130.4v-81.6c0-20.26,2.4-39.32,7.2-57.2,4.8-17.86,12.4-35.33,22.8-52.4,10.4-17.06,24.4-34.4,42-52l48.8,37.6c-12.8,12.8-23.07,24.94-30.8,36.4-7.74,11.48-13.34,22.8-16.8,34-1.36,4.37-3.78,9.3-3.78,14.2"/>
+              <path class="testimonial-quote-path" d="M78.24,124.5h59.16v128H7v-81.6c0-20.26,2.4-39.32,7.2-57.2,4.8-17.86,12.4-35.33,22.8-52.4,10.4-17.06,24.4-34.4,42-52l48.8,37.6c-12.8,12.8-23.07,24.94-30.8,36.4-7.74,11.48-13.34,22.8-16.8,34-1.36,4.37-3.78,9.3-3.78,14.2"/>
+            </svg>
         </div>
 
         </div>

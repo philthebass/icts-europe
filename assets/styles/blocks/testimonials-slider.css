@@ -79,8 +79,21 @@
 /* Size the SVG itself, preserving aspect ratio from XD (78×252) */
 .block-testimonials-slider .testimonial-quote-svg {
     display: block;
-    width: 2.5em;  /* about 2½ lines worth – scales with font */
+    width: 2.5em;  /* scales with font size */
     height: auto;
+}
+
+/* Quote mark styling (outlined paths) */
+.block-testimonials-slider .testimonial-quote-path {
+    fill: var(--wp--preset--color--white);
+    stroke: var(--wp--preset--color--brand-primary);
+    stroke-width: 14;
+    stroke-miterlimit: 10;
+}
+
+/* Closing quote – rotate to mirror the opening quote */
+.block-testimonials-slider .testimonial-quote-icon--close .testimonial-quote-svg {
+    transform: rotate(180deg);
 }
 
 /* Flickity navigation tweaks */
