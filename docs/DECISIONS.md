@@ -12,3 +12,6 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 
 2026-02-04 — Standardized stylesheet handle (icts-europe) and moved inline CSS to wp_add_inline_style — Predictable enqueue and safer output — Dependencies can inline to this handle.
 
+2026-02-05 — Hero Slider editor preview is CSS-only — JS preview caused instability in the editor — Preview shows first slide only and is view-only; editing remains stacked.
+
+2026-02-05 — RTL support handled in slider CSS/JS — Polylang RTL pages need mirrored layout — Overlay gradient flips, content aligns right, indicators align right, and Flickity runs with rightToLeft.

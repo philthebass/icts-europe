@@ -74,6 +74,19 @@
     );
 }
 
+/* RTL: flip gradient direction */
+:dir(rtl) .icts-hero-slider__overlay,
+body.rtl .icts-hero-slider__overlay,
+[dir="rtl"] .icts-hero-slider__overlay {
+    background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.45) 35%,
+        rgba(0, 0, 0, 0.2) 60%,
+        rgba(0, 0, 0, 0) 100%
+    );
+}
+
 /* =========================================================
    Content area (page-width aligned, anchored low-left)
    ========================================================= */
@@ -97,6 +110,15 @@
     gap: 1.25rem;                    /* equal-ish spacing in the stack */
 
     min-height: 100%;               /* IMPORTANT: use full slide height */
+}
+
+/* RTL: align content to the right */
+:dir(rtl) .icts-hero-slider__content,
+body.rtl .icts-hero-slider__content,
+[dir="rtl"] .icts-hero-slider__content {
+    align-items: flex-start;
+    text-align: right;
+    direction: rtl;
 }
 
 .icts-hero-slider__title {
@@ -146,6 +168,12 @@
         box-shadow 0.15s ease;
 }
 
+:dir(rtl) .icts-hero-slider__button.wp-element-button,
+body.rtl .icts-hero-slider__button.wp-element-button,
+[dir="rtl"] .icts-hero-slider__button.wp-element-button {
+    align-self: flex-start;
+}
+
 .icts-hero-slider__button.wp-element-button:hover,
 .icts-hero-slider__button.wp-element-button:focus-visible {
     background-color: var(--wp--preset--color--brand-primary);
@@ -175,6 +203,14 @@
     justify-content: flex-start;
     gap: 0.75rem;
     z-index: 4;
+}
+
+/* RTL: align indicators to the right */
+:dir(rtl) .icts-hero-slider__indicators,
+body.rtl .icts-hero-slider__indicators,
+[dir="rtl"] .icts-hero-slider__indicators {
+    direction: rtl;
+    justify-content: flex-start;
 }
 
 .icts-hero-slider__indicator {

@@ -14,6 +14,7 @@
             sliderEl.classList.add('is-icts-hero-slider-init');
 
             const isEditor = !!(document.body && document.body.classList.contains('block-editor-page'));
+            const isRtl = !!(document.documentElement && document.documentElement.dir === 'rtl');
 
             // eslint-disable-next-line no-undef
             const flkty = new Flickity(sliderEl, {
@@ -23,6 +24,7 @@
                 pauseAutoPlayOnHover: isEditor ? false : true,
                 prevNextButtons: isEditor ? true : false,
                 pageDots: false,
+                rightToLeft: isRtl,
                 // In the editor, keep Flickity non-draggable so clicks focus
                 // RichText fields instead of moving the carousel.
                 draggable: isEditor ? false : true,
@@ -48,6 +50,7 @@
                     btn.className = 'icts-hero-slider__indicator' + (idx === 0 ? ' is-active' : '');
                     btn.setAttribute('role', 'tab');
                     btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+                    btn.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
                     btn.setAttribute('data-slide-index', String(idx));
                     const bar = document.createElement('span');
                     bar.className = 'icts-hero-slider__indicator-bar';
@@ -122,16 +125,6 @@
         initHeroSliders(document);
     });
 
-    // Block editor: hook into ACF block preview rendering
-    if (window.acf && typeof window.acf.addAction === 'function') {
-        window.acf.addAction(
-            'render_block_preview/type=hero-slider',
-            function ($block) {
-                // $block is a jQuery object – get the raw element
-                initHeroSliders($block[0]);
-            }
-        );
-    }
     // Expose init for editor reuse
     if (typeof window !== 'undefined') {
         window.ICTS = window.ICTS || {};

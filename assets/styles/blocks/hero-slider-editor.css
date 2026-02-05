@@ -19,8 +19,17 @@
 }
 
 /* In preview mode, show only the first slide (no JS required) */
-.block-editor-page .icts-hero-slider.is-previewing .icts-hero-slider__track > *:not(:first-child) {
+.block-editor-page .icts-hero-slider-block.is-previewing .wp-block[data-type="icts-europe/hero-slide"]:not(:first-of-type) {
   display: none !important;
+}
+/* Preview mode is view-only */
+.block-editor-page .icts-hero-slider.is-previewing .wp-block[data-type="icts-europe/hero-slide"] {
+  pointer-events: none;
+}
+/* Hide block appender while previewing */
+.block-editor-page .icts-hero-slider.is-previewing .block-list-appender,
+.block-editor-page .icts-hero-slider.is-previewing .block-editor-button-block-appender {
+  display: none;
 }
 
 /* Reset full-width breakout in the editor to avoid overlapping meta boxes */

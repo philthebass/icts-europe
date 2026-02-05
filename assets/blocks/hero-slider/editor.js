@@ -187,10 +187,21 @@
     category: 'layout',
     supports: { align: ['full'], html: false, anchor: true },
     attributes: { preview: { type: 'boolean', default: false } },
-    edit: function () {
+    edit: function (props) {
+      const { attributes: { preview }, setAttributes } = props;
 
-      return el('div', { className: 'icts-hero-slider-block alignfull' },
-        el('section', { className: 'icts-hero-slider' },
+      return el('div', { className: 'icts-hero-slider-block alignfull' + (preview ? ' is-previewing' : '') },
+        el(BlockControls, {},
+          el(ToolbarGroup, {},
+            el(ToolbarButton, {
+              icon: preview ? 'visibility' : 'hidden',
+              label: preview ? __('Exit preview', 'icts-europe') : __('Preview', 'icts-europe'),
+              isPressed: !!preview,
+              onClick: function () { setAttributes({ preview: !preview }); }
+            })
+          )
+        ),
+        el('section', { className: 'icts-hero-slider' + (preview ? ' is-previewing' : '') },
           el('div', { className: 'icts-hero-slider__track' },
             el(InnerBlocks, {
               allowedBlocks: ['icts-europe/hero-slide'],
