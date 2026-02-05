@@ -151,12 +151,10 @@ body.rtl .icts-hero-slider__content,
 .icts-hero-slider__button.wp-element-button {
     align-self: flex-start;
     margin-top: 0;
-
     background-color: var(--wp--preset--color--white);
     color: var(--wp--preset--color--brand-primary);
     border: 2px solid var(--wp--preset--color--white);
-
-    /* Slimmer vertical, slightly wider horizontal per comp */
+    font-weight: 500;
     padding-block: 0.5em;
     padding-inline: 1.4em;
 
