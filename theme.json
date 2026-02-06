@@ -84,7 +84,7 @@
 					"slug": "warm-grey"
 				},
 				{
-					"color": "#ebeff2",
+					"color": "rgb(235, 239, 242)",
 					"name": "Light Grey Blue",
 					"slug": "light-grey-blue"
 				},
