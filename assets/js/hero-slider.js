@@ -15,13 +15,19 @@
 
             const isEditor = !!(document.body && document.body.classList.contains('block-editor-page'));
             const isRtl = !!(document.documentElement && document.documentElement.dir === 'rtl');
+            const prefersReducedMotion = !!(
+                window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            );
+
+            const autoPlayMs = !isEditor && !prefersReducedMotion ? 7000 : 0;
 
             // eslint-disable-next-line no-undef
             const flkty = new Flickity(sliderEl, {
                 cellSelector: '.icts-hero-slider__slide',
                 wrapAround: true,
-                autoPlay: isEditor ? false : 7000,
-                pauseAutoPlayOnHover: isEditor ? false : true,
+                autoPlay: autoPlayMs || false,
+                pauseAutoPlayOnHover: !!autoPlayMs,
                 prevNextButtons: isEditor ? true : false,
                 pageDots: false,
                 rightToLeft: isRtl,
@@ -32,6 +38,15 @@
             });
 
             const container = sliderEl.closest('.icts-hero-slider');
+            if (container) {
+                if (autoPlayMs) {
+                    container.style.setProperty(
+                        '--icts-hero-autoplay',
+                        String(autoPlayMs) + 'ms'
+                    );
+                }
+                container.classList.toggle('is-hero-no-autoplay', !autoPlayMs);
+            }
             // Preserve editor-selected slide across re-renders
             let savedIndex = 0;
             if (container && container.dataset && container.dataset.ictsSelectedIndex) {

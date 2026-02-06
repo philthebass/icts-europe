@@ -24,6 +24,18 @@
     position: relative;
     width: 100%;
     color: var(--wp--preset--color--base, #ffffff);
+
+    /* Layout tuning (XD spec) */
+    --icts-hero-content-padding-inline: var(--wp--preset--spacing--medium, 1.5rem);
+    --icts-hero-content-padding-top: clamp(3rem, 7vh, 4rem);
+    --icts-hero-content-gap: 1.25rem;
+
+    /* Indicators */
+    --icts-hero-indicators-offset: 4rem; /* space under bars */
+    --icts-hero-indicator-width: 117px;
+    --icts-hero-indicator-height: 13px;
+    --icts-hero-indicator-border-width: 2px;
+    --icts-hero-indicator-radius: 2px;
 }
 
 /* Track / slide area */
@@ -100,14 +112,21 @@ body.rtl .icts-hero-slider__overlay,
     max-width: var(--wp--style--global--content-size, 1200px);
     margin-inline: auto;
 
-    padding-inline: 0;
-    padding-block: clamp(3rem, 7vh, 4rem);
+    /* Extra gutter to match XD spacing */
+    padding-inline: var(--icts-hero-content-padding-inline);
+    padding-block:
+        var(--icts-hero-content-padding-top)
+        calc(
+            var(--icts-hero-indicators-offset) +
+            var(--icts-hero-indicator-height) +
+            var(--icts-hero-content-gap)
+        );
 
     display: flex;
     flex-direction: column;
     justify-content: flex-end;      /* push stack towards bottom */
     align-items: flex-start;        /* left align */
-    gap: 1.25rem;                    /* equal-ish spacing in the stack */
+    gap: var(--icts-hero-content-gap); /* equal spacing in the stack */
 
     min-height: 100%;               /* IMPORTANT: use full slide height */
 }
@@ -192,11 +211,12 @@ body.rtl .icts-hero-slider__button.wp-element-button,
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 2rem;
+    /* Extra breathing room under the indicator bars (XD spec) */
+    bottom: var(--icts-hero-indicators-offset);
     width: 100%;
     max-width: var(--wp--style--global--content-size, 1200px);
     margin-inline: auto;
-    padding-inline: 0; /* align with hero content */
+    padding-inline: var(--icts-hero-content-padding-inline); /* align with hero content */
     display: flex;
     justify-content: flex-start;
     gap: 0.75rem;
@@ -221,24 +241,81 @@ body.rtl .icts-hero-slider__indicators,
 }
 
 .icts-hero-slider__indicator-bar {
-    width: 72px;
-    height: 4px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    background: transparent;
-    box-sizing: border-box;
+    width: var(--icts-hero-indicator-width);
+    height: var(--icts-hero-indicator-height);
+    border-radius: var(--icts-hero-indicator-radius);
+    position: relative;
+    overflow: hidden;
     opacity: 0.7;
     transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
         opacity 0.2s ease;
+}
+
+/* Border */
+.icts-hero-slider__indicator-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: var(--icts-hero-indicator-border-width) solid rgba(255, 255, 255, 0.8);
+    z-index: 1;
+    pointer-events: none;
+    transition: border-color 0.2s ease;
+}
+
+/* Timer fill */
+.icts-hero-slider__indicator-bar::after {
+    content: "";
+    position: absolute;
+    inset: var(--icts-hero-indicator-border-width);
+    border-radius: inherit;
+    background-color: #ffffff;
+    transform: scaleX(0);
+    transform-origin: left center;
+    z-index: 0;
+}
+
+/* RTL: fill from the right */
+:dir(rtl) .icts-hero-slider__indicator-bar::after,
+body.rtl .icts-hero-slider__indicator-bar::after,
+[dir="rtl"] .icts-hero-slider__indicator-bar::after {
+    transform-origin: right center;
+}
+
+@keyframes icts-hero-indicator-fill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
 }
 
 /* Active slide */
 .icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar {
-    background-color: #ffffff;
-    border-color: #ffffff;
     opacity: 1;
+}
+
+.icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::before {
+    border-color: #ffffff;
+}
+
+.icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::after {
+    animation: icts-hero-indicator-fill var(--icts-hero-autoplay, 7000ms) linear forwards;
+}
+
+/* Pause the timer when the slider is hovered (matches Flickity pauseAutoPlayOnHover) */
+.icts-hero-slider:hover .icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::after {
+    animation-play-state: paused;
+}
+
+/* If autoplay is disabled (or motion reduced), keep the active bar filled without animating */
+.icts-hero-slider.is-hero-no-autoplay .icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::after {
+    animation: none;
+    transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::after {
+        animation: none;
+        transform: scaleX(1);
+    }
 }
 
 /* Hover / focus */
@@ -254,24 +331,16 @@ body.rtl .icts-hero-slider__indicators,
 
 
 @media (max-width: 960px) {
+    .icts-hero-slider {
+        --icts-hero-content-padding-top: 2.5rem;
+        --icts-hero-indicators-offset: 1.75rem;
+        --icts-hero-indicator-width: 48px;
+        --icts-hero-indicator-height: 5px;
+        --icts-hero-indicator-border-width: 1.5px;
+    }
+
     .icts-hero-slider__track {
         height: min(70vh, 480px);
         min-height: 360px;
-    }
-
-    .icts-hero-slider__content {
-        padding-inline: 1.5rem;
-        padding-block: 2.5rem 3.5rem; /* slightly tighter on small screens */
-    }
-
-    .icts-hero-slider__indicators {
-        bottom: 1.25rem;
-        padding-inline: 1.5rem;
-    }
-
-    .icts-hero-slider__indicator-bar {
-        width: 48px;
-        height: 3px;
-        border-width: 1.5px;
     }
 }
