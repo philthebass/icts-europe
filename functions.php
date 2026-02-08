@@ -96,6 +96,13 @@ function setup() {
 function enqueue_style_sheet() {
 	$handle = 'icts-europe';
 	wp_enqueue_style( $handle, get_stylesheet_uri(), array(), wp_get_theme()->get( 'Version' ) );
+	wp_enqueue_script(
+		'icts-navigation-mega-menu',
+		get_template_directory_uri() . '/assets/js/navigation-mega-menu.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
 
