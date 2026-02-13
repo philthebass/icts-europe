@@ -103,8 +103,32 @@ function enqueue_style_sheet() {
 		wp_get_theme()->get( 'Version' ),
 		true
 	);
+	wp_enqueue_script(
+		'icts-header-search-modal',
+		get_template_directory_uri() . '/assets/js/header-search-modal.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
+
+/**
+ * Render header search modal in front end only.
+ */
+function render_header_search_modal() {
+	$search_block = '<!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search\u2026","buttonText":"Search","buttonUseIcon":true,"className":"icts-header-search-modal__search"} /-->';
+	?>
+	<div class="icts-header-search-modal" id="icts-header-search-modal" role="dialog" aria-modal="true" aria-label="Site search" hidden>
+		<div class="icts-header-search-modal__backdrop" data-icts-search-close></div>
+		<div class="icts-header-search-modal__panel" role="document">
+			<button type="button" class="icts-header-search-modal__close" data-icts-search-close aria-label="<?php esc_attr_e( 'Close search', 'icts-europe' ); ?>">×</button>
+			<?php echo do_blocks( $search_block ); ?>
+		</div>
+	</div>
+	<?php
+}
+add_action( 'wp_footer', __NAMESPACE__ . '\render_header_search_modal', 20 );
 
 
 /**
