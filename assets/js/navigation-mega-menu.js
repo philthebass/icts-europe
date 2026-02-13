@@ -3,8 +3,8 @@
     // Update when debugging version/caching issues.
     window.__ICTS_NAV_MEGA_MENU_VERSION = '2026-02-12-back-debug-1';
 
-    var desktopQuery = window.matchMedia('(min-width: 960px)');
-    var mobileQuery = window.matchMedia('(max-width: 959px)');
+    var desktopQuery = window.matchMedia('(min-width: 860px)');
+    var mobileQuery = window.matchMedia('(max-width: 859px)');
     var DESKTOP_CLOSE_MS = 1000;
     var MOBILE_SLIDE_MS = 280;
 

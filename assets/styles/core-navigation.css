@@ -1,6 +1,35 @@
+/* Header navigation breakpoint alignment (desktop >= 860, mobile <= 859)
+--------------------------------------------- */
+@media (max-width: 859px) {
+	.wp-block-navigation.icts-site-header__nav .wp-block-navigation__responsive-container-open:not(.always-shown) {
+		display: flex;
+	}
+
+	.wp-block-navigation.icts-site-header__nav .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.is-menu-open) {
+		display: none;
+		position: fixed;
+		inset: 0;
+		width: auto;
+		z-index: auto;
+	}
+}
+
+@media (min-width: 860px) {
+	.wp-block-navigation.icts-site-header__nav .wp-block-navigation__responsive-container-open:not(.always-shown) {
+		display: none;
+	}
+
+	.wp-block-navigation.icts-site-header__nav .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.is-menu-open) {
+		display: block;
+		position: relative;
+		width: 100%;
+		z-index: auto;
+	}
+}
+
 /* Desktop mega menu
 --------------------------------------------- */
-@media (min-width: 960px) {
+@media (min-width: 860px) {
 	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega {
 		position: static;
 	}
@@ -169,9 +198,17 @@
 }
 
 body.rtl .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+	inline-size: 100vw;
+	max-inline-size: 100vw;
 	margin-inline-start: auto;
 	margin-inline-end: 0;
 	animation-name: icts-mobile-menu-enter-rtl;
+}
+
+body.rtl .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog {
+	inline-size: 100vw;
+	max-inline-size: 100vw;
+	margin: 0;
 }
 
 .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive-container.is-menu-open.has-modal-open .wp-block-navigation__container {
@@ -461,6 +498,8 @@ body.rtl .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive
 body.rtl .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation__submenu-container {
 	inset-inline-start: auto;
 	inset-inline-end: 0;
+	inline-size: 100vw;
+	max-inline-size: 100vw;
 	transform: translateX(-100%);
 }
 
@@ -502,6 +541,11 @@ body.rtl .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive
 	border-radius: 4px;
 	background: var(--wp--preset--color--tertiary);
 	color: var(--wp--preset--color--main);
+}
+
+.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive-container-open {
+	background: var(--wp--preset--color--brand-primary);
+	color: var(--wp--preset--color--base);
 }
 
 .wp-block-navigation.icts-nav-enhanced .wp-block-navigation__responsive-container-close {

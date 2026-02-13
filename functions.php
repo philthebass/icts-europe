@@ -110,6 +110,13 @@ function enqueue_style_sheet() {
 		wp_get_theme()->get( 'Version' ),
 		true
 	);
+	wp_enqueue_script(
+		'icts-header-language-switcher',
+		get_template_directory_uri() . '/assets/js/header-language-switcher.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
 
@@ -129,6 +136,198 @@ function render_header_search_modal() {
 	<?php
 }
 add_action( 'wp_footer', __NAMESPACE__ . '\render_header_search_modal', 20 );
+
+/**
+ * Render the header search trigger button as icon-only on the front end.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Parsed block data.
+ * @return string
+ */
+function render_header_search_trigger_button( $block_content, $block ) {
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return $block_content;
+	}
+
+	$class_name = '';
+	if ( ! empty( $block['attrs'] ) && is_array( $block['attrs'] ) && ! empty( $block['attrs']['className'] ) ) {
+		$class_name = (string) $block['attrs']['className'];
+	}
+
+	if ( '' === $class_name || false === strpos( $class_name, 'icts-site-header__search-toggle' ) ) {
+		return $block_content;
+	}
+
+	$previous_libxml_state = libxml_use_internal_errors( true );
+	$document              = new \DOMDocument( '1.0', 'UTF-8' );
+	$loaded                = $document->loadHTML(
+		'<?xml encoding="utf-8" ?><div data-icts-search-toggle-wrapper>' . $block_content . '</div>',
+		LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+	);
+
+	if ( ! $loaded ) {
+		libxml_use_internal_errors( $previous_libxml_state );
+		libxml_clear_errors();
+		return $block_content;
+	}
+
+	$anchors = $document->getElementsByTagName( 'a' );
+	if ( ! $anchors->length ) {
+		libxml_use_internal_errors( $previous_libxml_state );
+		libxml_clear_errors();
+		return $block_content;
+	}
+
+	$anchor = $anchors->item( 0 );
+	$label  = trim( wp_strip_all_tags( (string) $anchor->textContent ) );
+	if ( '' === $label ) {
+		$label = __( 'Search', 'icts-europe' );
+	}
+
+	while ( $anchor->firstChild ) {
+		$anchor->removeChild( $anchor->firstChild );
+	}
+	$anchor->setAttribute( 'aria-label', $label );
+
+	$wrapper = $document->getElementsByTagName( 'div' )->item( 0 );
+	if ( ! $wrapper ) {
+		libxml_use_internal_errors( $previous_libxml_state );
+		libxml_clear_errors();
+		return $block_content;
+	}
+
+	$output = '';
+	foreach ( $wrapper->childNodes as $child_node ) {
+		$output .= $document->saveHTML( $child_node );
+	}
+
+	libxml_use_internal_errors( $previous_libxml_state );
+	libxml_clear_errors();
+
+	return '' !== $output ? $output : $block_content;
+}
+add_filter( 'render_block_core/button', __NAMESPACE__ . '\render_header_search_trigger_button', 10, 2 );
+
+/**
+ * Render a custom front-end language switcher for Polylang.
+ *
+ * Keep the block in templates/editor for content management, but replace output
+ * on the front end so we can fully control styling and behavior.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Parsed block data.
+ * @return string
+ */
+function render_custom_polylang_language_switcher( $block_content, $block ) {
+	if ( empty( $block['blockName'] ) || 'polylang/language-switcher' !== $block['blockName'] ) {
+		return $block_content;
+	}
+
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return $block_content;
+	}
+
+	if ( ! function_exists( 'pll_the_languages' ) ) {
+		return $block_content;
+	}
+
+	$attrs                  = ! empty( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+	$show_names             = ! array_key_exists( 'show_names', $attrs ) || ! empty( $attrs['show_names'] );
+	$hide_if_no_translation = ! empty( $attrs['hide_if_no_translation'] );
+	$force_home             = ! empty( $attrs['force_home'] );
+	$languages              = pll_the_languages(
+		array(
+			'raw'                    => 1,
+			'hide_if_empty'          => 0,
+			'hide_if_no_translation' => $hide_if_no_translation,
+			'force_home'             => $force_home,
+		)
+	);
+
+	if ( empty( $languages ) || ! is_array( $languages ) ) {
+		return $block_content;
+	}
+
+	$current_language = null;
+	foreach ( $languages as $language ) {
+		if ( ! empty( $language['current_lang'] ) ) {
+			$current_language = $language;
+			break;
+		}
+	}
+
+	if ( ! $current_language ) {
+		$current_language = reset( $languages );
+	}
+
+	$toggle_label = __( 'Language selector', 'icts-europe' );
+	$current_name = ! empty( $current_language['name'] ) ? $current_language['name'] : '';
+	$current_slug = ! empty( $current_language['slug'] ) ? strtoupper( $current_language['slug'] ) : '';
+	$current_text = $show_names && '' !== $current_name ? $current_name : $current_slug;
+
+	if ( '' === $current_text ) {
+		$current_text = __( 'Language', 'icts-europe' );
+	}
+
+	$menu_id = wp_unique_id( 'icts-language-switcher-menu-' );
+	$classes = array( 'wp-block-polylang-language-switcher', 'icts-language-switcher' );
+
+	if ( ! empty( $attrs['className'] ) && is_string( $attrs['className'] ) ) {
+		foreach ( preg_split( '/\s+/', $attrs['className'] ) as $class_name ) {
+			$sanitized = sanitize_html_class( $class_name );
+			if ( '' !== $sanitized ) {
+				$classes[] = $sanitized;
+			}
+		}
+	}
+
+	$items_html = '';
+	foreach ( $languages as $language ) {
+		if ( ! is_array( $language ) ) {
+			continue;
+		}
+
+		$name       = ! empty( $language['name'] ) ? $language['name'] : '';
+		$slug       = ! empty( $language['slug'] ) ? strtoupper( $language['slug'] ) : '';
+		$item_text  = $show_names && '' !== $name ? $name : $slug;
+		$is_current = ! empty( $language['current_lang'] );
+		$url        = ! empty( $language['url'] ) ? $language['url'] : '';
+
+		if ( '' === trim( $item_text ) ) {
+			continue;
+		}
+
+		$item_inner = '<span class="icts-language-switcher__item-label">' . esc_html( $item_text ) . '</span>';
+
+		if ( $is_current || '' === $url ) {
+			$items_html .= '<li role="none" class="icts-language-switcher__item' . ( $is_current ? ' is-current' : '' ) . '">';
+			$items_html .= '<span class="icts-language-switcher__item-link is-current" role="menuitemradio" aria-checked="' . ( $is_current ? 'true' : 'false' ) . '">' . $item_inner . '</span>';
+			$items_html .= '</li>';
+			continue;
+		}
+
+		$items_html .= '<li role="none" class="icts-language-switcher__item' . ( $is_current ? ' is-current' : '' ) . '">';
+		$items_html .= '<a class="icts-language-switcher__item-link" role="menuitemradio" aria-checked="false" href="' . esc_url( $url ) . '">' . $item_inner . '</a>';
+		$items_html .= '</li>';
+	}
+
+	if ( '' === $items_html ) {
+		return $block_content;
+	}
+
+	$output = '<div class="' . esc_attr( implode( ' ', array_unique( $classes ) ) ) . '" data-icts-language-switcher>';
+	$output .= '<button type="button" class="icts-language-switcher__toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="' . esc_attr( $menu_id ) . '" aria-label="' . esc_attr( $toggle_label ) . '">';
+	$output .= '<span class="icts-language-switcher__label">' . esc_html( $current_text ) . '</span>';
+	$output .= '<span class="icts-language-switcher__chevron" aria-hidden="true"></span>';
+	$output .= '</button>';
+	$output .= '<ul class="icts-language-switcher__menu" id="' . esc_attr( $menu_id ) . '" role="menu" hidden>';
+	$output .= $items_html;
+	$output .= '</ul>';
+	$output .= '</div>';
+
+	return $output;
+}
+add_filter( 'render_block', __NAMESPACE__ . '\render_custom_polylang_language_switcher', 10, 2 );
 
 
 /**
