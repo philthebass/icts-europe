@@ -27,3 +27,5 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-15 — Added native Solutions Slider block pair — Needed a page-width locked, editor-friendly slider with hero-style timer indicators and reusable Flickity setup — New `icts-europe/solutions-slider` + `icts-europe/solutions-slide` blocks ship with custom editor UI, front-end autoplay indicators, and constrained responsive styling.
 
 2026-02-15 — Added decorative animated strands to Solutions Slider wrapper — Needed an initial branded motif matching XD style without adding plugin/code complexity — Implemented lightweight SVG-based pseudo-elements with reduced-motion and mobile/editor fallbacks; can be swapped for final XD-exported strand SVG later.
+
+2026-02-15 — Switched Solutions Slider strands to static (no motion) — Animated motion did not meet design preference — Strands remain as decorative SVG pseudo-elements with the same placement and responsive/editor fallbacks.
