@@ -29,7 +29,7 @@
                 contain: false,
                 wrapAround: true,
                 pageDots: true,
-                prevNextButtons: true,
+                prevNextButtons: false,
                 adaptiveHeight: true,
                 // autoplay every 5 seconds
                 autoPlay: 5000,

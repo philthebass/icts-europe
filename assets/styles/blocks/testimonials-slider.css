@@ -3,13 +3,20 @@
 
 .block-testimonials-slider {
     padding: 4rem 0 5rem; /* extra bottom space above footer */
+    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 /* Constrain the Flickity track to page width */
 .block-testimonials-slider .testimonials-slider {
-    max-width: 960px;           /* adjust to match your content width */
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     position: relative;
+}
+
+.block-testimonials-slider .flickity-viewport {
+    overflow: hidden;
 }
 
 /* One slide per viewport */
@@ -31,13 +38,20 @@
 
 .block-testimonials-slider .testimonial-quote {
     margin: 0 0 2rem;
+    font-size: var(--wp--preset--font-size--base);
+    line-height: var(--wp--custom--line-height--body);
+}
+
+.block-testimonials-slider .testimonial-quote p {
+    font-size: inherit;
+    line-height: inherit;
 }
 
 /* Name + Job Title (single line) */
 .block-testimonials-slider .testimonial-person {
     margin-top: 1.5rem;
     font-weight: 900;      /* slightly heavier than body text */
-    font-size: 1.05rem;
+    font-size: var(--wp--preset--font-size--small);
     line-height: 1.4;
 }
 
@@ -103,17 +117,18 @@
     transform: translateY(-50%);
     background: transparent;
     box-shadow: none;
+    display: none;
 }
 
 /* Move arrows outside the text column */
 .block-testimonials-slider .flickity-prev-next-button.previous {
     left: 1rem;
-    transform: translate(-150%, -50%);
+    transform: translateY(-50%);
 }
 
 .block-testimonials-slider .flickity-prev-next-button.next {
     right: 1rem;
-    transform: translate(150%, -50%);
+    transform: translateY(-50%);
 }
 
 /* Dots spacing */

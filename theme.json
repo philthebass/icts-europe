@@ -402,11 +402,6 @@
 					"fontSize": "var(--wp--preset--font-size--small)"
 				}
 			},
-			"core/paragraph": {
-				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--nunito-sans)"
-				}
-			},
 			"core/preformatted": {
 				"border": {
 					"radius": "6px"
