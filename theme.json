@@ -37,16 +37,21 @@
 			"defaultPalette": false,
 			"duotone": [],
 			"gradients": [],
-			"palette": [
-				{
-					"color": "rgb(0, 53, 101)",
-					"name": "Brand Primary",
-					"slug": "brand-primary"
-				},
-				{
-					"color": "rgb(193, 10, 39)",
-					"name": "Brand Secondary",
-					"slug": "brand-secondary"
+				"palette": [
+					{
+						"color": "rgb(0, 53, 101)",
+						"name": "Brand Primary",
+						"slug": "brand-primary"
+					},
+					{
+						"color": "rgb(2, 68, 128)",
+						"name": "Brand Primary Hover",
+						"slug": "brand-primary-hover"
+					},
+					{
+						"color": "rgb(193, 10, 39)",
+						"name": "Brand Secondary",
+						"slug": "brand-secondary"
 				},
 				{
 					"color": "rgb(251 190 98)",
@@ -434,13 +439,13 @@
 			"text": "var(--wp--preset--color--near-black)"
 		},
 		"elements": {
-			"button": {
-				":hover": {
-					"color": {
-						"background": "var(--wp--preset--color--brand-tertiary)",
-						"text": "var(--wp--preset--color--white)"
-					}
-				},
+				"button": {
+					":hover": {
+						"color": {
+							"background": "var(--wp--preset--color--brand-primary-hover)",
+							"text": "var(--wp--preset--color--white)"
+						}
+					},
 				"border": {
 					"radius": "6px"
 				},
