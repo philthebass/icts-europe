@@ -336,7 +336,7 @@ body.rtl .icts-hero-slider__indicator-bar::after,
         --icts-hero-indicators-offset: 1.75rem;
         --icts-hero-indicator-width: 48px;
         --icts-hero-indicator-height: 5px;
-        --icts-hero-indicator-border-width: 1.5px;
+        --icts-hero-indicator-border-width: 1px;
     }
 
     .icts-hero-slider__track {

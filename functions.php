@@ -14,23 +14,43 @@ namespace ICTS_Europe;
 require_once __DIR__ . '/inc/blocks.php';
 // Register native (JS) blocks assets.
 \add_action( 'init', function () {
-    // Editor script for native hero blocks (no build step; uses wp globals).
-    $handle = 'icts-hero-blocks-editor';
+    $theme_dir = get_template_directory();
+    $theme_ver = \wp_get_theme()->get( 'Version' );
+    $asset_ver = static function ( $relative_path ) use ( $theme_dir, $theme_ver ) {
+        $absolute_path = $theme_dir . $relative_path;
+        return file_exists( $absolute_path ) ? (string) filemtime( $absolute_path ) : $theme_ver;
+    };
+
+    // Editor scripts for native slider blocks (no build step; uses wp globals).
+    $hero_editor_handle = 'icts-hero-blocks-editor';
     \wp_register_script(
-        $handle,
+        $hero_editor_handle,
         get_template_directory_uri() . '/assets/blocks/hero-slider/editor.js',
         [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
-        \wp_get_theme()->get( 'Version' ),
+        $asset_ver( '/assets/blocks/hero-slider/editor.js' ),
+        true
+    );
+    $solutions_editor_handle = 'icts-solutions-blocks-editor';
+    \wp_register_script(
+        $solutions_editor_handle,
+        get_template_directory_uri() . '/assets/blocks/solutions-slider/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
+        $asset_ver( '/assets/blocks/solutions-slider/editor.js' ),
         true
     );
 
     // Front-end assets (shared with editor preview if needed).
-    $ver = \wp_get_theme()->get( 'Version' );
     \wp_register_style(
         'icts-hero-slider-style',
         get_template_directory_uri() . '/assets/styles/blocks/hero-slider.css',
         [],
-        $ver
+        $asset_ver( '/assets/styles/blocks/hero-slider.css' )
+    );
+    \wp_register_style(
+        'icts-solutions-slider-style',
+        get_template_directory_uri() . '/assets/styles/blocks/solutions-slider.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/solutions-slider.css' )
     );
     \wp_register_style(
         'flickity',
@@ -49,19 +69,37 @@ require_once __DIR__ . '/inc/blocks.php';
         'icts-hero-slider-frontend',
         get_template_directory_uri() . '/assets/js/hero-slider.js',
         [ 'flickity' ],
-        $ver,
+        $asset_ver( '/assets/js/hero-slider.js' ),
+        true
+    );
+    \wp_register_script(
+        'icts-solutions-slider-frontend',
+        get_template_directory_uri() . '/assets/js/solutions-slider.js',
+        [ 'flickity' ],
+        $asset_ver( '/assets/js/solutions-slider.js' ),
         true
     );
 
     \register_block_type( 'icts-europe/hero-slider', [
-        'editor_script' => $handle,
+        'editor_script' => $hero_editor_handle,
         'style'         => [ 'icts-hero-slider-style', 'flickity' ],
         'view_script'   => [ 'flickity', 'icts-hero-slider-frontend' ],
     ] );
 
     \register_block_type( 'icts-europe/hero-slide', [
-        'editor_script' => $handle,
+        'editor_script' => $hero_editor_handle,
         'parent'        => [ 'icts-europe/hero-slider' ],
+    ] );
+
+    \register_block_type( 'icts-europe/solutions-slider', [
+        'editor_script' => $solutions_editor_handle,
+        'style'         => [ 'icts-solutions-slider-style', 'flickity' ],
+        'view_script'   => [ 'flickity', 'icts-solutions-slider-frontend' ],
+    ] );
+
+    \register_block_type( 'icts-europe/solutions-slide', [
+        'editor_script' => $solutions_editor_handle,
+        'parent'        => [ 'icts-europe/solutions-slider' ],
     ] );
 } );
 

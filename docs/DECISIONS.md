@@ -23,3 +23,7 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-13 — Replaced front-end Polylang select with custom language popover — Native `<select>` styling was too limited for design parity and RTL control — Theme now intercepts `polylang/language-switcher` output on front end via `render_block`, using `pll_the_languages( raw )` data plus custom JS/CSS; editor block workflow remains unchanged.
 
 2026-02-13 — Moved header container spacing/border from block inline styles to scoped CSS — Inline block styles forced repeated `!important` overrides across breakpoints — Header defaults now live in `assets/styles/core-template-part.css`, which reduces `!important` usage and makes responsive changes cleaner.
+
+2026-02-15 — Added native Solutions Slider block pair — Needed a page-width locked, editor-friendly slider with hero-style timer indicators and reusable Flickity setup — New `icts-europe/solutions-slider` + `icts-europe/solutions-slide` blocks ship with custom editor UI, front-end autoplay indicators, and constrained responsive styling.
+
+2026-02-15 — Added decorative animated strands to Solutions Slider wrapper — Needed an initial branded motif matching XD style without adding plugin/code complexity — Implemented lightweight SVG-based pseudo-elements with reduced-motion and mobile/editor fallbacks; can be swapped for final XD-exported strand SVG later.
