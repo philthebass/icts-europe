@@ -111,6 +111,14 @@ require_once __DIR__ . '/inc/blocks.php';
         [],
         \wp_get_theme()->get( 'Version' )
     );
+
+    $team_profile_style_path = get_template_directory() . '/assets/styles/blocks/team-member-profile.css';
+    \wp_enqueue_style(
+        'icts-team-member-profile-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/team-member-profile.css',
+        [],
+        \file_exists( $team_profile_style_path ) ? (string) \filemtime( $team_profile_style_path ) : \wp_get_theme()->get( 'Version' )
+    );
 } );
 
 /**
@@ -656,9 +664,194 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
             'management-team',
             'CPT Archives'
         );
+
+        \pll_register_string(
+            'team_member_archive_title',
+            'Management Team',
+            'CPT Archives'
+        );
+
+        \pll_register_string(
+            'management_team_page_heading',
+            'Meet our Executive and Management Teams',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_sidebar_title',
+            'Leadership Team',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_sidebar_aria',
+            'Other team members',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_sidebar_empty',
+            'No other team members found.',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_linkedin_label',
+            'LinkedIn',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_linkedin_aria',
+            'Visit %s on LinkedIn',
+            'Theme: Team Member'
+        );
     }
 } 
 );
+
+/**
+ * Return localized archive title label for the Team Member CPT.
+ *
+ * @return string
+ */
+function get_team_member_archive_title_label() {
+    $label = \__( 'Management Team', 'icts-europe' );
+
+    if ( \function_exists( 'pll__' ) ) {
+        $translated = \pll__( $label );
+        if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+            $label = $translated;
+        }
+    }
+
+    return $label;
+}
+
+/**
+ * Return localized H1 label for Team Member archive page heading.
+ *
+ * @return string
+ */
+function get_team_member_archive_page_heading_label() {
+    $label = \__( 'Meet our Executive and Management Teams', 'icts-europe' );
+
+    if ( \function_exists( 'pll__' ) ) {
+        $translated = \pll__( $label );
+        if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+            $label = $translated;
+        }
+    }
+
+    return $label;
+}
+
+/**
+ * Remove "Archive" from Yoast titles for Team Member archive pages.
+ *
+ * @param string $title Current SEO title.
+ * @return string
+ */
+function filter_team_member_archive_yoast_title( $title ) {
+    if ( ! \is_post_type_archive( 'team-member' ) ) {
+        return $title;
+    }
+
+    $site_name = \wp_specialchars_decode( \get_bloginfo( 'name' ), \ENT_QUOTES );
+    $label     = get_team_member_archive_title_label();
+
+    return \sprintf( '%1$s - %2$s', $label, $site_name );
+}
+add_filter( 'wpseo_title', __NAMESPACE__ . '\filter_team_member_archive_yoast_title' );
+add_filter( 'wpseo_opengraph_title', __NAMESPACE__ . '\filter_team_member_archive_yoast_title' );
+add_filter( 'wpseo_twitter_title', __NAMESPACE__ . '\filter_team_member_archive_yoast_title' );
+
+/**
+ * Keep Yoast CollectionPage schema title in sync with filtered archive title.
+ *
+ * @param array $data Schema node data.
+ * @return array
+ */
+function filter_team_member_archive_yoast_schema_name( $data ) {
+    if ( ! \is_post_type_archive( 'team-member' ) || ! \is_array( $data ) ) {
+        return $data;
+    }
+
+    $site_name    = \wp_specialchars_decode( \get_bloginfo( 'name' ), \ENT_QUOTES );
+    $archive_name = \sprintf( '%1$s - %2$s', get_team_member_archive_title_label(), $site_name );
+
+    $data['name'] = $archive_name;
+
+    return $data;
+}
+add_filter( 'wpseo_schema_webpage', __NAMESPACE__ . '\filter_team_member_archive_yoast_schema_name', 10, 1 );
+
+/**
+ * Replace Team Member archive H1 block text with a translatable Polylang string.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Parsed block data.
+ * @return string
+ */
+function filter_team_member_archive_heading( $block_content, $block ) {
+    if ( ! \is_post_type_archive( 'team-member' ) ) {
+        return $block_content;
+    }
+
+    if ( empty( $block['attrs'] ) || ! \is_array( $block['attrs'] ) ) {
+        return $block_content;
+    }
+
+    $level = isset( $block['attrs']['level'] ) ? (int) $block['attrs']['level'] : 2;
+    if ( 1 !== $level ) {
+        return $block_content;
+    }
+
+    $default_heading = 'Meet our Executive and Management Teams';
+    if ( false === \strpos( \wp_strip_all_tags( $block_content ), $default_heading ) ) {
+        return $block_content;
+    }
+
+    $replacement_heading = get_team_member_archive_page_heading_label();
+
+    $previous_libxml_state = \libxml_use_internal_errors( true );
+    $document              = new \DOMDocument( '1.0', 'UTF-8' );
+    $loaded                = $document->loadHTML(
+        '<?xml encoding="utf-8" ?><div data-icts-team-heading-wrapper>' . $block_content . '</div>',
+        \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD
+    );
+
+    if ( ! $loaded ) {
+        \libxml_use_internal_errors( $previous_libxml_state );
+        \libxml_clear_errors();
+        return $block_content;
+    }
+
+    $wrapper = $document->getElementsByTagName( 'div' )->item( 0 );
+    $heading = $document->getElementsByTagName( 'h1' )->item( 0 );
+
+    if ( ! $wrapper || ! $heading ) {
+        \libxml_use_internal_errors( $previous_libxml_state );
+        \libxml_clear_errors();
+        return $block_content;
+    }
+
+    while ( $heading->firstChild ) {
+        $heading->removeChild( $heading->firstChild );
+    }
+    $heading->appendChild( $document->createTextNode( $replacement_heading ) );
+
+    $output = '';
+    foreach ( $wrapper->childNodes as $child_node ) {
+        $output .= $document->saveHTML( $child_node );
+    }
+
+    \libxml_use_internal_errors( $previous_libxml_state );
+    \libxml_clear_errors();
+
+    return '' !== $output ? $output : $block_content;
+}
+add_filter( 'render_block_core/heading', __NAMESPACE__ . '\filter_team_member_archive_heading', 10, 2 );
 
 \add_filter( 'register_post_type_args', function ( $args, $post_type ) {
 

@@ -1,0 +1,295 @@
+.team-member-profile {
+	--icts-team-member-profile-panel-radius: 6px;
+	--icts-team-member-profile-gap: clamp(1.5rem, 3vw, 3rem);
+	--icts-team-member-profile-inner-gap: clamp(1.25rem, 2.4vw, 2.2rem);
+	--icts-team-member-profile-section-padding: clamp(1.25rem, 2.2vw, 2rem);
+	--icts-team-member-profile-sidebar-padding: clamp(1rem, 2vw, 1.4rem);
+	--icts-team-member-profile-sidebar-item-gap: 0.25rem;
+	--icts-team-member-profile-linkedin-size: 1.6rem;
+	margin: 0;
+}
+
+.team-member-profile__layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+	gap: var(--icts-team-member-profile-gap);
+	align-items: start;
+}
+
+.team-member-profile__main,
+.team-member-profile__sidebar {
+	background: var(--wp--preset--color--light-grey-blue);
+	border-radius: var(--icts-team-member-profile-panel-radius);
+}
+
+.team-member-profile__main {
+	padding: var(--icts-team-member-profile-section-padding);
+}
+
+.team-member-profile__inner {
+	display: grid;
+	grid-template-columns: minmax(14rem, 21rem) minmax(0, 1fr);
+	gap: var(--icts-team-member-profile-inner-gap);
+	align-items: start;
+}
+
+.team-member-profile__media {
+	inline-size: 100%;
+	max-inline-size: clamp(11rem, 24vw, 18rem);
+}
+
+.team-member-profile__image {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	border-radius: var(--icts-team-member-profile-panel-radius);
+}
+
+.team-member-profile__content {
+	min-inline-size: 0;
+}
+
+.team-member-profile__header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-bottom: clamp(0.85rem, 1.6vw, 1.25rem);
+}
+
+.team-member-profile__name {
+	margin: 0;
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.team-member-profile__role {
+	margin: 0;
+	color: var(--wp--preset--color--secondary);
+}
+
+.team-member-profile__linkedin {
+	margin: 0.35rem 0 0;
+}
+
+.team-member-profile__linkedin-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--wp--preset--color--brand-primary);
+	text-decoration: none;
+	transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.team-member-profile__linkedin-link:hover,
+.team-member-profile__linkedin-link:focus-visible {
+	color: var(--wp--preset--color--brand-tertiary);
+	transform: translateY(-1px);
+	text-decoration: none;
+}
+
+.team-member-profile__linkedin-icon {
+	inline-size: var(--icts-team-member-profile-linkedin-size);
+	block-size: var(--icts-team-member-profile-linkedin-size);
+	display: block;
+}
+
+.team-member-profile__bio > *:first-child {
+	margin-top: 0;
+}
+
+.team-member-profile__bio > *:last-child {
+	margin-bottom: 0;
+}
+
+.team-member-profile__sidebar {
+	padding: var(--icts-team-member-profile-sidebar-padding);
+}
+
+.team-member-profile__sidebar-title {
+	margin: 0 0 0.9rem;
+	color: var(--wp--preset--color--brand-primary);
+	font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2rem);
+	line-height: 1.15;
+}
+
+.team-member-profile__sidebar-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+}
+
+.team-member-profile__sidebar-item {
+	padding-bottom: 0.85rem;
+	border-bottom: 1px solid var(--wp--preset--color--border-light);
+}
+
+.team-member-profile__sidebar-member {
+	display: grid;
+	grid-template-columns: 4.5rem minmax(0, 1fr);
+	gap: 0.75rem;
+	align-items: center;
+}
+
+.team-member-profile__sidebar-image-link {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+	border-radius: var(--icts-team-member-profile-panel-radius);
+	position: relative;
+	isolation: isolate;
+}
+
+.team-member-profile__sidebar-image-link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-color: color-mix(in srgb, var(--wp--preset--color--brand-primary) 35%, transparent);
+	opacity: 0;
+	transition: opacity 0.25s ease;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.team-member-profile__sidebar-image {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+	border-radius: var(--icts-team-member-profile-panel-radius);
+	transform: scale(1);
+	transform-origin: center;
+	transition: transform 0.25s ease;
+}
+
+.team-member-profile__sidebar-image-link:hover::after,
+.team-member-profile__sidebar-image-link:focus-visible::after {
+	opacity: 0.18;
+}
+
+.team-member-profile__sidebar-image-link:hover .team-member-profile__sidebar-image,
+.team-member-profile__sidebar-image-link:focus-visible .team-member-profile__sidebar-image {
+	transform: scale(1.03);
+}
+
+.team-member-profile__sidebar-item:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.team-member-profile__sidebar-member-text {
+	min-inline-size: 0;
+}
+
+.team-member-profile__sidebar-link {
+	display: inline-block;
+	font-weight: 700;
+	text-decoration: none;
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.team-member-profile__sidebar-link:hover,
+.team-member-profile__sidebar-link:focus-visible {
+	color: var(--wp--preset--color--brand-primary-hover);
+	text-decoration: none;
+}
+
+.team-member-profile__sidebar-role {
+	margin: var(--icts-team-member-profile-sidebar-item-gap) 0 0;
+	color: var(--wp--preset--color--secondary);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.35;
+}
+
+.team-member-profile__sidebar-empty {
+	margin: 0;
+	color: var(--wp--preset--color--secondary);
+}
+
+@media (max-width: 1280px) {
+	.team-member-profile__inner {
+		grid-template-columns: minmax(10.5rem, 16rem) minmax(0, 1fr);
+		gap: clamp(0.75rem, 1.2vw, 1rem);
+	}
+
+	.team-member-profile__media {
+		max-inline-size: clamp(10.5rem, 20vw, 16rem);
+	}
+}
+
+@media (max-width: 1200px) {
+	.team-member-profile__layout {
+		grid-template-columns: 1fr;
+	}
+
+	.team-member-profile__inner {
+		grid-template-columns: minmax(10.5rem, 15rem) minmax(0, 1fr);
+		gap: clamp(0.75rem, 1.4vw, 1rem);
+	}
+
+	.team-member-profile__sidebar-list {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.team-member-profile__sidebar-item,
+	.team-member-profile__sidebar-item:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+}
+
+@media (max-width: 960px) {
+	.team-member-profile__media {
+		max-inline-size: clamp(10.5rem, 28vw, 15rem);
+	}
+}
+
+@media (max-width: 768px) {
+	.team-member-profile__inner {
+		grid-template-columns: 1fr;
+	}
+
+	.team-member-profile__media {
+		max-inline-size: 100%;
+		margin-inline: 0;
+	}
+
+	.team-member-profile__sidebar-member {
+		grid-template-columns: 4rem minmax(0, 1fr);
+	}
+
+	.team-member-profile__sidebar-list {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 638px) {
+	.team-member-profile__sidebar-list {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.team-member-profile__linkedin-link,
+	.team-member-profile__sidebar-image-link::after,
+	.team-member-profile__sidebar-image {
+		transition: none;
+	}
+}
+
+.editor-styles-wrapper .wp-block[data-type="acf/team-member-profile"] {
+	max-width: 100%;
+}
+
+.editor-styles-wrapper .wp-block[data-type="acf/team-member-profile"] .acf-block-component {
+	margin: 0;
+}
+
+.editor-styles-wrapper .wp-block[data-type="acf/team-member-profile"] .team-member-profile {
+	margin: 0;
+}

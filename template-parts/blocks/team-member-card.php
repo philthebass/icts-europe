@@ -56,11 +56,11 @@ $portrait = get_the_post_thumbnail(
     <?php endif; ?>
 
     <div class="team-member-card__body">
-        <h3 class="team-member-card__name">
+        <h5 class="team-member-card__name">
             <a href="<?php echo esc_url( $permalink ); ?>">
                 <?php echo esc_html( $title ); ?>
             </a>
-        </h3>
+        </h5>
 
         <?php if ( $job_title ) : ?>
             <p class="team-member-card__role">

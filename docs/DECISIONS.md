@@ -29,3 +29,13 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-15 — Added decorative animated strands to Solutions Slider wrapper — Needed an initial branded motif matching XD style without adding plugin/code complexity — Implemented lightweight SVG-based pseudo-elements with reduced-motion and mobile/editor fallbacks; can be swapped for final XD-exported strand SVG later.
 
 2026-02-15 — Switched Solutions Slider strands to static (no motion) — Animated motion did not meet design preference — Strands remain as decorative SVG pseudo-elements with the same placement and responsive/editor fallbacks.
+
+2026-02-16 — Team Member single template uses a two-column profile+sidebar block layout — Needed a usable baseline for CPT singles with discoverability of adjacent profiles and cleaner social treatment — `acf/team-member-profile` now renders profile content plus an "other team members" sidebar, with LinkedIn icon output only when the ACF URL exists and brand-tertiary hover transition.
+
+2026-02-16 — Registered Team Member profile UI strings with Polylang and switched block output to `pll__()` fallback — Needed direct per-language editing in Polylang String Translations for labels like "Leadership Team" — Strings now appear under `Theme: Team Member`, while untranslated sites still use theme textdomain defaults.
+
+2026-02-16 — Enqueued Team Member profile stylesheet in block editor and added editor-specific preview polish — Single template preview looked inconsistent in Site Editor — `assets/styles/blocks/team-member-profile.css` is now loaded in editor and includes scoped preview layout rules.
+
+2026-02-16 — Overrode Yoast Team Member archive SEO title/schema naming to remove "Archive" — Default Yoast archive template produced "Management Team Archive - …" in title/OG/schema — Theme now filters Yoast title/OG/Twitter/schema for `team-member` archives to output "Management Team - Site Name", with Polylang-aware label translation.
+
+2026-02-16 — Team Member archive H1 is translated via Polylang string mapping — Block template heading text is static HTML, so direct `__()` output is not available in template markup — Theme now registers `management_team_page_heading` and swaps the archive H1 block text at render time for `team-member` archive requests.

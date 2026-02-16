@@ -84,6 +84,16 @@ namespace ICTS_Europe;
                     'align'  => false,
                     'anchor' => true,
                 ],
+                'enqueue_assets'  => function () {
+                    $style_path = \get_template_directory() . '/assets/styles/blocks/team-member-card.css';
+
+                    \wp_enqueue_style(
+                        'icts-team-member-card',
+                        \get_template_directory_uri() . '/assets/styles/blocks/team-member-card.css',
+                        [],
+                        \file_exists( $style_path ) ? (string) \filemtime( $style_path ) : '1.0.0'
+                    );
+                },
             ]
         );
 
@@ -101,6 +111,16 @@ namespace ICTS_Europe;
                     'align'  => false,
                     'anchor' => true,
                 ],
+                'enqueue_assets'  => function () {
+                    $style_path = \get_template_directory() . '/assets/styles/blocks/team-member-profile.css';
+
+                    \wp_enqueue_style(
+                        'icts-team-member-profile',
+                        \get_template_directory_uri() . '/assets/styles/blocks/team-member-profile.css',
+                        [],
+                        \file_exists( $style_path ) ? (string) \filemtime( $style_path ) : '1.0.0'
+                    );
+                },
             ]
         );
 

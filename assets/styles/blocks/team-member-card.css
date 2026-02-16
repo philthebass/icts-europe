@@ -1,0 +1,196 @@
+.team-member-card {
+	--icts-team-member-card-gap: clamp(0.35rem, 0.7vw, 0.55rem);
+	--icts-team-member-card-image-gap: clamp(0.9rem, 1.2vw, 1.1rem);
+	--icts-team-member-card-bottom-gap: clamp(1rem, 1.3vw, 1.25rem);
+	--icts-team-member-card-inline-padding: calc(1rem / 2);
+	--icts-team-member-card-wrapper-gap: clamp(0.75rem, 1.2vw, 1.25rem);
+	background-color: var(--wp--preset--color--light-grey-blue);
+	border-radius: 6px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: var(--icts-team-member-card-wrapper-gap);
+}
+
+.team-member-card__image-link {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 1 / 1;
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	border-radius: 6px;
+}
+
+.team-member-card__image-link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-color: rgb(0 53 101 / 0.35);
+	background-color: color-mix(in srgb, var(--wp--preset--color--brand-primary) 35%, transparent);
+	opacity: 0;
+	transition: opacity 0.25s ease;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.team-member-card__image-link:hover::after,
+.team-member-card__image-link:focus-visible::after {
+	opacity: 0.18;
+}
+
+.team-member-card__image,
+.team-member-card__image-link img {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+	border-radius: 6px;
+	transform: scale(1);
+	transform-origin: center;
+	transition: transform 0.25s ease;
+}
+
+.team-member-card__image-link:hover .team-member-card__image,
+.team-member-card__image-link:hover img,
+.team-member-card__image-link:focus-visible .team-member-card__image,
+.team-member-card__image-link:focus-visible img {
+	transform: scale(1.03);
+}
+
+.team-member-card__name {
+	margin: 0;
+	text-align: center;
+	line-height: 1.2;
+}
+
+.team-member-card__body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: var(--icts-team-member-card-gap);
+	padding-inline: var(--icts-team-member-card-inline-padding);
+	padding-top: var(--icts-team-member-card-image-gap);
+	padding-bottom: var(--icts-team-member-card-bottom-gap);
+}
+
+.team-member-card__role {
+	margin: 0;
+	text-align: center;
+}
+
+.team-member-card__name a {
+	color: var(--wp--preset--color--brand-primary);
+	text-decoration: none;
+}
+
+.team-member-card__name a:hover,
+.team-member-card__name a:focus-visible {
+	color: var(--wp--preset--color--brand-primary-hover);
+	text-decoration: none;
+}
+
+.team-member-card__name a:visited {
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.editor-styles-wrapper .team-member-card__name a,
+.block-editor-page .team-member-card__name a {
+	color: var(--wp--preset--color--brand-primary);
+	text-decoration: none;
+}
+
+.editor-styles-wrapper .team-member-card__name a:hover,
+.editor-styles-wrapper .team-member-card__name a:focus-visible,
+.block-editor-page .team-member-card__name a:hover,
+.block-editor-page .team-member-card__name a:focus-visible {
+	color: var(--wp--preset--color--brand-primary-hover);
+	text-decoration: none;
+}
+
+/* Match front-end rendering in Site Editor previews */
+.editor-styles-wrapper .team-member-card__image-link,
+.block-editor-page .team-member-card__image-link {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 1 / 1;
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	border-radius: 6px;
+}
+
+.editor-styles-wrapper .team-member-card__image,
+.editor-styles-wrapper .team-member-card__image-link img,
+.block-editor-page .team-member-card__image,
+.block-editor-page .team-member-card__image-link img {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+	border-radius: 6px;
+	transform: scale(1);
+	transform-origin: center;
+	transition: transform 0.25s ease;
+}
+
+.editor-styles-wrapper .team-member-card__name,
+.block-editor-page .team-member-card__name {
+	margin: 0;
+	text-align: center;
+}
+
+.editor-styles-wrapper .team-member-card__body,
+.block-editor-page .team-member-card__body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: var(--icts-team-member-card-gap);
+	padding-inline: var(--icts-team-member-card-inline-padding);
+	padding-top: var(--icts-team-member-card-image-gap);
+	padding-bottom: var(--icts-team-member-card-bottom-gap);
+}
+
+.editor-styles-wrapper .team-member-card__role,
+.block-editor-page .team-member-card__role {
+	margin: 0;
+	text-align: center;
+}
+
+.editor-styles-wrapper .team-member-card__name a:visited,
+.block-editor-page .team-member-card__name a:visited {
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.post-type-archive-team-member .wp-block-query.alignfull {
+	margin-bottom: var(--wp--preset--spacing--x-large);
+}
+
+.post-type-archive-team-member .wp-block-post-template.is-layout-grid {
+	align-items: stretch;
+}
+
+.post-type-archive-team-member .wp-block-post-template.is-layout-grid > li {
+	display: flex;
+}
+
+.post-type-archive-team-member .wp-block-post-template.is-layout-grid > li .team-member-card {
+	inline-size: 100%;
+	block-size: 100%;
+	margin-bottom: 0;
+}
+
+@media (max-width: 1024px) {
+	.post-type-archive-team-member .wp-block-post-template.is-layout-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.team-member-card__image,
+	.team-member-card__image-link img {
+		transition: none;
+	}
+}
