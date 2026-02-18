@@ -34,8 +34,8 @@ Brand & Tokens (current)
 - Typography: Nunito Sans; sizes small, base, x-small, large, h-1..h-6 (fluid).
 
 Content Model
-- CPTs: customers, testimonial, team-member.
-- Taxonomies: customer-type, product (for filtering client logos).
+- CPTs: customers, testimonial, team-member, faq.
+- Taxonomies: customer-type, product (shared filters across customers + FAQs).
 
 ## Languages
 

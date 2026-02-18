@@ -176,5 +176,51 @@ namespace ICTS_Europe;
             ]
         );
 
+        // FAQ Accordion block.
+        \acf_register_block_type(
+            [
+                'name'            => 'faq-accordion',
+                'title'           => __( 'FAQ Accordion', 'icts-europe' ),
+                'description'     => __( 'Displays FAQs with taxonomy filters and accordion interactions.', 'icts-europe' ),
+                'render_template' => \get_template_directory() . '/template-parts/blocks/faq-accordion.php',
+                'category'        => 'theme',
+                'icon'            => 'list-view',
+                'keywords'        => [ 'faq', 'accordion', 'questions', 'answers' ],
+                'align'           => 'wide',
+                'supports'        => [
+                    'align'  => [ 'wide', 'full' ],
+                    'anchor' => true,
+                ],
+                'enqueue_assets'  => function () {
+                    $theme_dir = \get_template_directory();
+                    $theme_uri = \get_template_directory_uri();
+                    $theme_ver = \wp_get_theme()->get( 'Version' );
+
+                    $style_path = '/assets/styles/blocks/faq-accordion.css';
+                    $style_abs  = $theme_dir . $style_path;
+                    $style_ver  = \file_exists( $style_abs ) ? (string) \filemtime( $style_abs ) : $theme_ver;
+
+                    $script_path = '/assets/js/faq-accordion.js';
+                    $script_abs  = $theme_dir . $script_path;
+                    $script_ver  = \file_exists( $script_abs ) ? (string) \filemtime( $script_abs ) : $theme_ver;
+
+                    \wp_enqueue_style(
+                        'icts-faq-accordion',
+                        $theme_uri . $style_path,
+                        [],
+                        $style_ver
+                    );
+
+                    \wp_enqueue_script(
+                        'icts-faq-accordion',
+                        $theme_uri . $script_path,
+                        [],
+                        $script_ver,
+                        true
+                    );
+                },
+            ]
+        );
+
     }
 );

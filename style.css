@@ -132,6 +132,112 @@ a.more-link {
 	display: block;
 }
 
+/* Contact details pattern (scoped) */
+.icts-contact-details .icts-contact-details__stack,
+.icts-contact-details__stack,
+.icts-contact-details-stack {
+	display: flex;
+	flex-direction: column;
+	--wp--style--block-gap: 16px;
+	gap: 16px;
+}
+
+.icts-contact-details .icts-contact-details__stack > *,
+.icts-contact-details__stack > *,
+.icts-contact-details-stack > * {
+	margin-block: 0;
+}
+
+/* Contact details map (scoped) */
+.icts-contact-map {
+	inline-size: 100%;
+}
+
+.icts-contact-map iframe,
+.icts-contact-details .wp-block-html iframe[src*="google.com/maps"],
+.icts-contact-details .wp-block-html iframe[src*="maps.google.com"] {
+	display: block;
+	inline-size: 100%;
+	max-inline-size: 100%;
+	block-size: auto;
+	min-block-size: 260px;
+	aspect-ratio: 4 / 3;
+	border: 0;
+	border-radius: 6px;
+}
+
+.icts-contact-map-static .wp-block-image {
+	margin: 0;
+}
+
+.icts-contact-map-static__image {
+	position: relative;
+	overflow: hidden;
+	border-radius: 6px;
+}
+
+.icts-contact-map-static__image a {
+	display: block;
+	position: relative;
+	border-radius: inherit;
+	overflow: hidden;
+}
+
+.icts-contact-map-static__image img {
+	display: block;
+	inline-size: 100%;
+	max-inline-size: 100%;
+	block-size: auto;
+	min-block-size: 260px;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: 6px;
+	transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.icts-contact-map-static__image a::after {
+	content: "Open Map in Google Maps";
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+	color: var(--wp--preset--color--white);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	text-align: center;
+	background: rgba(0, 53, 101, 0.72);
+	opacity: 0;
+	transition: opacity 0.25s ease;
+	pointer-events: none;
+}
+
+.icts-contact-map-static__image a:hover::after,
+.icts-contact-map-static__image a:focus-visible::after {
+	opacity: 1;
+}
+
+.icts-contact-map-static__image a:hover img,
+.icts-contact-map-static__image a:focus-visible img {
+	transform: scale(1.02);
+	filter: saturate(1.04);
+}
+
+/* Keep helper UI out of front-end output for this pattern */
+body:not(.wp-admin) .icts-contact-map-static figcaption,
+body:not(.wp-admin) .icts-contact-map-static .icts-contact-map-static__instructions,
+body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
+	display: none;
+}
+
+.editor-styles-wrapper .icts-contact-map-static figcaption,
+.editor-styles-wrapper .icts-contact-map-static .icts-contact-map-static__instructions,
+.editor-styles-wrapper .icts-contact-map-static .wp-block-buttons {
+	display: initial;
+}
+
 /* Inline code */
 *:not(.wp-block-code) > code {
 	background-color: var(--wp--preset--color--tertiary);
@@ -203,4 +309,15 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	header:has(>.icts-europe-unstick-mobile) {
 		position: static;
 	}
+}
+
+/* Gravity Forms (Orbital theme)
+---------------------------------------------------------------------------- */
+
+.gform_wrapper.gform-theme--orbital .gform_required_legend {
+	color: var(--wp--preset--color--base);
+}
+
+.gform_wrapper.gform-theme--orbital .gform_required_legend .gfield_required_asterisk {
+	color: var(--gf-ctrl-label-color-req);
 }

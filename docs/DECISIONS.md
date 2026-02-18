@@ -39,3 +39,5 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-16 — Overrode Yoast Team Member archive SEO title/schema naming to remove "Archive" — Default Yoast archive template produced "Management Team Archive - …" in title/OG/schema — Theme now filters Yoast title/OG/Twitter/schema for `team-member` archives to output "Management Team - Site Name", with Polylang-aware label translation.
 
 2026-02-16 — Team Member archive H1 is translated via Polylang string mapping — Block template heading text is static HTML, so direct `__()` output is not available in template markup — Theme now registers `management_team_page_heading` and swaps the archive H1 block text at render time for `team-member` archive requests.
+
+2026-02-18 — Added FAQ Accordion ACF block with product/customer filters and RTL-safe interactions — Needed a reusable front-end FAQ surface with taxonomy filtering across translated FAQ posts and an accessible accordion UI — New `acf/faq-accordion` block renders language-scoped FAQ queries, optional fixed taxonomy scoping per page, client-side filter controls, and subtle open/close animation while keeping all items closed by default.

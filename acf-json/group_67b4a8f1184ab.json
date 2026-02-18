@@ -1,0 +1,219 @@
+{
+    "key": "group_67b4a8f1184ab",
+    "title": "FAQ Accordion (Block Controls)",
+    "fields": [
+        {
+            "key": "field_67b4a8f159101",
+            "label": "Heading",
+            "name": "heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Leave blank to use the default \"FAQs\" label.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "FAQs",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_67b4a8f159102",
+            "label": "Intro",
+            "name": "intro",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional line below the heading.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_67b4a8f159103",
+            "label": "Show Filter Controls",
+            "name": "show_filters",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Show front-end Product and Customer Type dropdown filters.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide",
+            "ui": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_67b4a8f159104",
+            "label": "Product Filter Mode",
+            "name": "product_filter_mode",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Limit this block to one product or show all products.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "all": "Show all products",
+                "specific": "Filter by product"
+            },
+            "default_value": "all",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": "all"
+        },
+        {
+            "key": "field_67b4a8f159105",
+            "label": "Product",
+            "name": "product_taxonomy",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_67b4a8f159104",
+                        "operator": "==",
+                        "value": "specific"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "product",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "field_type": "select",
+            "allow_null": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_67b4a8f159106",
+            "label": "Customer Type Filter Mode",
+            "name": "customer_type_filter",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Limit this block to one customer type or show all.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "all": "Show all customer types",
+                "specific": "Filter by customer type"
+            },
+            "default_value": "all",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": "all"
+        },
+        {
+            "key": "field_67b4a8f159107",
+            "label": "Customer Type",
+            "name": "customer_type_term",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_67b4a8f159106",
+                        "operator": "==",
+                        "value": "specific"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "customer-type",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "field_type": "select",
+            "allow_null": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/faq-accordion"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Controls for the FAQ Accordion block.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "pll_display_field_instructions": 1,
+    "modified": 1771430100
+}

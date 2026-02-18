@@ -527,6 +527,48 @@ function pattern_categories() {
 }
 add_action( 'init', __NAMESPACE__ . '\pattern_categories', 9 );
 
+/**
+ * Register fallback map patterns explicitly.
+ *
+ * This ensures the pattern appears in the inserter even if auto-discovery
+ * doesn't pick up new files immediately in a local/editor session.
+ */
+function register_fallback_patterns() {
+	if ( ! function_exists( 'register_block_pattern' ) || ! class_exists( '\WP_Block_Patterns_Registry' ) ) {
+		return;
+	}
+
+	$registry = \WP_Block_Patterns_Registry::get_instance();
+	$slug     = 'icts-europe/contact-map-static';
+
+	if ( $registry->is_registered( $slug ) ) {
+		return;
+	}
+
+	$placeholder_url = esc_url( get_template_directory_uri() . '/assets/images/contact-map-placeholder.svg' );
+	$alt_text        = esc_attr__( 'Static map placeholder', 'icts-europe' );
+	$map_url         = esc_url( 'https://maps.app.goo.gl/wxcWEyqnCVKFgaZs7' );
+
+	$content = '<!-- wp:group {"metadata":{"name":"Contact Map Static"},"className":"icts-contact-map-static","layout":{"type":"constrained"}} -->
+<div class="wp-block-group icts-contact-map-static"><!-- wp:image {"sizeSlug":"full","linkDestination":"custom","href":"' . $map_url . '","linkTarget":"_blank","rel":"noopener noreferrer","className":"icts-contact-map-static__image"} -->
+<figure class="wp-block-image size-full icts-contact-map-static__image"><a href="' . $map_url . '" target="_blank" rel="noopener noreferrer"><img src="' . $placeholder_url . '" alt="' . $alt_text . '"/></a></figure>
+<!-- /wp:image --></div>
+<!-- /wp:group -->';
+
+	register_block_pattern(
+		$slug,
+		[
+			'title'       => __( 'Contact Map (Static)', 'icts-europe' ),
+			'description' => __( 'Cookie-safe static map image with an external maps link.', 'icts-europe' ),
+			'categories'  => [ 'icts-europe/call-to-action', 'icts-europe/hero' ],
+			'keywords'    => [ 'map', 'contact', 'location', 'address', 'static' ],
+			'inserter'    => true,
+			'content'     => $content,
+		]
+	);
+}
+add_action( 'init', __NAMESPACE__ . '\register_fallback_patterns', 20 );
+
 
 /**
  * Remove last separator on blog/archive if no pagination exists.
@@ -705,6 +747,54 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
             'team_member_linkedin_aria',
             'Visit %s on LinkedIn',
             'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'faq_block_heading_default',
+            'FAQs',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_filter_form_label',
+            'FAQ filters',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_filter_product_label',
+            'Product',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_filter_customer_label',
+            'Customer type',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_filter_all_products',
+            'All products',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_filter_all_customer_types',
+            'All customer types',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_filter_empty',
+            'No FAQs found for the selected filters.',
+            'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'faq_block_empty_preview',
+            'No FAQs found. Add FAQ posts to populate this block.',
+            'Theme: FAQ'
         );
     }
 } 
@@ -975,4 +1065,142 @@ namespace ICTS_Europe;
     },
     10,
     3
+);
+
+/**
+ * When FAQ filter taxonomies are updated on any translation, mirror that taxonomy
+ * to all linked FAQ translations.
+ */
+\add_action(
+	'set_object_terms',
+	function ( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ) {
+
+		static $is_syncing = false;
+
+		if ( $is_syncing ) {
+			return;
+		}
+
+		$object_id = (int) $object_id;
+		if ( $object_id <= 0 ) {
+			return;
+		}
+
+		if ( ! \in_array( $taxonomy, [ 'product', 'customer-type' ], true ) ) {
+			return;
+		}
+
+		if ( \get_post_type( $object_id ) !== 'faq' ) {
+			return;
+		}
+
+		if ( ! \function_exists( 'pll_get_post_translations' ) ) {
+			return;
+		}
+
+		$translations = \pll_get_post_translations( $object_id );
+		if ( empty( $translations ) || ! \is_array( $translations ) ) {
+			return;
+		}
+
+		$source_term_ids = \wp_get_object_terms(
+			$object_id,
+			$taxonomy,
+			[
+				'fields' => 'ids',
+			]
+		);
+
+		if ( \is_wp_error( $source_term_ids ) ) {
+			return;
+		}
+
+		$is_syncing = true;
+
+		foreach ( $translations as $translated_post_id ) {
+			$translated_post_id = (int) $translated_post_id;
+
+			if ( $translated_post_id <= 0 || $translated_post_id === $object_id ) {
+				continue;
+			}
+
+			\wp_set_object_terms( $translated_post_id, $source_term_ids, $taxonomy, false );
+		}
+
+		$is_syncing = false;
+	},
+	20,
+	6
+);
+
+/**
+ * Ensure newly created/updated FAQ translations inherit synced filter taxonomies.
+ * This covers Polylang/DeepL translation creation where no manual term edit occurs.
+ */
+\add_action(
+	'pll_save_post',
+	function ( $post_id, $post, $translations ) {
+
+		static $is_syncing = false;
+
+		if ( $is_syncing ) {
+			return;
+		}
+
+		$post_id = (int) $post_id;
+		if ( $post_id <= 0 || \get_post_type( $post_id ) !== 'faq' ) {
+			return;
+		}
+
+		if ( empty( $translations ) || ! \is_array( $translations ) ) {
+			return;
+		}
+
+		$taxonomies_to_sync = [ 'product', 'customer-type' ];
+		$source_post_id     = $post_id;
+
+		if ( \function_exists( 'pll_default_language' ) ) {
+			$default_lang = (string) \pll_default_language();
+			if ( $default_lang && ! empty( $translations[ $default_lang ] ) ) {
+				$default_post_id = (int) $translations[ $default_lang ];
+				if ( $default_post_id > 0 && \get_post_type( $default_post_id ) === 'faq' ) {
+					$source_post_id = $default_post_id;
+				}
+			}
+		}
+
+		$is_syncing = true;
+
+		foreach ( $taxonomies_to_sync as $taxonomy ) {
+			if ( ! \taxonomy_exists( $taxonomy ) || ! \is_object_in_taxonomy( 'faq', $taxonomy ) ) {
+				continue;
+			}
+
+			$source_term_ids = \wp_get_object_terms(
+				$source_post_id,
+				$taxonomy,
+				[
+					'fields' => 'ids',
+				]
+			);
+
+			if ( \is_wp_error( $source_term_ids ) ) {
+				continue;
+			}
+
+			foreach ( $translations as $translated_post_id ) {
+				$translated_post_id = (int) $translated_post_id;
+
+				if ( $translated_post_id <= 0 || $translated_post_id === $source_post_id ) {
+					continue;
+				}
+
+				\wp_set_object_terms( $translated_post_id, $source_term_ids, $taxonomy, false );
+			}
+		}
+
+		$is_syncing = false;
+	},
+	20,
+	3
 );

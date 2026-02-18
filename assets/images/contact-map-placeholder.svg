@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" fill="none">
+  <rect width="1200" height="900" fill="#EBEFF2"/>
+  <rect x="24" y="24" width="1152" height="852" rx="12" fill="#FFFFFF" stroke="#C1CED6" stroke-width="2"/>
+  <path d="M200 700L390 540L500 620L710 430L840 510L1010 350" stroke="#003565" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="710" cy="430" r="20" fill="#C10A27"/>
+  <path d="M710 385C668.026 385 634 419.026 634 461C634 530 710 612 710 612C710 612 786 530 786 461C786 419.026 751.974 385 710 385Z" fill="#C10A27" fill-opacity="0.12" stroke="#C10A27" stroke-width="8"/>
+  <text x="600" y="140" fill="#003565" font-family="Nunito Sans, Arial, sans-serif" font-size="58" font-weight="700" text-anchor="middle">Static Map Placeholder</text>
+  <text x="600" y="200" fill="#5C6670" font-family="Nunito Sans, Arial, sans-serif" font-size="30" font-weight="400" text-anchor="middle">Replace with your uploaded contact map image</text>
+</svg>
