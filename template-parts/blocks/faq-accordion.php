@@ -9,6 +9,8 @@ if ( ! isset( $block ) || ! is_array( $block ) ) {
 	return;
 }
 
+$is_editor_preview = ! empty( $is_preview ) || is_admin();
+
 $translate = static function ( $text ) {
 	$label = (string) $text;
 
@@ -40,12 +42,6 @@ if ( ! is_string( $heading ) || '' === trim( $heading ) ) {
 $intro = get_field( 'intro' );
 $intro = is_string( $intro ) ? trim( $intro ) : '';
 
-$show_filters = get_field( 'show_filters' );
-if ( null === $show_filters || '' === $show_filters ) {
-	$show_filters = 1;
-}
-$show_filters = (bool) $show_filters;
-
 $product_filter_mode = get_field( 'product_filter_mode' );
 if ( ! in_array( $product_filter_mode, [ 'all', 'specific' ], true ) ) {
 	$product_filter_mode = 'all';
@@ -59,6 +55,12 @@ if ( ! in_array( $customer_type_filter, [ 'all', 'specific' ], true ) ) {
 }
 
 $customer_type_term = get_field( 'customer_type_term' );
+
+$output_schema = get_field( 'output_schema' );
+if ( null === $output_schema || '' === $output_schema ) {
+	$output_schema = 1;
+}
+$output_schema = (bool) $output_schema;
 
 $tax_query = [];
 
@@ -85,7 +87,7 @@ if ( count( $tax_query ) > 1 ) {
 $query_args = [
 	'post_type'           => 'faq',
 	'post_status'         => 'publish',
-	'posts_per_page'      => -1,
+	'posts_per_page'      => $is_editor_preview ? 20 : -1,
 	'orderby'             => [
 		'menu_order' => 'ASC',
 		'title'      => 'ASC',
@@ -105,9 +107,7 @@ if ( function_exists( 'pll_current_language' ) ) {
 
 $query = new WP_Query( $query_args );
 
-$faq_rows             = [];
-$product_term_options = [];
-$customer_term_options = [];
+$faq_rows = [];
 
 if ( $query->have_posts() ) {
 	while ( $query->have_posts() ) {
@@ -119,88 +119,59 @@ if ( $query->have_posts() ) {
 		$answer_content = (string) get_post_field( 'post_content', $faq_post_id );
 		$answer_html    = '';
 		if ( '' !== trim( $answer_content ) ) {
-			$answer_html = apply_filters( 'the_content', $answer_content );
-		}
-
-		$product_terms = get_the_terms( $faq_post_id, 'product' );
-		if ( is_wp_error( $product_terms ) || ! is_array( $product_terms ) ) {
-			$product_terms = [];
-		}
-
-		$customer_terms = get_the_terms( $faq_post_id, 'customer-type' );
-		if ( is_wp_error( $customer_terms ) || ! is_array( $customer_terms ) ) {
-			$customer_terms = [];
-		}
-
-		$product_slugs = [];
-		foreach ( $product_terms as $term ) {
-			if ( ! $term instanceof WP_Term ) {
-				continue;
+			if ( $is_editor_preview ) {
+				$answer_html = wpautop( wp_kses_post( $answer_content ) );
+			} else {
+				$answer_html = apply_filters( 'the_content', $answer_content );
 			}
-
-			$product_slugs[] = (string) $term->slug;
-			$product_term_options[ (int) $term->term_id ] = $term;
 		}
 
-		$customer_slugs = [];
-		foreach ( $customer_terms as $term ) {
-			if ( ! $term instanceof WP_Term ) {
-				continue;
-			}
-
-			$customer_slugs[] = (string) $term->slug;
-			$customer_term_options[ (int) $term->term_id ] = $term;
-		}
+		$answer_schema = trim(
+			preg_replace(
+				'/\s+/u',
+				' ',
+				wp_strip_all_tags( strip_shortcodes( $answer_content ) )
+			)
+		);
 
 		$faq_rows[] = [
-			'post_id'        => $faq_post_id,
-			'question'       => $question,
-			'answer_html'    => $answer_html,
-			'product_slugs'  => $product_slugs,
-			'customer_slugs' => $customer_slugs,
+			'post_id'       => $faq_post_id,
+			'question'      => $question,
+			'answer_html'   => $answer_html,
+			'answer_schema' => $answer_schema,
 		];
 	}
 }
 
 wp_reset_postdata();
 
-if ( ! empty( $product_term_options ) ) {
-	uasort(
-		$product_term_options,
-		static function ( $term_a, $term_b ) {
-			return strnatcasecmp( (string) $term_a->name, (string) $term_b->name );
+$editor_empty_label = $translate( __( 'No FAQs found. Add FAQ posts to populate this block.', 'icts-europe' ) );
+
+$faq_schema_rows = [];
+if ( $output_schema && ! $is_editor_preview && ! empty( $faq_rows ) ) {
+	foreach ( $faq_rows as $faq_row ) {
+		$question = isset( $faq_row['question'] ) ? trim( (string) $faq_row['question'] ) : '';
+		$answer   = isset( $faq_row['answer_schema'] ) ? trim( (string) $faq_row['answer_schema'] ) : '';
+
+		if ( '' === $question || '' === $answer ) {
+			continue;
 		}
-	);
+
+		$faq_schema_rows[] = [
+			'@type'          => 'Question',
+			'name'           => $question,
+			'acceptedAnswer' => [
+				'@type' => 'Answer',
+				'text'  => $answer,
+			],
+		];
+	}
 }
-
-if ( ! empty( $customer_term_options ) ) {
-	uasort(
-		$customer_term_options,
-		static function ( $term_a, $term_b ) {
-			return strnatcasecmp( (string) $term_a->name, (string) $term_b->name );
-		}
-	);
-}
-
-$product_filter_default  = ( 'specific' === $product_filter_mode && $product_taxonomy_term instanceof WP_Term ) ? (string) $product_taxonomy_term->slug : '';
-$customer_filter_default = ( 'specific' === $customer_type_filter && $customer_type_term instanceof WP_Term ) ? (string) $customer_type_term->slug : '';
-
-$filter_form_label       = $translate( __( 'FAQ filters', 'icts-europe' ) );
-$filter_product_label    = $translate( __( 'Product', 'icts-europe' ) );
-$filter_customer_label   = $translate( __( 'Customer type', 'icts-europe' ) );
-$filter_all_products     = $translate( __( 'All products', 'icts-europe' ) );
-$filter_all_customers    = $translate( __( 'All customer types', 'icts-europe' ) );
-$empty_results_label     = $translate( __( 'No FAQs found for the selected filters.', 'icts-europe' ) );
-$editor_empty_label      = $translate( __( 'No FAQs found. Add FAQ posts to populate this block.', 'icts-europe' ) );
-
-$render_filters = $show_filters && ( ! empty( $product_term_options ) || ! empty( $customer_term_options ) );
 ?>
 
 <section
 	id="<?php echo esc_attr( $id ); ?>"
 	class="<?php echo esc_attr( $class_name ); ?>"
-	data-default-product="<?php echo esc_attr( $product_filter_default ); ?>"
-	data-default-customer="<?php echo esc_attr( $customer_filter_default ); ?>"
 >
 	<div class="icts-faq-accordion__inner">
 		<header class="icts-faq-accordion__header">
@@ -210,50 +181,6 @@ $render_filters = $show_filters && ( ! empty( $product_term_options ) || ! empty
 			<?php endif; ?>
 		</header>
 
-		<?php if ( $render_filters ) : ?>
-			<form class="icts-faq-accordion__filters" data-icts-faq-filters aria-label="<?php echo esc_attr( $filter_form_label ); ?>">
-				<?php if ( ! empty( $product_term_options ) ) : ?>
-					<div class="icts-faq-accordion__filter">
-						<label class="icts-faq-accordion__filter-label" for="<?php echo esc_attr( $id ); ?>-filter-product">
-							<?php echo esc_html( $filter_product_label ); ?>
-						</label>
-						<select
-							class="icts-faq-accordion__filter-select"
-							id="<?php echo esc_attr( $id ); ?>-filter-product"
-							data-icts-faq-filter="product"
-						>
-							<option value=""><?php echo esc_html( $filter_all_products ); ?></option>
-							<?php foreach ( $product_term_options as $term ) : ?>
-								<option value="<?php echo esc_attr( $term->slug ); ?>" <?php selected( $product_filter_default, (string) $term->slug ); ?>>
-									<?php echo esc_html( $term->name ); ?>
-								</option>
-							<?php endforeach; ?>
-						</select>
-					</div>
-				<?php endif; ?>
-
-				<?php if ( ! empty( $customer_term_options ) ) : ?>
-					<div class="icts-faq-accordion__filter">
-						<label class="icts-faq-accordion__filter-label" for="<?php echo esc_attr( $id ); ?>-filter-customer">
-							<?php echo esc_html( $filter_customer_label ); ?>
-						</label>
-						<select
-							class="icts-faq-accordion__filter-select"
-							id="<?php echo esc_attr( $id ); ?>-filter-customer"
-							data-icts-faq-filter="customer"
-						>
-							<option value=""><?php echo esc_html( $filter_all_customers ); ?></option>
-							<?php foreach ( $customer_term_options as $term ) : ?>
-								<option value="<?php echo esc_attr( $term->slug ); ?>" <?php selected( $customer_filter_default, (string) $term->slug ); ?>>
-									<?php echo esc_html( $term->name ); ?>
-								</option>
-							<?php endforeach; ?>
-						</select>
-					</div>
-				<?php endif; ?>
-			</form>
-		<?php endif; ?>
-
 		<?php if ( ! empty( $faq_rows ) ) : ?>
 			<div class="icts-faq-accordion__items" data-icts-faq-items>
 				<?php foreach ( $faq_rows as $index => $faq_row ) : ?>
@@ -262,11 +189,7 @@ $render_filters = $show_filters && ( ! empty( $product_term_options ) || ! empty
 					$question_id = $item_dom_id . '-label';
 					$panel_id    = $item_dom_id . '-panel';
 					?>
-					<article
-						class="icts-faq-accordion__item"
-						data-product-terms="<?php echo esc_attr( implode( '|', $faq_row['product_slugs'] ) ); ?>"
-						data-customer-terms="<?php echo esc_attr( implode( '|', $faq_row['customer_slugs'] ) ); ?>"
-					>
+					<article class="icts-faq-accordion__item">
 						<h3 class="icts-faq-accordion__question-wrap">
 							<button
 								type="button"
@@ -300,14 +223,23 @@ $render_filters = $show_filters && ( ! empty( $product_term_options ) || ! empty
 					</article>
 				<?php endforeach; ?>
 			</div>
-
-			<p class="icts-faq-accordion__empty" data-icts-faq-empty hidden>
-				<?php echo esc_html( $empty_results_label ); ?>
-			</p>
 		<?php else : ?>
 			<p class="icts-faq-accordion__empty is-static" data-icts-faq-empty-static>
 				<?php echo esc_html( $editor_empty_label ); ?>
 			</p>
 		<?php endif; ?>
 	</div>
+
+	<?php if ( ! empty( $faq_schema_rows ) ) : ?>
+		<?php
+		$faq_schema = [
+			'@context'   => 'https://schema.org',
+			'@type'      => 'FAQPage',
+			'mainEntity' => $faq_schema_rows,
+		];
+		?>
+		<script type="application/ld+json" class="icts-faq-accordion__schema">
+			<?php echo wp_json_encode( $faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ); ?>
+		</script>
+	<?php endif; ?>
 </section>

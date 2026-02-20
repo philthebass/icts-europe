@@ -756,42 +756,6 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
         );
 
         \pll_register_string(
-            'faq_filter_form_label',
-            'FAQ filters',
-            'Theme: FAQ'
-        );
-
-        \pll_register_string(
-            'faq_filter_product_label',
-            'Product',
-            'Theme: FAQ'
-        );
-
-        \pll_register_string(
-            'faq_filter_customer_label',
-            'Customer type',
-            'Theme: FAQ'
-        );
-
-        \pll_register_string(
-            'faq_filter_all_products',
-            'All products',
-            'Theme: FAQ'
-        );
-
-        \pll_register_string(
-            'faq_filter_all_customer_types',
-            'All customer types',
-            'Theme: FAQ'
-        );
-
-        \pll_register_string(
-            'faq_filter_empty',
-            'No FAQs found for the selected filters.',
-            'Theme: FAQ'
-        );
-
-        \pll_register_string(
             'faq_block_empty_preview',
             'No FAQs found. Add FAQ posts to populate this block.',
             'Theme: FAQ'

@@ -6,50 +6,35 @@
 	--icts-faq-item-padding-block: clamp(0.85rem, 1.4vw, 1.1rem);
 	--icts-faq-panel-padding-block-end: clamp(1rem, 2vw, 1.35rem);
 	--icts-faq-transition: 280ms ease;
-	--icts-faq-strands-width: clamp(56px, 5vw, 78px);
-	--icts-faq-strands-height: clamp(80px, 7vw, 112px);
-	position: relative;
+	--icts-faq-strands-width: clamp(128px, 10vw, 180px);
+	--icts-faq-strands-height: clamp(980px, 82vw, 1260px);
+	--icts-faq-strands-trim: clamp(14px, 1.5vw, 24px);
+	--icts-faq-strands-gap: clamp(2rem, 4vw, 3.25rem);
+
 	width: 100%;
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
 	margin: 0;
+	padding-block: var(--icts-faq-strands-gap);
+	background-image:
+		url("../../images/solutions-slider-strands.svg"),
+		url("../../images/solutions-slider-strands.svg");
+	background-repeat: no-repeat, no-repeat;
+	background-position:
+		center calc(0% - var(--icts-faq-strands-trim)),
+		center calc(100% + var(--icts-faq-strands-trim));
+	background-size:
+		var(--icts-faq-strands-width) var(--icts-faq-strands-height),
+		var(--icts-faq-strands-width) var(--icts-faq-strands-height);
 }
 
 .icts-faq-accordion__inner {
 	max-width: var(--icts-faq-section-max-width);
 	margin-inline: auto;
-	padding-inline: var(--wp--preset--spacing--medium);
-	padding-block: clamp(1.25rem, 2.7vw, 2.2rem);
+	padding-top: var(--wp--preset--spacing--medium);
+	background-color: var(--wp--preset--color--white);
 	position: relative;
-}
-
-.icts-faq-accordion__inner::before,
-.icts-faq-accordion__inner::after {
-	content: "";
-	position: absolute;
-	inset-inline-start: 50%;
-	inline-size: var(--icts-faq-strands-width);
-	block-size: var(--icts-faq-strands-height);
-	transform: translateX(-50%);
-	background: center / contain no-repeat url("../../images/solutions-slider-strands.svg");
-	pointer-events: none;
-	z-index: 0;
-}
-
-.icts-faq-accordion__inner::before {
-	inset-block-start: 0;
-	transform: translate(-50%, -54%);
-}
-
-.icts-faq-accordion__inner::after {
-	inset-block-end: 0;
-	transform: translate(-50%, 54%);
-}
-
-.icts-faq-accordion__header,
-.icts-faq-accordion__filters,
-.icts-faq-accordion__items,
-.icts-faq-accordion__empty {
-	position: relative;
-	z-index: 1;
 }
 
 .icts-faq-accordion__header {
@@ -67,56 +52,19 @@
 	margin: 0.6rem 0 0;
 }
 
-.icts-faq-accordion__filters {
-	max-width: var(--icts-faq-content-max-width);
-	margin-inline: auto;
-	margin-top: clamp(0.9rem, 1.9vw, 1.35rem);
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-	gap: var(--wp--preset--spacing--small);
-}
-
-.icts-faq-accordion__filter {
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-}
-
-.icts-faq-accordion__filter-label {
-	font-size: var(--wp--preset--font-size--x-small);
-	font-weight: 700;
-	color: var(--wp--preset--color--brand-primary);
-}
-
-.icts-faq-accordion__filter-select {
-	inline-size: 100%;
-	min-block-size: 2.8rem;
-	border-radius: var(--icts-faq-radius);
-	border: 1px solid color-mix(in srgb, var(--wp--preset--color--brand-primary) 28%, transparent);
-	background-color: var(--wp--preset--color--base);
-	padding-inline: 0.8rem;
-	font: inherit;
-	color: var(--wp--preset--color--main);
-}
-
-.icts-faq-accordion__filter-select:focus-visible {
-	outline: 2px solid var(--wp--preset--color--brand-primary);
-	outline-offset: 1px;
-}
-
 .icts-faq-accordion__items {
 	max-width: var(--icts-faq-content-max-width);
 	margin-inline: auto;
 	margin-top: clamp(1rem, 2.3vw, 1.8rem);
 	display: flex;
 	flex-direction: column;
-	gap: 0.4rem;
+	gap: 0.45rem;
 }
 
 .icts-faq-accordion__item {
 	background: var(--wp--preset--color--light-grey-blue);
 	border-radius: var(--icts-faq-radius);
-	overflow: clip;
+	overflow: hidden;
 	color: var(--wp--preset--color--main);
 	transition: background-color 200ms ease, color 200ms ease;
 }
@@ -124,10 +72,6 @@
 .icts-faq-accordion__item.is-open {
 	background: var(--wp--preset--color--brand-primary);
 	color: var(--wp--preset--color--base);
-}
-
-.icts-faq-accordion__item.is-filtered-out {
-	display: none;
 }
 
 .icts-faq-accordion__question-wrap {
@@ -233,12 +177,6 @@
 
 .icts-faq-accordion__empty.is-static {
 	margin-top: clamp(1rem, 2vw, 1.4rem);
-}
-
-@media (max-width: 782px) {
-	.icts-faq-accordion__inner {
-		padding-inline: var(--wp--preset--spacing--small);
-	}
 }
 
 @media (prefers-reduced-motion: reduce) {

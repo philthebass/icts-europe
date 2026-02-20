@@ -12,7 +12,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
@@ -34,7 +34,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
@@ -47,28 +47,6 @@
             "pll_default_value": ""
         },
         {
-            "key": "field_67b4a8f159103",
-            "label": "Show Filter Controls",
-            "name": "show_filters",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "Show front-end Product and Customer Type dropdown filters.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "message": "",
-            "default_value": 1,
-            "ui_on_text": "Show",
-            "ui_off_text": "Hide",
-            "ui": 1,
-            "translations": "copy_once",
-            "allow_in_bindings": 0
-        },
-        {
             "key": "field_67b4a8f159104",
             "label": "Product Filter Mode",
             "name": "product_filter_mode",
@@ -78,7 +56,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
@@ -114,7 +92,7 @@
                 ]
             ],
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
@@ -137,11 +115,11 @@
             "name": "customer_type_filter",
             "aria-label": "",
             "type": "radio",
-            "instructions": "Limit this block to one customer type or show all.",
+            "instructions": "Limit this block to one customer type or show all customer types.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
@@ -177,7 +155,7 @@
                 ]
             ],
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
@@ -193,6 +171,28 @@
             "bidirectional": 0,
             "multiple": 0,
             "bidirectional_target": []
+        },
+        {
+            "key": "field_67b4a8f159108",
+            "label": "Output FAQ Schema",
+            "name": "output_schema",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Adds FAQPage JSON-LD schema based on FAQs rendered by this block.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui_on_text": "Enabled",
+            "ui_off_text": "Disabled",
+            "ui": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0
         }
     ],
     "location": [
@@ -215,5 +215,5 @@
     "show_in_rest": 0,
     "display_title": "",
     "pll_display_field_instructions": 1,
-    "modified": 1771430100
+    "modified": 1771702740
 }

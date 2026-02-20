@@ -29,38 +29,6 @@
                   )
                 : [];
 
-            var emptyState = accordion.querySelector('[data-icts-faq-empty]');
-
-            var productFilter = accordion.querySelector(
-                '[data-icts-faq-filter="product"]'
-            );
-            var customerFilter = accordion.querySelector(
-                '[data-icts-faq-filter="customer"]'
-            );
-
-            var defaultProduct = accordion.getAttribute('data-default-product') || '';
-            var defaultCustomer = accordion.getAttribute('data-default-customer') || '';
-
-            if (productFilter && defaultProduct && !productFilter.value) {
-                productFilter.value = defaultProduct;
-            }
-            if (customerFilter && defaultCustomer && !customerFilter.value) {
-                customerFilter.value = defaultCustomer;
-            }
-
-            function getTerms(value) {
-                if (!value) {
-                    return [];
-                }
-
-                return value
-                    .split('|')
-                    .map(function (term) {
-                        return term.trim();
-                    })
-                    .filter(Boolean);
-            }
-
             function setExpanded(item, expanded) {
                 var toggle = item.querySelector('[data-icts-faq-toggle]');
                 var panel = item.querySelector('[data-icts-faq-panel]');
@@ -148,6 +116,12 @@
                     return;
                 }
 
+                item.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+                panel.hidden = true;
+                panel.style.maxHeight = '0px';
+                panel.style.opacity = '0';
+
                 toggle.addEventListener('click', function () {
                     var isOpen = item.classList.contains('is-open');
 
@@ -160,51 +134,6 @@
                     setExpanded(item, true);
                 });
             });
-
-            function applyFilters() {
-                if (!items.length) {
-                    return;
-                }
-
-                var selectedProduct = productFilter ? productFilter.value : '';
-                var selectedCustomer = customerFilter ? customerFilter.value : '';
-                var visibleCount = 0;
-
-                items.forEach(function (item) {
-                    var productTerms = getTerms(item.getAttribute('data-product-terms'));
-                    var customerTerms = getTerms(item.getAttribute('data-customer-terms'));
-
-                    var matchesProduct =
-                        !selectedProduct || productTerms.indexOf(selectedProduct) !== -1;
-                    var matchesCustomer =
-                        !selectedCustomer || customerTerms.indexOf(selectedCustomer) !== -1;
-                    var isMatch = matchesProduct && matchesCustomer;
-
-                    item.hidden = !isMatch;
-                    item.classList.toggle('is-filtered-out', !isMatch);
-
-                    if (!isMatch && item.classList.contains('is-open')) {
-                        setExpanded(item, false);
-                    }
-
-                    if (isMatch) {
-                        visibleCount += 1;
-                    }
-                });
-
-                if (emptyState) {
-                    emptyState.hidden = visibleCount !== 0;
-                }
-            }
-
-            if (productFilter) {
-                productFilter.addEventListener('change', applyFilters);
-            }
-            if (customerFilter) {
-                customerFilter.addEventListener('change', applyFilters);
-            }
-
-            applyFilters();
         });
     }
 

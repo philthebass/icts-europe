@@ -181,7 +181,7 @@ namespace ICTS_Europe;
             [
                 'name'            => 'faq-accordion',
                 'title'           => __( 'FAQ Accordion', 'icts-europe' ),
-                'description'     => __( 'Displays FAQs with taxonomy filters and accordion interactions.', 'icts-europe' ),
+                'description'     => __( 'Displays FAQs in an accordion with optional taxonomy scoping.', 'icts-europe' ),
                 'render_template' => \get_template_directory() . '/template-parts/blocks/faq-accordion.php',
                 'category'        => 'theme',
                 'icon'            => 'list-view',

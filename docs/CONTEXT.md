@@ -36,6 +36,7 @@ Brand & Tokens (current)
 Content Model
 - CPTs: customers, testimonial, team-member, faq.
 - Taxonomies: customer-type, product (shared filters across customers + FAQs).
+- FAQ rendering: `acf/faq-accordion` block with optional block-level taxonomy scoping and per-block FAQPage JSON-LD output.
 
 ## Languages
 
