@@ -49,6 +49,11 @@
 					"slug": "brand-primary-hover"
 				},
 				{
+					"color": "rgb(154, 228, 255)",
+					"name": "Brand Primary Light",
+					"slug": "brand-primary-light"
+				},
+				{
 					"color": "rgb(193, 10, 39)",
 					"name": "Brand Secondary",
 					"slug": "brand-secondary"
@@ -319,6 +324,15 @@
 					"name": "Large",
 					"size": "1.25rem",
 					"slug": "large"
+				},
+				{
+					"fluid": {
+						"max": "1.6rem",
+						"min": "1.35rem"
+					},
+					"name": "X Large",
+					"size": "1.5rem",
+					"slug": "x-large"
 				},
 				{
 					"name": "Button",

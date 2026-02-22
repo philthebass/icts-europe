@@ -222,5 +222,42 @@ namespace ICTS_Europe;
             ]
         );
 
+        // Counter block.
+        \acf_register_block_type(
+            [
+                'name'            => 'counter',
+                'title'           => __( 'Counter', 'icts-europe' ),
+                'description'     => __( 'Displays a branded animated counter with label, prefix, and suffix.', 'icts-europe' ),
+                'render_template' => \get_template_directory() . '/template-parts/blocks/counter.php',
+                'category'        => 'theme',
+                'icon'            => 'editor-ol',
+                'keywords'        => [ 'counter', 'number', 'stat', 'metric' ],
+                'supports'        => [
+                    'align'    => false,
+                    'anchor' => true,
+                    'inserter' => false,
+                ],
+                'enqueue_assets'  => function () {
+                    $style_path = \get_template_directory() . '/assets/styles/blocks/counter.css';
+                    $script_path = \get_template_directory() . '/assets/js/counter.js';
+
+                    \wp_enqueue_style(
+                        'icts-counter-block',
+                        \get_template_directory_uri() . '/assets/styles/blocks/counter.css',
+                        [],
+                        \file_exists( $style_path ) ? (string) \filemtime( $style_path ) : '1.0.0'
+                    );
+
+                    \wp_enqueue_script(
+                        'icts-counter-block-script',
+                        \get_template_directory_uri() . '/assets/js/counter.js',
+                        [],
+                        \file_exists( $script_path ) ? (string) \filemtime( $script_path ) : '1.0.0',
+                        true
+                    );
+                },
+            ]
+        );
+
     }
 );

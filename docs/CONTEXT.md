@@ -31,12 +31,13 @@ Tech targets:
 
 Brand & Tokens (current)
 - Colors: brand-primary, brand-secondary, brand-tertiary, base, main, secondary, tertiary, border-light.
-- Typography: Nunito Sans; sizes small, base, x-small, large, h-1..h-6 (fluid).
+- Typography: Nunito Sans; sizes x-small, small, base, large, x-large, and h-1..h-6 (fluid).
 
 Content Model
 - CPTs: customers, testimonial, team-member, faq.
 - Taxonomies: customer-type, product (shared filters across customers + FAQs).
 - FAQ rendering: `acf/faq-accordion` block with optional block-level taxonomy scoping and per-block FAQPage JSON-LD output.
+- Reusable metrics: `acf/counter` block for editable numeric counters (up/down, affixes, labels).
 
 ## Languages
 

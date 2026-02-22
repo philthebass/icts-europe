@@ -8,7 +8,7 @@
  * Viewport Width: 1500
  * Block Types:
  * Post Types:
- * Inserter: true
+ * Inserter: false
  */
 ?>
 <!-- wp:group {"metadata":{"name":"Big Text Features"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xx-large","bottom":"var:preset|spacing|xx-large","right":"var:preset|spacing|medium","left":"var:preset|spacing|medium"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|large"}},"backgroundColor":"primary","textColor":"base","layout":{"type":"constrained"}} -->

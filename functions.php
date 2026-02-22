@@ -485,6 +485,35 @@ function enqueue_woocommerce_styles() {
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_woocommerce_styles' );
 
+/**
+ * Enqueue counter assets globally so recovered/static pattern markup still animates.
+ */
+function enqueue_counter_assets() {
+	$theme_dir  = get_template_directory();
+	$theme_uri  = get_template_directory_uri();
+	$theme_ver  = wp_get_theme()->get( 'Version' );
+	$style_path = '/assets/styles/blocks/counter.css';
+	$script_path = '/assets/js/counter.js';
+	$style_abs  = $theme_dir . $style_path;
+	$script_abs = $theme_dir . $script_path;
+
+	wp_enqueue_style(
+		'icts-counter-block',
+		$theme_uri . $style_path,
+		[],
+		file_exists( $style_abs ) ? (string) filemtime( $style_abs ) : $theme_ver
+	);
+
+	wp_enqueue_script(
+		'icts-counter-block-script',
+		$theme_uri . $script_path,
+		[],
+		file_exists( $script_abs ) ? (string) filemtime( $script_abs ) : $theme_ver,
+		true
+	);
+}
+add_action( 'enqueue_block_assets', __NAMESPACE__ . '\enqueue_counter_assets', 20 );
+
 
 /**
  * Register pattern categories.
@@ -568,6 +597,98 @@ function register_fallback_patterns() {
 	);
 }
 add_action( 'init', __NAMESPACE__ . '\register_fallback_patterns', 20 );
+
+/**
+ * Register the Counter Band pattern with explicit content.
+ *
+ * Fallback only: if file discovery misses the pattern in a local/editor session.
+ */
+function register_counter_band_pattern() {
+	if ( ! function_exists( 'register_block_pattern' ) || ! class_exists( '\WP_Block_Patterns_Registry' ) ) {
+		return;
+	}
+
+	$registry = \WP_Block_Patterns_Registry::get_instance();
+	$slug     = 'icts-europe/counter-band';
+
+	if ( $registry->is_registered( $slug ) ) {
+		return;
+	}
+
+	$pattern_file = get_template_directory() . '/patterns/counter-band.php';
+	if ( ! file_exists( $pattern_file ) ) {
+		return;
+	}
+
+	ob_start();
+	include $pattern_file;
+	$content = trim( (string) ob_get_clean() );
+
+	if ( '' === $content ) {
+		return;
+	}
+
+	register_block_pattern(
+		$slug,
+		[
+			'title'       => __( 'Counter Band', 'icts-europe' ),
+			'description' => __( 'Full-width counter section with background image and responsive grid.', 'icts-europe' ),
+			'categories'  => [ 'icts-europe/features' ],
+			'keywords'    => [ 'counter', 'stats', 'metrics', 'numbers' ],
+			'inserter'    => true,
+			'content'     => $content,
+		]
+	);
+}
+add_action( 'init', __NAMESPACE__ . '\register_counter_band_pattern', 25 );
+
+/**
+ * Keep the inserter focused on the current counter workflow.
+ */
+function unregister_legacy_patterns() {
+	if ( ! function_exists( 'unregister_block_pattern' ) || ! class_exists( '\WP_Block_Patterns_Registry' ) ) {
+		return;
+	}
+
+	$registry = \WP_Block_Patterns_Registry::get_instance();
+	$patterns = $registry->get_all_registered();
+
+	foreach ( $patterns as $slug => $pattern ) {
+		$title = isset( $pattern['title'] ) ? wp_strip_all_tags( (string) $pattern['title'] ) : '';
+
+		if (
+			'icts-europe/numbers-stacked' === $slug ||
+			false !== strpos( (string) $slug, 'numbers-stacked' ) ||
+			0 === strcasecmp( $title, 'Numbers Stacked' )
+		) {
+			unregister_block_pattern( (string) $slug );
+		}
+	}
+}
+add_action( 'init', __NAMESPACE__ . '\unregister_legacy_patterns', 30 );
+
+/**
+ * Hide legacy counter inserter entries.
+ *
+ * Counter cards are now intended to be added through the Counter Band pattern.
+ */
+function filter_allowed_block_types( $allowed_block_types, $block_editor_context ) {
+	unset( $block_editor_context );
+
+	$blocked_types = [ 'core/counter' ];
+
+	if ( true === $allowed_block_types && class_exists( '\WP_Block_Type_Registry' ) ) {
+		$all_types = array_keys( \WP_Block_Type_Registry::get_instance()->get_all_registered() );
+		return array_values( array_diff( $all_types, $blocked_types ) );
+	}
+
+	if ( is_array( $allowed_block_types ) ) {
+		return array_values( array_diff( $allowed_block_types, $blocked_types ) );
+	}
+
+	return $allowed_block_types;
+}
+add_filter( 'allowed_block_types_all', __NAMESPACE__ . '\filter_allowed_block_types', 20, 2 );
 
 
 /**
