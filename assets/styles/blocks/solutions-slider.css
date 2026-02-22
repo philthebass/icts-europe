@@ -396,11 +396,6 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
     font-size: 12px;
 }
 
-.block-editor-page .icts-solutions-slider-block {
-    background-image: none;
-    padding-block: 0;
-}
-
 .block-editor-page .wp-block[data-type="icts-europe/solutions-slider"].has-child-selected
     .wp-block[data-type="icts-europe/solutions-slide"] {
     opacity: 0.45;
@@ -416,13 +411,17 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
     display: none;
 }
 
-.block-editor-page .icts-solutions-slider.is-solutions-previewing
-    .wp-block[data-type="icts-europe/solutions-slide"] {
-    pointer-events: none;
-}
-
-.block-editor-page .icts-solutions-slider.is-solutions-previewing .block-list-appender,
-.block-editor-page .icts-solutions-slider.is-solutions-previewing
-    .block-editor-button-block-appender {
-    display: none;
+/* Keep decorative strands visible in editor, regardless canvas width. */
+.block-editor-page .icts-solutions-slider-block {
+    background-image:
+        url("../../images/solutions-slider-strands.svg"),
+        url("../../images/solutions-slider-strands.svg");
+    background-repeat: no-repeat, no-repeat;
+    background-position:
+        center calc(0% - var(--icts-solutions-strands-trim)),
+        center calc(100% + var(--icts-solutions-strands-trim));
+    background-size:
+        var(--icts-solutions-strands-width) var(--icts-solutions-strands-height),
+        var(--icts-solutions-strands-width) var(--icts-solutions-strands-height);
+    padding-block: var(--icts-solutions-strands-gap);
 }

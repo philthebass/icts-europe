@@ -21,6 +21,7 @@
 
   // Child: hero-slide
   registerBlockType('icts-europe/hero-slide', {
+    apiVersion: 3,
     title: __('Hero Slide', 'icts-europe'),
     icon: 'format-image',
     parent: ['icts-europe/hero-slider'],
@@ -29,9 +30,9 @@
     attributes: {
       title: { type: 'string', source: 'text', selector: 'h2.icts-hero-slider__title' },
       text: { type: 'string', source: 'html', selector: '.icts-hero-slider__text' },
-      ctaLabel: { type: 'string', default: '' },
-      ctaUrl: { type: 'string', default: '' },
-      ctaTarget: { type: 'string', default: '' },
+      ctaLabel: { type: 'string', source: 'html', selector: 'a.icts-hero-slider__button', default: '' },
+      ctaUrl: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'href', default: '' },
+      ctaTarget: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'target', default: '' },
       mediaId: { type: 'number' },
       mediaUrl: { type: 'string' },
       focalPoint: { type: 'object', default: { x: 0.5, y: 0.5 } }
@@ -182,6 +183,7 @@
 
   // Parent: hero-slider
   registerBlockType('icts-europe/hero-slider', {
+    apiVersion: 3,
     title: __('Hero Slider', 'icts-europe'),
     icon: 'images-alt2',
     category: 'layout',
@@ -191,6 +193,15 @@
       const { attributes: { preview }, setAttributes } = props;
 
       return el('div', { className: 'icts-hero-slider-block alignfull' + (preview ? ' is-previewing' : '') },
+        el(InspectorControls, {},
+          el(PanelBody, { title: __('Slider Settings', 'icts-europe'), initialOpen: true },
+            el(ToggleControl, {
+              label: __('Preview first slide only', 'icts-europe'),
+              checked: !!preview,
+              onChange: function (nextValue) { setAttributes({ preview: !!nextValue }); }
+            })
+          )
+        ),
         el(BlockControls, {},
           el(ToolbarGroup, {},
             el(ToolbarButton, {

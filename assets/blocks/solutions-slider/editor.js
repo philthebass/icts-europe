@@ -17,10 +17,12 @@
         ToolbarGroup,
         ToolbarButton,
         RangeControl,
-        FocalPointPicker
+        FocalPointPicker,
+        ToggleControl
     } = wp.components;
 
     registerBlockType('icts-europe/solutions-slide', {
+        apiVersion: 3,
         title: __('Solutions Slide', 'icts-europe'),
         icon: 'format-image',
         parent: ['icts-europe/solutions-slider'],
@@ -202,6 +204,7 @@
     });
 
     registerBlockType('icts-europe/solutions-slider', {
+        apiVersion: 3,
         title: __('Solutions Slider', 'icts-europe'),
         icon: 'images-alt2',
         category: 'layout',
@@ -211,8 +214,18 @@
             anchor: true
         },
         attributes: {
-            heading: { type: 'string', default: '' },
-            subheading: { type: 'string', default: '' },
+            heading: {
+                type: 'string',
+                source: 'html',
+                selector: '.icts-solutions-slider__heading',
+                default: ''
+            },
+            subheading: {
+                type: 'string',
+                source: 'html',
+                selector: '.icts-solutions-slider__subheading',
+                default: ''
+            },
             preview: { type: 'boolean', default: false },
             autoplay: { type: 'number', default: 7000 }
         },
@@ -252,6 +265,13 @@
                         el(
                             PanelBody,
                             { title: __('Slider Settings', 'icts-europe'), initialOpen: true },
+                            el(ToggleControl, {
+                                label: __('Preview first slide only', 'icts-europe'),
+                                checked: !!preview,
+                                onChange: function (value) {
+                                    setAttributes({ preview: !!value });
+                                }
+                            }),
                             el(RangeControl, {
                                 label: __('Autoplay duration (ms)', 'icts-europe'),
                                 min: 2000,
@@ -363,7 +383,7 @@
                             className:
                                 'icts-solutions-slider__indicators js-icts-solutions-slider-indicators',
                             role: 'tablist',
-                            'aria-label': __('Solutions slider pagination', 'icts-europe')
+                            'aria-label': 'Solutions slider pagination'
                         })
                     ]
                 )

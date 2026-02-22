@@ -49,3 +49,9 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-20 — Added `brand-primary-light` token and applied it to counters — Needed a lighter branded counter treatment while keeping reusable card behavior in editor layouts — Counter cards now use 70% transparent `brand-primary-light`, and counter blocks stretch to equal height when used inside Row/Grid/Columns containers.
 
 2026-02-20 — Added reusable Counter Band pattern and container-aware counter typography — Counter cards needed a predictable full-width section wrapper and better handling of large values in narrow cards — New `icts-europe/counter-band` pattern provides a background-image band with responsive counter grid, and counter value sizing now scales by card width to prevent overflow.
+
+2026-02-22 — Made Hero/Solutions native blocks translation-safe by sourcing translatable fields from saved HTML — Polylang/DeepL translations changed visible text while unsourced attributes still held original values, triggering block validation errors — Hero CTA label/URL/target and Solutions intro heading/subheading now parse from block markup, reducing “unexpected or invalid content” on translated pages.
+
+2026-02-22 — Upgraded native Hero/Solutions block registrations to `apiVersion: 3` — WordPress 6.9 warns on API v1/v2 custom blocks for iframe editor compatibility — Theme-owned JS blocks now align with current block API expectations; plugin-owned warnings remain external.
+
+2026-02-22 — Added inspector preview toggles and restored Solutions strands in editor — Preview mode needed a reliable way to exit in Site Editor and design parity required visible strands while editing — Hero/Solutions sliders now expose `Preview first slide only` in inspector, preview no longer suppresses all interactions, and Solutions decorative strands are rendered in editor.
