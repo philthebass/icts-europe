@@ -105,11 +105,12 @@ require_once __DIR__ . '/inc/blocks.php';
 
 // Editor-only CSS for better hero slider preview
 \add_action( 'enqueue_block_editor_assets', function () {
+	$hero_editor_style_path = get_template_directory() . '/assets/styles/blocks/hero-slider-editor.css';
     \wp_enqueue_style(
         'icts-hero-slider-editor',
         get_template_directory_uri() . '/assets/styles/blocks/hero-slider-editor.css',
         [],
-        \wp_get_theme()->get( 'Version' )
+        \file_exists( $hero_editor_style_path ) ? (string) \filemtime( $hero_editor_style_path ) : \wp_get_theme()->get( 'Version' )
     );
 
     $team_profile_style_path = get_template_directory() . '/assets/styles/blocks/team-member-profile.css';

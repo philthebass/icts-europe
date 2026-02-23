@@ -55,3 +55,7 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-22 — Upgraded native Hero/Solutions block registrations to `apiVersion: 3` — WordPress 6.9 warns on API v1/v2 custom blocks for iframe editor compatibility — Theme-owned JS blocks now align with current block API expectations; plugin-owned warnings remain external.
 
 2026-02-22 — Added inspector preview toggles and restored Solutions strands in editor — Preview mode needed a reliable way to exit in Site Editor and design parity required visible strands while editing — Hero/Solutions sliders now expose `Preview first slide only` in inspector, preview no longer suppresses all interactions, and Solutions decorative strands are rendered in editor.
+
+2026-02-23 — Scoped editor-only slider CSS for iframe editor compatibility — After moving native blocks to `apiVersion: 3`, editor canvas rules keyed to `.block-editor-page` no longer matched reliably inside iframe contexts — Hero/Solutions preview and strands editor rules now target both `.block-editor-page` and `.editor-styles-wrapper`, and preview-hide logic uses sibling selectors so only non-first slides are hidden.
+
+2026-02-23 — Versioned Hero editor stylesheet by filemtime — Theme-version cache keys delayed editor CSS updates during rapid block iteration — Hero editor styles now invalidate immediately after file edits, matching other block/editor asset versioning.

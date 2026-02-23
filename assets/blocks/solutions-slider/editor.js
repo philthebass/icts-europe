@@ -232,14 +232,78 @@
         edit: function (props) {
             const { attributes, setAttributes } = props;
             const { heading, subheading, preview, autoplay } = attributes;
+            const { useRef, useEffect } = wp.element;
+            const previewRef = useRef(null);
             const appender =
                 InnerBlocks && InnerBlocks.ButtonBlockAppender
                     ? InnerBlocks.ButtonBlockAppender
                     : undefined;
 
+            useEffect(function () {
+                const root = previewRef.current;
+                if (!root) {
+                    return undefined;
+                }
+
+                const applyPreviewState = function () {
+                    const track = root.querySelector('.icts-solutions-slider__track');
+                    if (!track) {
+                        return;
+                    }
+
+                    let slideBlocks = Array.from(
+                        track.querySelectorAll(
+                            '.block-editor-block-list__layout > [data-type="icts-europe/solutions-slide"]'
+                        )
+                    );
+
+                    if (!slideBlocks.length) {
+                        slideBlocks = Array.from(
+                            track.querySelectorAll('[data-type="icts-europe/solutions-slide"]')
+                        );
+                    }
+
+                    slideBlocks.forEach(function (slideBlock, index) {
+                        if (preview && index > 0) {
+                            slideBlock.style.setProperty('display', 'none');
+                            slideBlock.setAttribute('data-icts-preview-hidden', '1');
+                            return;
+                        }
+
+                        if (slideBlock.getAttribute('data-icts-preview-hidden') === '1') {
+                            slideBlock.style.removeProperty('display');
+                            slideBlock.removeAttribute('data-icts-preview-hidden');
+                        }
+                    });
+                };
+
+                applyPreviewState();
+
+                if (typeof MutationObserver === 'undefined') {
+                    return undefined;
+                }
+
+                const observer = new MutationObserver(function () {
+                    applyPreviewState();
+                });
+                observer.observe(root, { childList: true, subtree: true });
+
+                return function () {
+                    observer.disconnect();
+                    const hiddenSlides = root.querySelectorAll('[data-icts-preview-hidden="1"]');
+                    hiddenSlides.forEach(function (hiddenSlide) {
+                        hiddenSlide.style.removeProperty('display');
+                        hiddenSlide.removeAttribute('data-icts-preview-hidden');
+                    });
+                };
+            }, [preview]);
+
             return el(
                 'div',
-                { className: 'icts-solutions-slider-block' + (preview ? ' is-previewing' : '') },
+                {
+                    className: 'icts-solutions-slider-block' + (preview ? ' is-previewing' : ''),
+                    ref: previewRef
+                },
                 [
                     el(
                         BlockControls,
@@ -268,6 +332,7 @@
                             el(ToggleControl, {
                                 label: __('Preview first slide only', 'icts-europe'),
                                 checked: !!preview,
+                                __nextHasNoMarginBottom: true,
                                 onChange: function (value) {
                                     setAttributes({ preview: !!value });
                                 }

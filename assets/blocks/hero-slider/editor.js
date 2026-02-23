@@ -118,6 +118,7 @@
                     el(ToggleControl, {
                       label: __('Open in new tab', 'icts-europe'),
                       checked: !!(tempCta && tempCta.newTab),
+                      __nextHasNoMarginBottom: true,
                       onChange: function(val){ setTempCta(Object.assign({}, tempCta || {}, { newTab: !!val })); }
                     })
                   ),
@@ -191,13 +192,71 @@
     attributes: { preview: { type: 'boolean', default: false } },
     edit: function (props) {
       const { attributes: { preview }, setAttributes } = props;
+      const { useRef, useEffect } = wp.element;
+      const previewRef = useRef(null);
 
-      return el('div', { className: 'icts-hero-slider-block alignfull' + (preview ? ' is-previewing' : '') },
+      useEffect(function () {
+        const root = previewRef.current;
+        if (!root) {
+          return undefined;
+        }
+
+        const applyPreviewState = function () {
+          const track = root.querySelector('.icts-hero-slider__track');
+          if (!track) {
+            return;
+          }
+
+          let slideBlocks = Array.from(
+            track.querySelectorAll('.block-editor-block-list__layout > [data-type="icts-europe/hero-slide"]')
+          );
+
+          if (!slideBlocks.length) {
+            slideBlocks = Array.from(track.querySelectorAll('[data-type="icts-europe/hero-slide"]'));
+          }
+
+          slideBlocks.forEach(function (slideBlock, index) {
+            if (preview && index > 0) {
+              slideBlock.style.setProperty('display', 'none');
+              slideBlock.setAttribute('data-icts-preview-hidden', '1');
+              return;
+            }
+
+            if (slideBlock.getAttribute('data-icts-preview-hidden') === '1') {
+              slideBlock.style.removeProperty('display');
+              slideBlock.removeAttribute('data-icts-preview-hidden');
+            }
+          });
+        };
+
+        applyPreviewState();
+
+        if (typeof MutationObserver === 'undefined') {
+          return undefined;
+        }
+
+        const observer = new MutationObserver(function () {
+          applyPreviewState();
+        });
+        observer.observe(root, { childList: true, subtree: true });
+
+        return function () {
+          observer.disconnect();
+          const hiddenSlides = root.querySelectorAll('[data-icts-preview-hidden="1"]');
+          hiddenSlides.forEach(function (hiddenSlide) {
+            hiddenSlide.style.removeProperty('display');
+            hiddenSlide.removeAttribute('data-icts-preview-hidden');
+          });
+        };
+      }, [preview]);
+
+      return el('div', { className: 'icts-hero-slider-block alignfull' + (preview ? ' is-previewing' : ''), ref: previewRef },
         el(InspectorControls, {},
           el(PanelBody, { title: __('Slider Settings', 'icts-europe'), initialOpen: true },
             el(ToggleControl, {
               label: __('Preview first slide only', 'icts-europe'),
               checked: !!preview,
+              __nextHasNoMarginBottom: true,
               onChange: function (nextValue) { setAttributes({ preview: !!nextValue }); }
             })
           )
