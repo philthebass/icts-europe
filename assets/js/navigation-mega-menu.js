@@ -86,6 +86,27 @@
         });
     }
 
+    function setDesktopFlyoutTopOffset(item) {
+        if (!item) {
+            return;
+        }
+
+        var panel = getPanel(item);
+        var parentPanel = item.parentElement;
+        if (!panel || !parentPanel || !parentPanel.classList.contains('wp-block-navigation__submenu-container')) {
+            return;
+        }
+
+        var itemRect = item.getBoundingClientRect();
+        var parentRect = parentPanel.getBoundingClientRect();
+        var offset = parentRect.top - itemRect.top;
+        panel.style.setProperty('--icts-flyout-top-offset', Math.round(offset) + 'px');
+    }
+
+    function refreshDesktopFlyoutOffsets(nav) {
+        getDesktopFlyoutItems(nav).forEach(setDesktopFlyoutTopOffset);
+    }
+
     function closeDesktopFlyout(item, immediate, done) {
         if (item._ictsFlyoutCloseTimer) {
             window.clearTimeout(item._ictsFlyoutCloseTimer);
@@ -158,6 +179,7 @@
             item._ictsFlyoutCloseTimer = null;
         }
 
+        setDesktopFlyoutTopOffset(item);
         setPanelHidden(item, false);
         item.classList.remove('is-icts-flyout-closing');
         item.classList.add('is-icts-flyout-open');
@@ -770,6 +792,7 @@
             item.classList.add('icts-nav-has-flyout');
             setExpanded(item, false);
             setPanelHidden(item, true);
+            setDesktopFlyoutTopOffset(item);
         });
 
         nav.addEventListener(
@@ -848,12 +871,14 @@
                 if (openItem && openItem !== clickedItem) {
                     closeDesktopItem(openItem, false, function () {
                         setMegaTop(nav);
+                        refreshDesktopFlyoutOffsets(nav);
                         openDesktopItem(clickedItem);
                     });
                     return;
                 }
 
                 setMegaTop(nav);
+                refreshDesktopFlyoutOffsets(nav);
                 openDesktopItem(clickedItem);
             },
             true
@@ -904,6 +929,7 @@
         var setPositions = function () {
             navBlocks.forEach(function (nav) {
                 setMegaTop(nav);
+                refreshDesktopFlyoutOffsets(nav);
                 if (!desktopQuery.matches) {
                     closeDesktopAll(nav, true);
                 }

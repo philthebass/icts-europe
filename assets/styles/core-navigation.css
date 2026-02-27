@@ -128,7 +128,7 @@
 	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega > .wp-block-navigation__submenu-container > .wp-block-navigation-item.has-child > .wp-block-navigation__submenu-container {
 		display: block !important;
 		position: absolute;
-		inset-block-start: 0;
+		inset-block-start: var(--icts-flyout-top-offset, 0px);
 		inset-inline-start: calc(100% + var(--icts-mega-column-gap)) !important;
 		inset-inline-end: auto !important;
 		left: calc(100% + var(--icts-mega-column-gap)) !important;
