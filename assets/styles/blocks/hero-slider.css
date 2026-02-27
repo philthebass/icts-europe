@@ -11,6 +11,19 @@
     margin-right: calc(50% - 50vw) !important;
 }
 
+/* Always neutralize auto flow margins on this block */
+.wp-block-icts-europe-hero-slider {
+    margin-block-start: 0 !important;
+    margin-block-end: 0 !important;
+}
+
+/* Prevent inherited layout flow spacing around the block wrapper */
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-europe-hero-slider,
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-europe-hero-slider.alignfull {
+    margin-block-start: 0 !important;
+    margin-block-end: 0 !important;
+}
+
 /* Prevent parent layout from re-centering */
 .icts-hero-slider-block.alignfull > .icts-hero-slider {
     margin: 0;

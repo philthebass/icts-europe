@@ -67,3 +67,9 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-27 — Standardized desktop third-level flyout placement and prevented submenu label wrapping — Deeper menu drawers must remain predictable as editors add more nested links under Industries/Solutions — Third-level flyouts now always anchor to a fixed right-side column from the first submenu panel, and submenu labels use no-wrap styling to avoid broken line wraps at narrower desktop widths.
 
 2026-02-27 — Enabled Polylang `Custom fields` synchronization for FSE translation workflows — Header/navigation and other block-based translated entities were not consistently duplicating/copying related metadata during language creation — Keeping `Languages → Settings → Synchronization → Custom fields` enabled is now a required project setting to support reliable translated menu/template behavior.
+
+2026-02-27 — Enabled editor margin/padding controls via theme settings with spacing token guardrails — Editors needed per-block spacing controls (margin/padding) without opening unrestricted custom values — `settings.appearanceTools` is now enabled and `settings.spacing.margin/padding` are true, while `customSpacingSize` remains false so spacing remains token-based.
+
+2026-02-27 — Scoped flow-spacing resets for Hero Slider, Solutions Slider, and Counter Band wrappers — Enabling global margin/padding tools exposed inherited flow spacing side effects on full-width custom blocks — Added targeted wrapper-level `margin-block` resets in block CSS so those components keep their intended geometry while editor spacing tools remain enabled globally.
+
+2026-02-27 — Aligned global button typography with header CTA baseline — Header navigation CTA intentionally uses smaller, regular-weight button text and other buttons should visually match by default — `styles.elements.button` now uses `font-size: small` and regular weight token in `theme.json`, while keeping existing button padding values.

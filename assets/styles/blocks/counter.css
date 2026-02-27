@@ -6,6 +6,19 @@
 	margin: 0;
 }
 
+/* Always neutralize auto flow margins on this block */
+.wp-block-cover.icts-counter-band {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* Prevent inherited layout flow spacing around the band wrapper */
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-cover.icts-counter-band,
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-cover.icts-counter-band.alignfull {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
 .icts-counter-block__inner {
 	background-color: var(--icts-counter-bg);
 	background-color: color-mix(in srgb, var(--wp--preset--color--brand-primary) 70%, transparent);

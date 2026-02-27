@@ -21,7 +21,7 @@
 		}
 	],
 	"settings": {
-		"appearanceTools": false,
+		"appearanceTools": true,
 		"border": {
 			"color": false,
 			"radius": false,
@@ -400,6 +400,14 @@
 	},
 	"styles": {
 		"blocks": {
+			"core/buttons": {
+				"spacing": {
+					"padding": {
+						"bottom": "0",
+						"top": "0"
+					}
+				}
+			},
 			"core/code": {
 				"border": {
 					"radius": "6px"
@@ -469,16 +477,16 @@
 				},
 				"spacing": {
 					"padding": {
-						"bottom": ".65em",
+						"bottom": "0.65em",
 						"left": "1.1em",
 						"right": "1.1em",
-						"top": ".65em"
+						"top": "0.65em"
 					}
 				},
 				"typography": {
 					"fontFamily": "var(--wp--preset--font-family--nunito-sans)",
-					"fontSize": "var(--wp--preset--font-size--button)",
-					"fontWeight": "400"
+					"fontSize": "var(--wp--preset--font-size--small)",
+					"fontWeight": "var(--wp--custom--font-weight--regular)"
 				}
 			},
 			"h1": {
@@ -519,35 +527,35 @@
 					"lineHeight": "var(--wp--custom--line-height--snug)"
 				}
 			},
-				"link": {
-					":hover": {
-						"color": {
-							"text": "var(--wp--preset--color--brand-primary-hover)"
-						},
-						"typography": {
-							"textDecoration": "none"
-						}
-					},
-					":focus": {
-						"color": {
-							"text": "var(--wp--preset--color--brand-primary-hover)"
-						},
-						"typography": {
-							"textDecoration": "none"
-						}
-					},
-					":visited": {
-						"color": {
-							"text": "var(--wp--preset--color--brand-primary)"
-						}
-					},
+			"link": {
+				":focus": {
 					"color": {
-						"text": "var(--wp--preset--color--brand-primary)"
+						"text": "var(--wp--preset--color--brand-primary-hover)"
 					},
 					"typography": {
 						"textDecoration": "none"
 					}
+				},
+				":hover": {
+					"color": {
+						"text": "var(--wp--preset--color--brand-primary-hover)"
+					},
+					"typography": {
+						"textDecoration": "none"
+					}
+				},
+				":visited": {
+					"color": {
+						"text": "var(--wp--preset--color--brand-primary)"
+					}
+				},
+				"color": {
+					"text": "var(--wp--preset--color--brand-primary)"
+				},
+				"typography": {
+					"textDecoration": "none"
 				}
+			}
 		},
 		"spacing": {
 			"blockGap": "var(--wp--preset--spacing--medium)",

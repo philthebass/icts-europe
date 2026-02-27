@@ -1,0 +1,14 @@
+/* Post Content
+--------------------------------------------- */
+
+/* Remove automatic flow spacing before post content wrapper. */
+:root :where(.is-layout-flow) > .entry-content.wp-block-post-content,
+:root :where(.is-layout-flow) > .wp-block-post-content {
+	margin-block-start: 0;
+}
+
+/* Prevent first block inside post content from reintroducing a top gap. */
+.entry-content.wp-block-post-content > :first-child,
+.wp-block-post-content > :first-child {
+	margin-block-start: 0;
+}

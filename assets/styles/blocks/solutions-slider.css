@@ -24,6 +24,25 @@
         var(--icts-solutions-strands-width) var(--icts-solutions-strands-height);
 }
 
+/* Always neutralize auto flow margins on this block */
+.wp-block-icts-europe-solutions-slider {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* Prevent inherited layout flow spacing around the block wrapper */
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-europe-solutions-slider,
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-europe-solutions-slider.alignfull {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* ACF/frontend wrapper can be output without wp-block-* class */
+:root :where(.is-layout-flow, .is-layout-constrained) > .icts-solutions-slider-block {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
 .icts-solutions-slider {
     --icts-solutions-content-gap: 1rem;
     --icts-solutions-slide-gap: clamp(1.5rem, 4vw, 3rem);
