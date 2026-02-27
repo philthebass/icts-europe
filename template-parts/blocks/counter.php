@@ -67,7 +67,7 @@ $label = is_string( $label ) ? trim( $label ) : '';
 
 $from_value = ( 'down' === $count_direction ) ? $number : 0;
 $to_value   = ( 'down' === $count_direction ) ? 0 : $number;
-$display_to = number_format( $to_value, 0, '.', ',' );
+$display_from = number_format( $from_value, 0, '.', ',' );
 
 $aria_value = trim( $prefix . (string) $number . $suffix );
 if ( '' === $aria_value ) {
@@ -91,7 +91,7 @@ if ( '' === $aria_value ) {
 				data-to="<?php echo esc_attr( (string) $to_value ); ?>"
 				data-duration="1600"
 			>
-				<?php echo esc_html( $display_to ); ?>
+				<?php echo esc_html( $display_from ); ?>
 			</span>
 
 			<?php if ( '' !== $suffix ) : ?>
