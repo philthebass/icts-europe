@@ -33,22 +33,52 @@
       ctaLabel: { type: 'string', source: 'html', selector: 'a.icts-hero-slider__button', default: '' },
       ctaUrl: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'href', default: '' },
       ctaTarget: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'target', default: '' },
+      logoId: { type: 'number' },
+      logoUrl: { type: 'string', default: '' },
+      logoAlt: { type: 'string', default: '' },
+      logoLinkUrl: { type: 'string', default: '' },
+      logoLinkTarget: { type: 'string', default: '' },
       mediaId: { type: 'number' },
       mediaUrl: { type: 'string' },
       focalPoint: { type: 'object', default: { x: 0.5, y: 0.5 } }
     },
     edit: function (props) {
       const { attributes, setAttributes, className } = props;
-      const { title, text, ctaLabel, ctaUrl, ctaTarget, mediaId, mediaUrl, focalPoint } = attributes;
+      const { title, text, ctaLabel, ctaUrl, ctaTarget, logoId, logoUrl, logoAlt, logoLinkUrl, logoLinkTarget, mediaId, mediaUrl, focalPoint } = attributes;
       const { useState } = wp.element;
 
       // CTA modal state
       const [isCtaOpen, setIsCtaOpen] = useState(false);
       const [tempCta, setTempCta] = useState(null);
+      const [isLogoLinkOpen, setIsLogoLinkOpen] = useState(false);
+      const [tempLogoLink, setTempLogoLink] = useState(null);
 
       function onSelectImage(media) {
         if (!media) return;
         setAttributes({ mediaId: media.id, mediaUrl: media.url });
+      }
+
+      function onSelectLogo(media) {
+        if (!media) return;
+        const resolvedUrl = media.url
+          || media.source_url
+          || (media.sizes && media.sizes.full && media.sizes.full.url)
+          || '';
+        setAttributes({
+          logoId: media.id,
+          logoUrl: resolvedUrl,
+          logoAlt: media.alt || media.title || ''
+        });
+      }
+
+      function removeLogo() {
+        setAttributes({
+          logoId: 0,
+          logoUrl: '',
+          logoAlt: '',
+          logoLinkUrl: '',
+          logoLinkTarget: ''
+        });
       }
 
       function openCta() {
@@ -60,6 +90,20 @@
         if (!tempCta) { setIsCtaOpen(false); return; }
         setAttributes({ ctaLabel: tempCta.label || '', ctaUrl: tempCta.url || '', ctaTarget: tempCta.newTab ? '_blank' : '' });
         setIsCtaOpen(false);
+      }
+
+      function openLogoLink() {
+        setTempLogoLink({ url: logoLinkUrl || '', newTab: logoLinkTarget === '_blank' });
+        setIsLogoLinkOpen(true);
+      }
+
+      function saveLogoLink() {
+        if (!tempLogoLink) { setIsLogoLinkOpen(false); return; }
+        setAttributes({
+          logoLinkUrl: tempLogoLink.url || '',
+          logoLinkTarget: tempLogoLink.newTab ? '_blank' : ''
+        });
+        setIsLogoLinkOpen(false);
       }
 
       return el(Fragment, {},
@@ -79,6 +123,68 @@
                 value: focalPoint,
                 onChange: (fp) => setAttributes({ focalPoint: fp })
               })
+            )
+          ),
+          el(PanelBody, { title: __('Logo', 'icts-europe'), initialOpen: false },
+            el(MediaUploadCheck, {},
+              el(MediaUpload, {
+                onSelect: onSelectLogo,
+                allowedTypes: ['image'],
+                value: logoId,
+                render: ({ open }) => el(Button, { onClick: open, isSecondary: true }, logoUrl ? __('Replace logo', 'icts-europe') : __('Select logo', 'icts-europe'))
+              })
+            ),
+            logoUrl && el(Fragment, {},
+              el('div', { style: { marginTop: '10px' } },
+                el('img', {
+                  src: logoUrl,
+                  alt: logoAlt || '',
+                  style: { maxWidth: '220px', width: '100%', height: 'auto', display: 'block' }
+                })
+              ),
+              el(TextControl, {
+                label: __('Logo alt text', 'icts-europe'),
+                value: logoAlt || '',
+                onChange: function(v){ setAttributes({ logoAlt: v }); }
+              }),
+              el('div', { className: 'icts-hero-cta-summary' },
+                el('div', { className: 'icts-hero-cta-summary__row' },
+                  el('div', { className: 'icts-hero-cta-summary__label' }, __('Logo link', 'icts-europe')),
+                  el('div', { className: 'icts-hero-cta-summary__value' }, logoLinkUrl || __('None', 'icts-europe'))
+                ),
+                el(Button, { isSecondary: true, onClick: openLogoLink, style: { marginTop: '8px' } }, __('Edit logo link', 'icts-europe')),
+                el(Button, { isLink: true, isDestructive: true, onClick: removeLogo, style: { marginTop: '4px' } }, __('Remove logo', 'icts-europe'))
+              ),
+              isLogoLinkOpen && el(Modal, { title: __('Edit logo link', 'icts-europe'), className: 'icts-hero-cta-modal-frame', onRequestClose: function(){ setIsLogoLinkOpen(false); } },
+                el('div', { className: 'icts-hero-cta-modal' },
+                  LinkControl ?
+                    el(LinkControl, {
+                      value: { url: (tempLogoLink && tempLogoLink.url) || '', opensInNewTab: !!(tempLogoLink && tempLogoLink.newTab) },
+                      onChange: function (val) {
+                        setTempLogoLink(Object.assign({}, tempLogoLink || {}, { url: (val && val.url) || '', newTab: !!(val && val.opensInNewTab) }));
+                      },
+                      settings: [ { id: 'opensInNewTab', title: __('Open in new tab', 'icts-europe') } ],
+                      showInitialSuggestions: true,
+                      withCreateSuggestion: false
+                    })
+                  : el('div', { style: { marginTop: '8px' } },
+                      el(URLInputButton, {
+                        url: (tempLogoLink && tempLogoLink.url) || '',
+                        onChange: function (url) { setTempLogoLink(Object.assign({}, tempLogoLink || {}, { url: url })); }
+                      }),
+                      el(ToggleControl, {
+                        label: __('Open in new tab', 'icts-europe'),
+                        checked: !!(tempLogoLink && tempLogoLink.newTab),
+                        __nextHasNoMarginBottom: true,
+                        onChange: function(val){ setTempLogoLink(Object.assign({}, tempLogoLink || {}, { newTab: !!val })); }
+                      })
+                    ),
+                  el('div', { className: 'icts-hero-cta-modal__actions' },
+                    el(Button, { isTertiary: true, onClick: function(){ setIsLogoLinkOpen(false); } }, __('Cancel', 'icts-europe')),
+                    el(Button, { isPrimary: true, onClick: saveLogoLink }, __('Save', 'icts-europe'))
+                  )
+                )
+              )
             )
           ),
           el(PanelBody, { title: __('CTA', 'icts-europe'), initialOpen: false },
@@ -141,6 +247,17 @@
           // Overlay must not capture pointer events in editor
           el('div', { className: 'icts-hero-slider__overlay', style: { pointerEvents: 'none' } }),
           el('div', { className: 'icts-hero-slider__content' },
+            logoUrl && el('div', { className: 'icts-hero-slider__logo' },
+              logoLinkUrl
+                ? el('a', {
+                  className: 'icts-hero-slider__logo-link',
+                  href: logoLinkUrl,
+                  target: logoLinkTarget || undefined,
+                  rel: logoLinkTarget === '_blank' ? 'noreferrer noopener' : undefined
+                },
+                el('img', { src: logoUrl, alt: logoAlt || '' }))
+                : el('img', { src: logoUrl, alt: logoAlt || '' })
+            ),
             el(RichText, {
               tagName: 'h2',
               className: 'icts-hero-slider__title',
@@ -174,6 +291,17 @@
         ),
         el('div', { className: 'icts-hero-slider__overlay' }),
         el('div', { className: 'icts-hero-slider__content' },
+          a.logoUrl && el('div', { className: 'icts-hero-slider__logo' },
+            a.logoLinkUrl
+              ? el('a', {
+                className: 'icts-hero-slider__logo-link',
+                href: a.logoLinkUrl,
+                target: a.logoLinkTarget || undefined,
+                rel: a.logoLinkTarget === '_blank' ? 'noreferrer noopener' : undefined
+              },
+              el('img', { src: a.logoUrl, alt: a.logoAlt || '' }))
+              : el('img', { src: a.logoUrl, alt: a.logoAlt || '' })
+          ),
           el(RichText.Content, { tagName: 'h2', className: 'icts-hero-slider__title', value: a.title }),
           el(RichText.Content, { tagName: 'div', className: 'icts-hero-slider__text has-medium-font-size', value: a.text }),
           (a.ctaLabel && a.ctaUrl) && el('a', { className: 'icts-hero-slider__button wp-element-button', href: a.ctaUrl, target: a.ctaTarget || undefined }, a.ctaLabel)

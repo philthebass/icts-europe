@@ -60,6 +60,9 @@ Plugins
 Accessibility & Motion
 - Sliders pause on hover; respect prefers-reduced-motion. No visible Pause control required for now.
 - Indicators keyboard accessible; ARIA labels present.
+- Navigation uses click-driven mega panels (desktop) and drawer panels (mobile), with reverse close animations.
+- Desktop supports second-level and fixed-position third-level flyouts; mobile supports parent-aware Back navigation.
+- Class-based menu icons (`nav-icon-*`) are shared across desktop and mobile submenu items.
 
 Performance
 - No bundler required. Vendor JS: Flickity v2.x.

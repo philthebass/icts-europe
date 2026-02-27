@@ -164,6 +164,26 @@ body.rtl .icts-hero-slider__content,
 }
 
 /* =========================================================
+   Optional slide logo
+   ========================================================= */
+.icts-hero-slider__logo {
+    width: 100%;
+    max-width: 260px;
+    display: block;
+}
+
+.icts-hero-slider__logo-link {
+    display: inline-block;
+    line-height: 0;
+}
+
+.icts-hero-slider__logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* =========================================================
    CTA Button – inverted brand style
    ========================================================= */
 
