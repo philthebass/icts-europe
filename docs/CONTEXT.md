@@ -57,6 +57,10 @@ Plugins
 - Polylang (optional)
 - WooCommerce (optional styles)
 
+Required plugin settings
+- Polylang → Languages → Settings → Synchronization → `Custom fields`: **enabled**.
+- Reason: required for reliable metadata syncing in translated FSE entities (notably navigation/template-related workflows).
+
 Accessibility & Motion
 - Sliders pause on hover; respect prefers-reduced-motion. No visible Pause control required for now.
 - Indicators keyboard accessible; ARIA labels present.
