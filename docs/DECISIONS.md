@@ -61,3 +61,5 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-23 — Versioned Hero editor stylesheet by filemtime — Theme-version cache keys delayed editor CSS updates during rapid block iteration — Hero editor styles now invalidate immediately after file edits, matching other block/editor asset versioning.
 
 2026-02-23 — Added nested navigation flyouts and hierarchical mobile submenu drawers — Industries/Solutions/Company now require second-level submenu flyouts on desktop and parent-aware drawer navigation on mobile — Desktop child flyouts open horizontally from the main mega panel with mirrored RTL positioning, and mobile Back now returns to the immediate parent panel instead of jumping to root.
+
+2026-02-27 — Enabled class-based submenu icons in mobile navigation drawers — Icon classes (`nav-icon-*`) were already used for desktop mega menu rows and needed parity in mobile for consistent IA cues — Mobile drawer row content/toggles now render the same mask-based icon pseudo-elements, so one menu item class setup works across desktop and mobile.
