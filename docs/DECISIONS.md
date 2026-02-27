@@ -59,3 +59,5 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-23 — Scoped editor-only slider CSS for iframe editor compatibility — After moving native blocks to `apiVersion: 3`, editor canvas rules keyed to `.block-editor-page` no longer matched reliably inside iframe contexts — Hero/Solutions preview and strands editor rules now target both `.block-editor-page` and `.editor-styles-wrapper`, and preview-hide logic uses sibling selectors so only non-first slides are hidden.
 
 2026-02-23 — Versioned Hero editor stylesheet by filemtime — Theme-version cache keys delayed editor CSS updates during rapid block iteration — Hero editor styles now invalidate immediately after file edits, matching other block/editor asset versioning.
+
+2026-02-23 — Added nested navigation flyouts and hierarchical mobile submenu drawers — Industries/Solutions/Company now require second-level submenu flyouts on desktop and parent-aware drawer navigation on mobile — Desktop child flyouts open horizontally from the main mega panel with mirrored RTL positioning, and mobile Back now returns to the immediate parent panel instead of jumping to root.

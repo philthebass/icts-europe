@@ -6,6 +6,7 @@
     var desktopQuery = window.matchMedia('(min-width: 860px)');
     var mobileQuery = window.matchMedia('(max-width: 859px)');
     var DESKTOP_CLOSE_MS = 1000;
+    var DESKTOP_FLYOUT_MS = 320;
     var MOBILE_SLIDE_MS = 280;
 
     var debugEnabled = false;
@@ -75,7 +76,97 @@
         panel.removeAttribute('hidden');
     }
 
+    function getDesktopFlyoutItems(nav) {
+        return Array.from(
+            nav.querySelectorAll(
+                '.wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega > .wp-block-navigation__submenu-container .wp-block-navigation-item.has-child'
+            )
+        ).filter(function (item) {
+            return !!getToggle(item) && !!getPanel(item);
+        });
+    }
+
+    function closeDesktopFlyout(item, immediate, done) {
+        if (item._ictsFlyoutCloseTimer) {
+            window.clearTimeout(item._ictsFlyoutCloseTimer);
+            item._ictsFlyoutCloseTimer = null;
+        }
+
+        var panel = getPanel(item);
+        var panelStyles = panel ? window.getComputedStyle(panel) : null;
+        var panelVisible = !!(
+            panelStyles &&
+            panelStyles.visibility !== 'hidden' &&
+            parseFloat(panelStyles.opacity || '0') > 0
+        );
+        var isOpen = item.classList.contains('is-icts-flyout-open');
+        var isClosing = item.classList.contains('is-icts-flyout-closing');
+
+        if (!isOpen && !isClosing && !panelVisible) {
+            if (typeof done === 'function') {
+                done();
+            }
+            return;
+        }
+
+        if (immediate) {
+            item.classList.remove('is-icts-flyout-closing');
+            item.classList.remove('is-icts-flyout-open');
+            setExpanded(item, false);
+            setPanelHidden(item, true);
+            if (typeof done === 'function') {
+                done();
+            }
+            return;
+        }
+
+        setPanelHidden(item, false);
+        item.classList.add('is-icts-flyout-closing');
+        item.classList.remove('is-icts-flyout-open');
+        item._ictsFlyoutCloseTimer = window.setTimeout(function () {
+            item.classList.remove('is-icts-flyout-closing');
+            setExpanded(item, false);
+            setPanelHidden(item, true);
+            item._ictsFlyoutCloseTimer = null;
+            if (typeof done === 'function') {
+                done();
+            }
+        }, DESKTOP_FLYOUT_MS);
+    }
+
+    function closeDesktopFlyoutsWithin(scope, immediate) {
+        if (!scope) {
+            return;
+        }
+
+        scope
+            .querySelectorAll('.wp-block-navigation-item.icts-nav-has-flyout')
+            .forEach(function (item) {
+                closeDesktopFlyout(item, immediate);
+            });
+    }
+
+    function closeDesktopFlyouts(nav, immediate) {
+        getDesktopFlyoutItems(nav).forEach(function (item) {
+            closeDesktopFlyout(item, immediate);
+        });
+    }
+
+    function openDesktopFlyout(item) {
+        if (item._ictsFlyoutCloseTimer) {
+            window.clearTimeout(item._ictsFlyoutCloseTimer);
+            item._ictsFlyoutCloseTimer = null;
+        }
+
+        setPanelHidden(item, false);
+        item.classList.remove('is-icts-flyout-closing');
+        item.classList.add('is-icts-flyout-open');
+        setExpanded(item, true);
+    }
+
     function closeDesktopItem(item, immediate, done) {
+        closeDesktopFlyoutsWithin(item, true);
+
         if (item._ictsCloseTimer) {
             window.clearTimeout(item._ictsCloseTimer);
             item._ictsCloseTimer = null;
@@ -128,6 +219,7 @@
     }
 
     function closeDesktopAll(nav, immediate) {
+        closeDesktopFlyouts(nav, immediate);
         getTopLevelItems(nav).forEach(function (item) {
             closeDesktopItem(item, immediate);
         });
@@ -176,9 +268,48 @@
         });
     }
 
+    function revealMobileParentPanel(panel) {
+        if (!panel) {
+            return;
+        }
+
+        if (panel._ictsMobileCloseTimer) {
+            window.clearTimeout(panel._ictsMobileCloseTimer);
+            panel._ictsMobileCloseTimer = null;
+        }
+
+        panel.removeAttribute('hidden');
+        panel.classList.remove('is-icts-mobile-parent-hidden');
+        panel.classList.remove('is-icts-mobile-closing');
+        panel.classList.add('is-icts-mobile-active');
+    }
+
+    function closeMobilePanelsWithin(scope, immediate) {
+        if (!scope) {
+            return;
+        }
+
+        scope
+            .querySelectorAll('.wp-block-navigation-item')
+            .forEach(function (item) {
+                if (!item.classList.contains('is-icts-mobile-open')) {
+                    return;
+                }
+
+                if (!getPanel(item) || !getToggle(item)) {
+                    return;
+                }
+
+                closeMobilePanel(item, true, !!immediate, false);
+            });
+    }
+
     function closeMobilePanel(item, collapseToggle, immediate, revealParent) {
         var panel = getPanel(item);
         var mobileContainer = item.closest('.wp-block-navigation__container');
+        var parentPanel = item.parentElement
+            ? item.parentElement.closest('.wp-block-navigation__submenu-container')
+            : null;
         var itemLabel = '';
         try {
             var labelEl = item.querySelector(
@@ -195,17 +326,24 @@
             label: itemLabel,
             immediate: immediate,
             revealParent: revealParent,
+            hasParentPanel: !!parentPanel,
             expanded: (getToggle(item) || {}).getAttribute ? getToggle(item).getAttribute('aria-expanded') : null
         });
         if (panel) {
+            closeMobilePanelsWithin(panel, true);
+
             var isActive = panel.classList.contains('is-icts-mobile-active');
             var isClosing = panel.classList.contains('is-icts-mobile-closing');
 
             // If nothing is visible, don't try to "animate" a panel that is already off-canvas.
             if (!immediate && !isActive && !isClosing) {
-                if (revealParent && mobileContainer && !mobileContainer._ictsRevealScheduled) {
-                    mobileContainer._ictsRevealScheduled = true;
-                    revealMobileParent(mobileContainer);
+                if (revealParent) {
+                    if (parentPanel) {
+                        revealMobileParentPanel(parentPanel);
+                    } else if (mobileContainer && !mobileContainer._ictsRevealScheduled) {
+                        mobileContainer._ictsRevealScheduled = true;
+                        revealMobileParent(mobileContainer);
+                    }
                 }
                 item.classList.remove('is-icts-mobile-open');
                 if (collapseToggle) {
@@ -224,10 +362,15 @@
             if (immediate) {
                 panel.classList.remove('is-icts-mobile-closing');
                 panel.classList.remove('is-icts-mobile-active');
+                panel.classList.remove('is-icts-mobile-parent-hidden');
                 panel.setAttribute('hidden', 'hidden');
-                if (revealParent && mobileContainer && !mobileContainer._ictsRevealScheduled) {
-                    mobileContainer._ictsRevealScheduled = true;
-                    revealMobileParent(mobileContainer);
+                if (revealParent) {
+                    if (parentPanel) {
+                        revealMobileParentPanel(parentPanel);
+                    } else if (mobileContainer && !mobileContainer._ictsRevealScheduled) {
+                        mobileContainer._ictsRevealScheduled = true;
+                        revealMobileParent(mobileContainer);
+                    }
                 }
             } else {
                 panel.removeAttribute('hidden');
@@ -235,12 +378,17 @@
                 panel.classList.remove('is-icts-mobile-active');
                 panel._ictsMobileCloseTimer = window.setTimeout(function () {
                     panel.classList.remove('is-icts-mobile-closing');
+                    panel.classList.remove('is-icts-mobile-parent-hidden');
                     panel.setAttribute('hidden', 'hidden');
                     panel._ictsMobileCloseTimer = null;
-                    if (revealParent && mobileContainer && !mobileContainer._ictsRevealScheduled) {
-                        mobileContainer._ictsRevealScheduled = true;
-                        debugLog('[ictsNav] panel close complete -> reveal', Date.now());
-                        revealMobileParent(mobileContainer);
+                    if (revealParent) {
+                        if (parentPanel) {
+                            revealMobileParentPanel(parentPanel);
+                        } else if (mobileContainer && !mobileContainer._ictsRevealScheduled) {
+                            mobileContainer._ictsRevealScheduled = true;
+                            debugLog('[ictsNav] panel close complete -> reveal', Date.now());
+                            revealMobileParent(mobileContainer);
+                        }
                     }
                 }, MOBILE_SLIDE_MS);
             }
@@ -293,12 +441,23 @@
                     window.clearTimeout(panel._ictsMobileCloseTimer);
                     panel._ictsMobileCloseTimer = null;
                 }
+
+                var parentPanel = item.parentElement
+                    ? item.parentElement.closest('.wp-block-navigation__submenu-container')
+                    : null;
+
+                if (parentPanel) {
+                    parentPanel.classList.remove('is-icts-mobile-active');
+                    parentPanel.classList.add('is-icts-mobile-parent-hidden');
+                }
+
                 panel.removeAttribute('hidden');
+                panel.classList.remove('is-icts-mobile-parent-hidden');
                 panel.classList.add('is-icts-mobile-active');
                 item.classList.add('is-icts-mobile-open');
 
                 var mobileContainer = item.closest('.wp-block-navigation__container');
-                if (mobileContainer) {
+                if (!parentPanel && mobileContainer) {
                     mobileContainer.classList.add('is-icts-mobile-container-hidden');
                 }
             }
@@ -311,7 +470,13 @@
 
                 var expanded = toggle.getAttribute('aria-expanded') === 'true';
                 if (expanded) {
-                    items.forEach(function (otherItem) {
+                    var siblingItems = Array.from(item.parentElement ? item.parentElement.children : []).filter(
+                        function (sibling) {
+                            return sibling !== item && sibling.classList.contains('wp-block-navigation-item');
+                        }
+                    );
+
+                    siblingItems.forEach(function (otherItem) {
                         if (otherItem !== item) {
                             var otherPanel = getPanel(otherItem);
                             var otherOpen =
@@ -324,6 +489,7 @@
                             closeMobilePanel(otherItem, true, false, false);
                         }
                     });
+
                     openMobilePanel();
                     return;
                 }
@@ -599,6 +765,54 @@
 
             item.classList.add('icts-nav-has-mega');
         });
+
+        getDesktopFlyoutItems(nav).forEach(function (item) {
+            item.classList.add('icts-nav-has-flyout');
+            setExpanded(item, false);
+            setPanelHidden(item, true);
+        });
+
+        nav.addEventListener(
+            'click',
+            function (event) {
+                if (!desktopQuery.matches) {
+                    return;
+                }
+
+                var flyoutItem = event.target.closest('.wp-block-navigation-item.icts-nav-has-flyout');
+                if (!flyoutItem || !nav.contains(flyoutItem)) {
+                    return;
+                }
+
+                var isToggleClick = !!event.target.closest('.wp-block-navigation-submenu__toggle');
+                var isIconClick = !!event.target.closest('.wp-block-navigation__submenu-icon');
+                if (!isToggleClick && !isIconClick) {
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                var isOpen =
+                    flyoutItem.classList.contains('is-icts-flyout-open') &&
+                    !flyoutItem.classList.contains('is-icts-flyout-closing');
+
+                if (isOpen) {
+                    closeDesktopFlyout(flyoutItem, false);
+                    return;
+                }
+
+                var siblingItems = Array.from(flyoutItem.parentElement.children).filter(function (sibling) {
+                    return sibling !== flyoutItem && sibling.classList.contains('icts-nav-has-flyout');
+                });
+                siblingItems.forEach(function (sibling) {
+                    closeDesktopFlyout(sibling, false);
+                });
+
+                openDesktopFlyout(flyoutItem);
+            },
+            true
+        );
 
         nav.addEventListener(
             'click',
