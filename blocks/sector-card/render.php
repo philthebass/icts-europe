@@ -14,6 +14,8 @@ $heading_wt   = isset( $attributes['headingFontWeight'] ) ? trim( (string) $attr
 $text         = isset( $attributes['text'] ) ? (string) $attributes['text'] : '';
 $text_size    = isset( $attributes['textFontSize'] ) ? trim( (string) $attributes['textFontSize'] ) : 'small';
 $text_wt      = isset( $attributes['textFontWeight'] ) ? trim( (string) $attributes['textFontWeight'] ) : '400';
+$modal_bg_slug = isset( $attributes['modalBackgroundColorSlug'] ) ? sanitize_key( (string) $attributes['modalBackgroundColorSlug'] ) : 'brand-primary-hover';
+$modal_bg     = isset( $attributes['modalBackgroundColor'] ) ? (string) $attributes['modalBackgroundColor'] : '';
 $button_label = isset( $attributes['buttonLabel'] ) && '' !== trim( (string) $attributes['buttonLabel'] )
 	? (string) $attributes['buttonLabel']
 	: __( 'Learn More', 'icts-europe' );
@@ -77,6 +79,16 @@ if ( '' !== $text_size_value ) {
 if ( '' !== $text_wt ) {
 	$text_style .= 'font-weight:' . sanitize_text_field( $text_wt ) . ';';
 }
+
+$modal_panel_style = '';
+if ( '' !== $modal_bg_slug ) {
+	$modal_panel_style = sprintf( 'background:var(--wp--preset--color--%s);', $modal_bg_slug );
+} else {
+	$sanitized_modal_bg = sanitize_hex_color( $modal_bg );
+	if ( $sanitized_modal_bg ) {
+		$modal_panel_style = 'background:' . $sanitized_modal_bg . ';';
+	}
+}
 ?>
 <article <?php echo get_block_wrapper_attributes( [ 'class' => 'icts-sector-card' ] ); ?>>
 	<div class="icts-sector-card__card">
@@ -115,6 +127,7 @@ if ( '' !== $text_wt ) {
 			aria-modal="true"
 			aria-labelledby="<?php echo esc_attr( $label_id ); ?>"
 			tabindex="-1"
+			<?php echo '' !== $modal_panel_style ? ' style="' . esc_attr( $modal_panel_style ) . '"' : ''; ?>
 		>
 			<button
 				type="button"

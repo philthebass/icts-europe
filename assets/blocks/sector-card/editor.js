@@ -11,17 +11,8 @@
 	const { Button, PanelBody, SelectControl, TextControl } = components;
 	const { Fragment, createElement: el, useEffect } = element;
 	const { __ } = i18n;
-
-	const MODAL_ALLOWED_BLOCKS = [
-		'core/heading',
-		'core/paragraph',
-		'core/image',
-		'core/buttons',
-		'core/button',
-		'core/list',
-		'core/separator',
-		'core/group',
-	];
+	const { createBlocksFromInnerBlocksTemplate } = blocks;
+	const { dispatch } = window.wp.data;
 
 	const MODAL_TEMPLATE = [
 		[
@@ -38,6 +29,110 @@
 			},
 		],
 	];
+
+	const MODAL_LAYOUT_TEMPLATES = {
+		simple: [
+			[
+				'core/heading',
+				{ level: 2, content: __( 'Modal heading', 'icts-europe' ) },
+			],
+			[
+				'core/paragraph',
+				{
+					content: __(
+						'Add a concise introduction for this sector.',
+						'icts-europe'
+					),
+				},
+			],
+		],
+		twoColumn: [
+			[
+				'core/columns',
+				{},
+				[
+					[
+						'core/column',
+						{},
+						[
+							[
+								'core/image',
+								{
+									sizeSlug: 'large',
+								},
+							],
+						],
+					],
+					[
+						'core/column',
+						{},
+						[
+							[
+								'core/heading',
+								{
+									level: 2,
+									content: __( 'Sector overview', 'icts-europe' ),
+								},
+							],
+							[
+								'core/paragraph',
+								{
+									content: __(
+										'Describe the challenge, the solution, and the outcome.',
+										'icts-europe'
+									),
+								},
+							],
+							[
+								'core/buttons',
+								{},
+								[
+									[
+										'core/button',
+										{
+											text: __( 'Learn more', 'icts-europe' ),
+										},
+									],
+								],
+							],
+						],
+					],
+				],
+			],
+		],
+		features: [
+			[
+				'core/heading',
+				{ level: 2, content: __( 'Key features', 'icts-europe' ) },
+			],
+			[
+				'core/list',
+				{
+					values:
+						'<li>' +
+						__( 'Fast onboarding', 'icts-europe' ) +
+						'</li><li>' +
+						__( 'Automated checks', 'icts-europe' ) +
+						'</li><li>' +
+						__( 'Global coverage', 'icts-europe' ) +
+						'</li>',
+				},
+			],
+			[
+				'core/separator',
+				{},
+			],
+			[
+				'core/paragraph',
+				{
+					content: __(
+						'Add supporting details, compliance notes, or implementation timeline.',
+						'icts-europe'
+					),
+				},
+			],
+		],
+	};
 
 	const makeModalId = ( clientId ) =>
 		`icts-sector-modal-${ clientId.replace( /-/g, '' ).slice( 0, 12 ) }`;
@@ -72,6 +167,8 @@
 				textFontSize,
 				textFontWeight,
 				buttonLabel,
+				modalBackgroundColorSlug,
+				modalBackgroundColor,
 				modalId,
 			} = attributes;
 
@@ -82,6 +179,27 @@
 			}, [ clientId, modalId ] );
 
 			const blockProps = useBlockProps( { className: 'icts-sector-card' } );
+			const editorSettings = window.wp.data.select( 'core/block-editor' ).getSettings();
+			const themeColors = Array.isArray( editorSettings?.colors ) ? editorSettings.colors : [];
+			const modalBackgroundOptions = themeColors.length
+				? themeColors.map( ( color ) => ( {
+						label: color.name,
+						value: color.slug,
+				  } ) )
+				: [ { label: __( 'Brand Primary Hover', 'icts-europe' ), value: 'brand-primary-hover' } ];
+
+			const modalBackgroundValue = modalBackgroundColorSlug
+				? `var(--wp--preset--color--${ modalBackgroundColorSlug })`
+				: modalBackgroundColor || undefined;
+			const applyModalTemplate = ( key ) => {
+				const template = MODAL_LAYOUT_TEMPLATES[ key ];
+				if ( ! template ) {
+					return;
+				}
+
+				const templateBlocks = createBlocksFromInnerBlocksTemplate( template );
+				dispatch( 'core/block-editor' ).replaceInnerBlocks( clientId, templateBlocks, false );
+			};
 
 			return el(
 				Fragment,
@@ -155,6 +273,20 @@
 								{ label: '900', value: '900' },
 							],
 							onChange: ( value ) => setAttributes( { textFontWeight: value } ),
+						} )
+					),
+					el(
+						PanelBody,
+						{ title: __( 'Modal', 'icts-europe' ), initialOpen: false },
+						el( SelectControl, {
+							label: __( 'Modal background color', 'icts-europe' ),
+							value: modalBackgroundColorSlug || 'brand-primary-hover',
+							options: modalBackgroundOptions,
+							onChange: ( value ) =>
+								setAttributes( {
+									modalBackgroundColorSlug: value || '',
+									modalBackgroundColor: '',
+								} ),
 						} )
 					)
 				),
@@ -235,14 +367,46 @@
 					),
 					el(
 						'div',
-						{ className: 'icts-sector-card__modal-editor' },
+						{
+							className: 'icts-sector-card__modal-editor',
+							style: {
+								background: modalBackgroundValue,
+							},
+						},
 						el(
 							'p',
 							{ className: 'icts-sector-card__modal-editor-label' },
 							__( 'Modal content', 'icts-europe' )
 						),
+						el(
+							'div',
+							{ className: 'icts-sector-card__modal-layout-actions' },
+							el(
+								Button,
+								{
+									variant: 'secondary',
+									onClick: () => applyModalTemplate( 'simple' ),
+								},
+								__( 'Simple', 'icts-europe' )
+							),
+							el(
+								Button,
+								{
+									variant: 'secondary',
+									onClick: () => applyModalTemplate( 'twoColumn' ),
+								},
+								__( '2 Column', 'icts-europe' )
+							),
+							el(
+								Button,
+								{
+									variant: 'secondary',
+									onClick: () => applyModalTemplate( 'features' ),
+								},
+								__( 'Feature List', 'icts-europe' )
+							)
+						),
 						el( InnerBlocks, {
-							allowedBlocks: MODAL_ALLOWED_BLOCKS,
 							template: MODAL_TEMPLATE,
 							templateInsertUpdatesSelection: false,
 							renderAppender: InnerBlocks.ButtonBlockAppender,

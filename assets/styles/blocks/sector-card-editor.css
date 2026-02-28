@@ -69,3 +69,10 @@
 	letter-spacing: 0.03em;
 	color: var(--wp--preset--color--secondary);
 }
+
+.wp-block-icts-sector-card .icts-sector-card__modal-layout-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 12px;
+}

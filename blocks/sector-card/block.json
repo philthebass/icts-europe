@@ -53,6 +53,14 @@
       "type": "string",
       "default": "Learn More"
     },
+    "modalBackgroundColorSlug": {
+      "type": "string",
+      "default": "brand-primary-hover"
+    },
+    "modalBackgroundColor": {
+      "type": "string",
+      "default": ""
+    },
     "modalId": {
       "type": "string",
       "default": ""

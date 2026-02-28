@@ -81,3 +81,9 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-27 — Constrained Sector Card font-size controls to theme preset tokens — Free-text size inputs were too open-ended for editor consistency — Heading/body font size controls now use preset dropdowns (theme token slugs), with frontend mapping to `--wp--preset--font-size--*` variables and backward compatibility for existing legacy values.
 
 2026-02-27 — Locked Sector Grid container layout to grid-only defaults — Editors should not switch card container layout types and break card alignment patterns — Sector Grid now disables layout editing/switching at container level, defaults to `type: grid`, and sets default `minimumColumnWidth` to `20rem` while preserving child grid item positioning controls.
+
+2026-02-27 — Expanded Sector Card modal authoring controls — Modal body composition needed to be less restrictive and card-level visual treatment needed configurable modal surfaces — Removed modal InnerBlocks allowlist (layout/content blocks now unrestricted) and added per-card modal background color setting rendered on the frontend modal panel.
+
+2026-02-27 — Added Sector Card modal starter layout actions — Editors needed faster modal authoring with reusable structures instead of building every modal from scratch — Sector Card editor now provides one-click modal templates (`Simple`, `2 Column`, `Feature List`) that replace modal InnerBlocks content with structured starter blocks.
+
+2026-02-27 — Restricted Sector Card modal background control to theme palette tokens — Modal visuals should remain on-brand and avoid arbitrary ad hoc colors — Modal background now uses a theme-color slug selector only (no free color picker), with default set to `brand-primary-hover` and frontend rendering through `--wp--preset--color--{slug}`.
