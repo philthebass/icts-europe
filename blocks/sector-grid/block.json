@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/sector-grid",
+  "version": "1.0.0",
+  "title": "Sector Grid",
+  "category": "design",
+  "icon": "screenoptions",
+  "description": "Responsive parent grid that contains Sector Card blocks.",
+  "textdomain": "icts-europe",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": ["wide", "full"],
+    "layout": {
+      "allowSwitching": false,
+      "allowInheriting": false,
+      "default": {
+        "type": "grid",
+        "minimumColumnWidth": "20rem"
+      }
+    }
+  },
+  "editorScript": "icts-sector-grid-editor",
+  "editorStyle": "icts-sector-grid-editor",
+  "style": "icts-sector-grid-style"
+}

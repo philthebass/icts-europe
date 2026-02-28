@@ -1,0 +1,6 @@
+.wp-block-icts-sector-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: clamp(1rem, 2vw, 1.5rem);
+	align-items: stretch;
+}

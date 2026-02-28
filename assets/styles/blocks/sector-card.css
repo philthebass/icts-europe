@@ -1,0 +1,124 @@
+.wp-block-icts-sector-card {
+	height: 100%;
+}
+
+.icts-sector-card__card {
+	display: flex;
+	flex-direction: column;
+	block-size: 100%;
+	background: var(--wp--preset--color--base);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.icts-sector-card__media {
+	margin: 0;
+}
+
+.icts-sector-card__media img {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+}
+
+.icts-sector-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 1.5rem;
+	flex: 1 1 auto;
+}
+
+.icts-sector-card__heading {
+	margin: 0;
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.icts-sector-card__text {
+	margin: 0;
+	color: var(--wp--preset--color--main);
+	flex: 1 1 auto;
+}
+
+.icts-sector-card__learn-more {
+	align-self: stretch;
+	margin-top: auto;
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+	line-height: inherit;
+	padding: 0.65em 1.1em;
+	border-radius: 6px;
+	font-size: var(--wp--preset--font-size--small);
+	background: var(--wp--preset--color--brand-primary);
+	color: var(--wp--preset--color--base);
+}
+
+.icts-sector-card__learn-more:hover,
+.icts-sector-card__learn-more:focus-visible {
+	background: var(--wp--preset--color--brand-primary-hover);
+}
+
+.icts-sector-card__modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: none;
+}
+
+.icts-sector-card__modal.is-open {
+	display: block;
+}
+
+.icts-sector-card__modal-overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.icts-sector-card__modal-panel {
+	position: relative;
+	z-index: 1;
+	inline-size: min(960px, calc(100vw - 2rem));
+	max-block-size: calc(100vh - 2rem);
+	margin: 1rem auto;
+	padding: clamp(1rem, 2vw, 1.5rem);
+	background: var(--wp--preset--color--base);
+	border-radius: 8px;
+	overflow: auto;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.icts-sector-card__modal-close {
+	position: sticky;
+	top: 0;
+	margin-left: auto;
+	display: inline-grid;
+	place-items: center;
+	inline-size: 40px;
+	block-size: 40px;
+	border: 0;
+	border-radius: 50%;
+	background: var(--wp--preset--color--tertiary);
+	color: var(--wp--preset--color--main);
+	font-size: 1.5rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.icts-sector-card__modal-content {
+	padding-top: 0.5rem;
+}
+
+body.has-icts-sector-modal-open {
+	overflow: hidden;
+}
+
+@media (max-width: 782px) {
+	.icts-sector-card__modal-panel {
+		inline-size: calc(100vw - 1rem);
+		max-block-size: calc(100vh - 1rem);
+		margin: 0.5rem auto;
+	}
+}

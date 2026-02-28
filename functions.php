@@ -80,6 +80,58 @@ require_once __DIR__ . '/inc/blocks.php';
         true
     );
 
+    \wp_register_script(
+        'icts-sector-grid-editor',
+        get_template_directory_uri() . '/assets/blocks/sector-grid/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-block-editor' ],
+        $asset_ver( '/assets/blocks/sector-grid/editor.js' ),
+        true
+    );
+
+    \wp_register_script(
+        'icts-sector-card-editor',
+        get_template_directory_uri() . '/assets/blocks/sector-card/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
+        $asset_ver( '/assets/blocks/sector-card/editor.js' ),
+        true
+    );
+
+    \wp_register_script(
+        'icts-sector-card-view',
+        get_template_directory_uri() . '/blocks/sector-card/view.js',
+        [],
+        $asset_ver( '/blocks/sector-card/view.js' ),
+        true
+    );
+
+    \wp_register_style(
+        'icts-sector-grid-style',
+        get_template_directory_uri() . '/assets/styles/blocks/sector-grid.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/sector-grid.css' )
+    );
+
+    \wp_register_style(
+        'icts-sector-grid-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/sector-grid-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/sector-grid-editor.css' )
+    );
+
+    \wp_register_style(
+        'icts-sector-card-style',
+        get_template_directory_uri() . '/assets/styles/blocks/sector-card.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/sector-card.css' )
+    );
+
+    \wp_register_style(
+        'icts-sector-card-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/sector-card-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/sector-card-editor.css' )
+    );
+
     \register_block_type( 'icts-europe/hero-slider', [
         'editor_script' => $hero_editor_handle,
         'style'         => [ 'icts-hero-slider-style', 'flickity' ],
@@ -101,6 +153,9 @@ require_once __DIR__ . '/inc/blocks.php';
         'editor_script' => $solutions_editor_handle,
         'parent'        => [ 'icts-europe/solutions-slider' ],
     ] );
+
+    \register_block_type_from_metadata( __DIR__ . '/blocks/sector-grid' );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/sector-card' );
 } );
 
 // Editor-only CSS for better hero slider preview

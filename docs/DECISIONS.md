@@ -73,3 +73,11 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-27 — Scoped flow-spacing resets for Hero Slider, Solutions Slider, and Counter Band wrappers — Enabling global margin/padding tools exposed inherited flow spacing side effects on full-width custom blocks — Added targeted wrapper-level `margin-block` resets in block CSS so those components keep their intended geometry while editor spacing tools remain enabled globally.
 
 2026-02-27 — Aligned global button typography with header CTA baseline — Header navigation CTA intentionally uses smaller, regular-weight button text and other buttons should visually match by default — `styles.elements.button` now uses `font-size: small` and regular weight token in `theme.json`, while keeping existing button padding values.
+
+2026-02-27 — Implemented new native Sector Grid/Sector Card blocks using no-build JS + plain CSS assets — Theme’s existing native block pipeline registers browser-ready scripts from `assets/blocks/*` and styles from `assets/styles/blocks/*` without SCSS compilation — New blocks follow the same runtime pattern and are registered via `register_block_type_from_metadata`.
+
+2026-02-27 — Tuned Sector Grid/Card editor controls for predictable content design — Editors requested fewer container spacing overrides plus flexible card typography controls — Sector Grid now relies on default spacing (no custom spacing controls) and exposes core layout/grid controls, while Sector Card now supports heading element switching (`h2`–`h6`/`p`) and configurable heading/body font size and weight.
+
+2026-02-27 — Constrained Sector Card font-size controls to theme preset tokens — Free-text size inputs were too open-ended for editor consistency — Heading/body font size controls now use preset dropdowns (theme token slugs), with frontend mapping to `--wp--preset--font-size--*` variables and backward compatibility for existing legacy values.
+
+2026-02-27 — Locked Sector Grid container layout to grid-only defaults — Editors should not switch card container layout types and break card alignment patterns — Sector Grid now disables layout editing/switching at container level, defaults to `type: grid`, and sets default `minimumColumnWidth` to `20rem` while preserving child grid item positioning controls.

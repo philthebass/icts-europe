@@ -1,0 +1,71 @@
+.wp-block-icts-sector-card .icts-sector-card__card-editor {
+	display: flex;
+	flex-direction: column;
+	background: var(--wp--preset--color--base);
+	border: 1px solid var(--wp--preset--color--border-light);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.wp-block-icts-sector-card .icts-sector-card__media-editor {
+	padding: 12px;
+	background: var(--wp--preset--color--tertiary);
+}
+
+.wp-block-icts-sector-card .icts-sector-card__media-editor img {
+	display: block;
+	inline-size: 100%;
+	block-size: 180px;
+	object-fit: cover;
+	margin-top: 10px;
+}
+
+.wp-block-icts-sector-card .icts-sector-card__media-placeholder {
+	display: grid;
+	place-items: center;
+	margin-top: 10px;
+	inline-size: 100%;
+	block-size: 180px;
+	background: rgba(255, 255, 255, 0.65);
+	color: var(--wp--preset--color--secondary);
+}
+
+.wp-block-icts-sector-card .icts-sector-card__body-editor {
+	padding: 16px;
+}
+
+.wp-block-icts-sector-card .icts-sector-card__heading {
+	margin: 0 0 0.75rem;
+}
+
+.wp-block-icts-sector-card .icts-sector-card__text {
+	margin: 0 0 1rem;
+}
+
+.wp-block-icts-sector-card .icts-sector-card__learn-more-editor {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.65em 1.1em;
+	border-radius: 6px;
+	background: var(--wp--preset--color--brand-primary);
+	color: var(--wp--preset--color--base);
+	font-size: var(--wp--preset--font-size--small);
+}
+
+.wp-block-icts-sector-card .icts-sector-card__modal-editor {
+	margin-top: 14px;
+	padding: 14px;
+	border: 1px dashed var(--wp--preset--color--secondary);
+	border-radius: 6px;
+	background: rgba(255, 255, 255, 0.6);
+}
+
+.wp-block-icts-sector-card .icts-sector-card__modal-editor-label {
+	margin: 0 0 10px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: var(--wp--preset--color--secondary);
+}

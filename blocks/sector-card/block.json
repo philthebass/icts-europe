@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/sector-card",
+  "version": "1.0.0",
+  "title": "Sector Card",
+  "category": "design",
+  "icon": "id-alt",
+  "description": "Card with image, summary, Learn More button, and full-screen modal content.",
+  "textdomain": "icts-europe",
+  "parent": ["icts/sector-grid"],
+  "attributes": {
+    "imageId": {
+      "type": "number"
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "p"
+    },
+    "headingFontSize": {
+      "type": "string",
+      "default": "base"
+    },
+    "headingFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "text": {
+      "type": "string",
+      "default": ""
+    },
+    "textFontSize": {
+      "type": "string",
+      "default": "small"
+    },
+    "textFontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "buttonLabel": {
+      "type": "string",
+      "default": "Learn More"
+    },
+    "modalId": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "reusable": false
+  },
+  "editorScript": "icts-sector-card-editor",
+  "viewScript": "icts-sector-card-view",
+  "editorStyle": "icts-sector-card-editor",
+  "style": "icts-sector-card-style",
+  "render": "file:./render.php"
+}
