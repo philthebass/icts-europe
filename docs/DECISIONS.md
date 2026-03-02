@@ -91,3 +91,5 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-03-02 — Added native How It Works timeline block pair with interactive step rail — Product pages need an editable, reusable 3-step process component before final design handoff — New `icts/how-it-works` + `icts/how-it-works-step` blocks provide editor-managed heading/intro/steps and front-end click+keyboard step activation with progressive timeline rail styling.
 
 2026-03-02 — Added optional `Horizontal Stepper` style variation for How It Works — Needed a second visual option before final design delivery without changing content model — `icts/how-it-works` now exposes a block style variation that switches timeline rail/panel layout to a desktop horizontal presentation while keeping existing mobile behavior.
+
+2026-03-02 — Temporarily enabled global border-radius controls in editor — Needed short-term visual tuning flexibility for selected layouts before launch lock-down — `settings.border.radius` is now `true`; plan is to switch it back to `false` before production handoff.

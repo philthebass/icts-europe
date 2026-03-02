@@ -15,7 +15,7 @@
 	position: relative;
 	isolation: isolate;
 	overflow: hidden;
-	margin: 0;
+	margin-block: 0;
 	padding-block: var(--icts-faq-strands-gap);
 	background-image:
 		url("../../images/solutions-slider-strands.svg"),
@@ -27,6 +27,25 @@
 	background-size:
 		var(--icts-faq-strands-width) var(--icts-faq-strands-height),
 		var(--icts-faq-strands-width) var(--icts-faq-strands-height);
+}
+
+/* Always neutralize auto flow margins on this block */
+.wp-block-acf-faq-accordion {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* Prevent inherited layout flow spacing around the block wrapper */
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-acf-faq-accordion,
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-acf-faq-accordion.alignfull {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* ACF/frontend wrapper can be output without wp-block-* class */
+:root :where(.is-layout-flow, .is-layout-constrained) > .icts-faq-accordion-block {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
 }
 
 .icts-faq-accordion__inner {
