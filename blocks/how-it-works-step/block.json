@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/how-it-works-step",
+  "version": "1.0.0",
+  "title": "How It Works Step",
+  "category": "design",
+  "icon": "leftright",
+  "description": "Single editable timeline step for How It Works.",
+  "textdomain": "icts-europe",
+  "parent": ["icts/how-it-works"],
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "stepLabel": {
+      "type": "string",
+      "default": "Step"
+    }
+  },
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "editorScript": "icts-how-it-works-step-editor",
+  "editorStyle": "icts-how-it-works-step-editor",
+  "style": "icts-how-it-works-step-style"
+}

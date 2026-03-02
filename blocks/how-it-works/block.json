@@ -1,0 +1,20 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/how-it-works",
+  "version": "1.0.0",
+  "title": "How It Works",
+  "category": "design",
+  "icon": "schedule",
+  "description": "Interactive timeline rail for editable process steps.",
+  "textdomain": "icts-europe",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": ["wide", "full"]
+  },
+  "editorScript": "icts-how-it-works-editor",
+  "editorStyle": "icts-how-it-works-editor",
+  "style": "icts-how-it-works-style",
+  "viewScript": "icts-how-it-works-view"
+}

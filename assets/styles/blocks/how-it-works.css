@@ -1,0 +1,230 @@
+.wp-block-icts-how-it-works {
+	--icts-hiw-rail: var(--wp--preset--color--border-light);
+	--icts-hiw-rail-active: var(--wp--preset--color--brand-primary);
+	--icts-hiw-surface: var(--wp--preset--color--base);
+	--icts-hiw-text: var(--wp--preset--color--main);
+	--icts-hiw-muted: var(--wp--preset--color--secondary);
+	--icts-hiw-progress: 0%;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works__heading {
+	margin: 0 0 0.5rem;
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works__intro {
+	margin: 0 0 clamp(1rem, 2.2vw, 1.5rem);
+	color: var(--icts-hiw-text);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works__timeline {
+	position: relative;
+	display: grid;
+	gap: 0.9rem;
+	padding-left: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works__timeline::before,
+.wp-block-icts-how-it-works .icts-how-it-works__timeline::after {
+	content: '';
+	position: absolute;
+	left: 1.22rem;
+	top: 0.65rem;
+	bottom: 0.65rem;
+	width: 2px;
+	border-radius: 2px;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works__timeline::before {
+	background: color-mix(in srgb, var(--icts-hiw-rail) 70%, transparent);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works__timeline::after {
+	background: linear-gradient(
+		to bottom,
+		var(--icts-hiw-rail-active) var(--icts-hiw-progress),
+		transparent var(--icts-hiw-progress)
+	);
+	transition: background 280ms ease;
+}
+
+.wp-block-icts-how-it-works .wp-block-icts-how-it-works-step {
+	position: relative;
+	padding-left: 1.25rem;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__trigger {
+	inline-size: 100%;
+	display: grid;
+	grid-template-columns: 2.2rem 1fr;
+	align-items: start;
+	gap: 0.9rem;
+	padding: 0.65rem 0.85rem;
+	border: 1px solid color-mix(in srgb, var(--icts-hiw-rail) 65%, transparent);
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--icts-hiw-surface) 94%, transparent);
+	text-align: left;
+	color: inherit;
+	cursor: pointer;
+	transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__trigger:hover,
+.wp-block-icts-how-it-works .icts-how-it-works-step__trigger:focus-visible {
+	border-color: color-mix(in srgb, var(--icts-hiw-rail-active) 55%, var(--icts-hiw-rail));
+	background: color-mix(in srgb, var(--icts-hiw-surface) 86%, transparent);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__marker-dot {
+	display: inline-grid;
+	place-items: center;
+	inline-size: 1.5rem;
+	block-size: 1.5rem;
+	border: 2px solid color-mix(in srgb, var(--icts-hiw-rail-active) 55%, var(--icts-hiw-rail));
+	border-radius: 999px;
+	background: var(--icts-hiw-surface);
+	color: var(--icts-hiw-rail-active);
+	font-weight: 700;
+	font-size: 0.82rem;
+	transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__marker-label {
+	display: block;
+	font-size: var(--wp--preset--font-size--x-small);
+	font-weight: 700;
+	color: var(--icts-hiw-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__title {
+	display: block;
+	margin-top: 0.1rem;
+	font-size: var(--wp--preset--font-size--large);
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--wp--preset--color--brand-primary);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__panel {
+	margin: 0.4rem 0 0 3.1rem;
+	padding: 0.8rem 1rem;
+	border-left: 2px solid color-mix(in srgb, var(--icts-hiw-rail-active) 30%, transparent);
+	color: var(--icts-hiw-text);
+	animation: icts-hiw-fade-up 240ms ease;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__panel[hidden] {
+	display: none;
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step.is-active .icts-how-it-works-step__trigger {
+	border-color: color-mix(in srgb, var(--icts-hiw-rail-active) 70%, transparent);
+	background: color-mix(in srgb, var(--icts-hiw-surface) 80%, transparent);
+}
+
+.wp-block-icts-how-it-works
+	.icts-how-it-works-step.is-active
+	.icts-how-it-works-step__marker-dot {
+	background: var(--icts-hiw-rail-active);
+	color: var(--wp--preset--color--base);
+	transform: scale(1.06);
+}
+
+.wp-block-icts-how-it-works .icts-how-it-works-step__description {
+	margin: 0;
+}
+
+@keyframes icts-hiw-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 782px) {
+	.wp-block-icts-how-it-works .icts-how-it-works__timeline {
+		padding-left: 0.45rem;
+	}
+
+	.wp-block-icts-how-it-works .icts-how-it-works__timeline::before,
+	.wp-block-icts-how-it-works .icts-how-it-works__timeline::after {
+		left: 0.94rem;
+	}
+
+	.wp-block-icts-how-it-works .wp-block-icts-how-it-works-step {
+		padding-left: 0.6rem;
+	}
+
+	.wp-block-icts-how-it-works .icts-how-it-works-step__trigger {
+		grid-template-columns: 1.9rem 1fr;
+		padding: 0.6rem 0.7rem;
+	}
+
+	.wp-block-icts-how-it-works .icts-how-it-works-step__panel {
+		margin-left: 2.55rem;
+	}
+}
+
+@media (min-width: 960px) {
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works__timeline {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+		padding: 2rem 0 0;
+	}
+
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works__timeline::before,
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works__timeline::after {
+		top: 0.72rem;
+		bottom: auto;
+		left: 1.45rem;
+		right: 1.45rem;
+		width: auto;
+		height: 2px;
+	}
+
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works__timeline::after {
+		background: linear-gradient(
+			to right,
+			var(--icts-hiw-rail-active) var(--icts-hiw-progress),
+			transparent var(--icts-hiw-progress)
+		);
+	}
+
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .wp-block-icts-how-it-works-step {
+		padding-left: 0;
+	}
+
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works-step__trigger {
+		grid-template-columns: 1fr;
+		gap: 0.55rem;
+		padding: 0.85rem;
+	}
+
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works-step__marker {
+		display: inline-flex;
+		justify-content: flex-start;
+	}
+
+	.wp-block-icts-how-it-works.is-style-horizontal-stepper .icts-how-it-works-step__panel {
+		margin: 0.55rem 0 0;
+		padding: 0.85rem 0.9rem;
+		border-left: 0;
+		border-top: 2px solid color-mix(in srgb, var(--icts-hiw-rail-active) 28%, transparent);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-icts-how-it-works .icts-how-it-works-step__trigger,
+	.wp-block-icts-how-it-works .icts-how-it-works-step__marker-dot,
+	.wp-block-icts-how-it-works .icts-how-it-works__timeline::after,
+	.wp-block-icts-how-it-works .icts-how-it-works-step__panel {
+		transition: none;
+		animation: none;
+	}
+}

@@ -87,3 +87,7 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-02-27 — Added Sector Card modal starter layout actions — Editors needed faster modal authoring with reusable structures instead of building every modal from scratch — Sector Card editor now provides one-click modal templates (`Simple`, `2 Column`, `Feature List`) that replace modal InnerBlocks content with structured starter blocks.
 
 2026-02-27 — Restricted Sector Card modal background control to theme palette tokens — Modal visuals should remain on-brand and avoid arbitrary ad hoc colors — Modal background now uses a theme-color slug selector only (no free color picker), with default set to `brand-primary-hover` and frontend rendering through `--wp--preset--color--{slug}`.
+
+2026-03-02 — Added native How It Works timeline block pair with interactive step rail — Product pages need an editable, reusable 3-step process component before final design handoff — New `icts/how-it-works` + `icts/how-it-works-step` blocks provide editor-managed heading/intro/steps and front-end click+keyboard step activation with progressive timeline rail styling.
+
+2026-03-02 — Added optional `Horizontal Stepper` style variation for How It Works — Needed a second visual option before final design delivery without changing content model — `icts/how-it-works` now exposes a block style variation that switches timeline rail/panel layout to a desktop horizontal presentation while keeping existing mobile behavior.

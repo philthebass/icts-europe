@@ -104,6 +104,30 @@ require_once __DIR__ . '/inc/blocks.php';
         true
     );
 
+    \wp_register_script(
+        'icts-how-it-works-editor',
+        get_template_directory_uri() . '/assets/blocks/how-it-works/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor' ],
+        $asset_ver( '/assets/blocks/how-it-works/editor.js' ),
+        true
+    );
+
+    \wp_register_script(
+        'icts-how-it-works-step-editor',
+        get_template_directory_uri() . '/assets/blocks/how-it-works-step/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
+        $asset_ver( '/assets/blocks/how-it-works-step/editor.js' ),
+        true
+    );
+
+    \wp_register_script(
+        'icts-how-it-works-view',
+        get_template_directory_uri() . '/blocks/how-it-works/view.js',
+        [],
+        $asset_ver( '/blocks/how-it-works/view.js' ),
+        true
+    );
+
     \wp_register_style(
         'icts-sector-grid-style',
         get_template_directory_uri() . '/assets/styles/blocks/sector-grid.css',
@@ -132,6 +156,34 @@ require_once __DIR__ . '/inc/blocks.php';
         $asset_ver( '/assets/styles/blocks/sector-card-editor.css' )
     );
 
+    \wp_register_style(
+        'icts-how-it-works-style',
+        get_template_directory_uri() . '/assets/styles/blocks/how-it-works.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/how-it-works.css' )
+    );
+
+    \wp_register_style(
+        'icts-how-it-works-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/how-it-works-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/how-it-works-editor.css' )
+    );
+
+    \wp_register_style(
+        'icts-how-it-works-step-style',
+        get_template_directory_uri() . '/assets/styles/blocks/how-it-works-step.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/how-it-works-step.css' )
+    );
+
+    \wp_register_style(
+        'icts-how-it-works-step-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/how-it-works-step-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/how-it-works-step-editor.css' )
+    );
+
     \register_block_type( 'icts-europe/hero-slider', [
         'editor_script' => $hero_editor_handle,
         'style'         => [ 'icts-hero-slider-style', 'flickity' ],
@@ -156,6 +208,25 @@ require_once __DIR__ . '/inc/blocks.php';
 
     \register_block_type_from_metadata( __DIR__ . '/blocks/sector-grid' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/sector-card' );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/how-it-works' );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/how-it-works-step' );
+
+    \register_block_style(
+        'icts/how-it-works',
+        [
+            'name'       => 'vertical-rail',
+            'label'      => __( 'Vertical Rail', 'icts-europe' ),
+            'is_default' => true,
+        ]
+    );
+
+    \register_block_style(
+        'icts/how-it-works',
+        [
+            'name'  => 'horizontal-stepper',
+            'label' => __( 'Horizontal Stepper', 'icts-europe' ),
+        ]
+    );
 } );
 
 // Editor-only CSS for better hero slider preview

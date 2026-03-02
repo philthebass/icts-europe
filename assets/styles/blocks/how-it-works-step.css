@@ -1,0 +1,3 @@
+.wp-block-icts-how-it-works-step .icts-how-it-works-step__marker-number:empty::before {
+	content: '•';
+}
