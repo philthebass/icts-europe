@@ -9,10 +9,10 @@
 		useBlockProps,
 	} = blockEditor;
 	const { Button, PanelBody, SelectControl, TextControl } = components;
-	const { Fragment, createElement: el, useEffect } = element;
+	const { Fragment, createElement: el, useEffect, useState } = element;
 	const { __ } = i18n;
 	const { createBlocksFromInnerBlocksTemplate } = blocks;
-	const { dispatch } = window.wp.data;
+	const { switchToBlockType } = blocks;
 
 	const MODAL_TEMPLATE = [
 		[
@@ -171,6 +171,8 @@
 				modalBackgroundColor,
 				modalId,
 			} = attributes;
+				const [ isModalEditorOpen, setModalEditorOpen ] = useState( false );
+				const [ lastModalBlockClientId, setLastModalBlockClientId ] = useState( null );
 
 			useEffect( () => {
 				if ( ! modalId ) {
@@ -178,10 +180,12 @@
 				}
 			}, [ clientId, modalId ] );
 
-			const blockProps = useBlockProps( { className: 'icts-sector-card' } );
-			const editorSettings = window.wp.data.select( 'core/block-editor' ).getSettings();
-			const themeColors = Array.isArray( editorSettings?.colors ) ? editorSettings.colors : [];
-			const modalBackgroundOptions = themeColors.length
+				const blockProps = useBlockProps( { className: 'icts-sector-card' } );
+				const blockEditorSelect = window.wp.data.select( 'core/block-editor' );
+				const blockEditorDispatch = window.wp.data.dispatch( 'core/block-editor' );
+				const editorSettings = window.wp.data.select( 'core/block-editor' ).getSettings();
+				const themeColors = Array.isArray( editorSettings?.colors ) ? editorSettings.colors : [];
+				const modalBackgroundOptions = themeColors.length
 				? themeColors.map( ( color ) => ( {
 						label: color.name,
 						value: color.slug,
@@ -191,105 +195,257 @@
 			const modalBackgroundValue = modalBackgroundColorSlug
 				? `var(--wp--preset--color--${ modalBackgroundColorSlug })`
 				: modalBackgroundColor || undefined;
-			const applyModalTemplate = ( key ) => {
-				const template = MODAL_LAYOUT_TEMPLATES[ key ];
-				if ( ! template ) {
-					return;
-				}
 
-				const templateBlocks = createBlocksFromInnerBlocksTemplate( template );
-				dispatch( 'core/block-editor' ).replaceInnerBlocks( clientId, templateBlocks, false );
-			};
+				const applyModalTemplate = ( key ) => {
+					const template = MODAL_LAYOUT_TEMPLATES[ key ];
+					if ( ! template ) {
+						return;
+					}
 
-			return el(
-				Fragment,
-				null,
-				el(
+					const templateBlocks = createBlocksFromInnerBlocksTemplate( template );
+					blockEditorDispatch.replaceInnerBlocks( clientId, templateBlocks, false );
+				};
+
+				const selectedBlockClientId = blockEditorSelect.getSelectedBlockClientId();
+				const selectedBlock = selectedBlockClientId
+					? blockEditorSelect.getBlock( selectedBlockClientId )
+					: null;
+				const selectedParents = selectedBlockClientId
+					? blockEditorSelect.getBlockParents( selectedBlockClientId )
+					: [];
+				const isSelectedBlockInModal =
+					!! selectedBlock &&
+					selectedParents.includes( clientId ) &&
+					( selectedBlock.name === 'core/heading' ||
+						selectedBlock.name === 'core/paragraph' );
+				const resolvedModalBlockClientId = isSelectedBlockInModal
+					? selectedBlockClientId
+					: lastModalBlockClientId;
+				const resolvedModalBlock = resolvedModalBlockClientId
+					? blockEditorSelect.getBlock( resolvedModalBlockClientId )
+					: null;
+				const isResolvedBlockEditable =
+					!! resolvedModalBlock &&
+					( resolvedModalBlock.name === 'core/heading' ||
+						resolvedModalBlock.name === 'core/paragraph' );
+
+				useEffect( () => {
+					if ( isSelectedBlockInModal && selectedBlockClientId ) {
+						setLastModalBlockClientId( selectedBlockClientId );
+					}
+				}, [ isSelectedBlockInModal, selectedBlockClientId ] );
+
+				const changeSelectedBlockType = ( nextBlockName ) => {
+					if (
+						! isResolvedBlockEditable ||
+						! resolvedModalBlock ||
+						! resolvedModalBlockClientId
+					) {
+						return;
+					}
+
+					if ( resolvedModalBlock.name === nextBlockName ) {
+						return;
+					}
+
+					const convertedBlock = switchToBlockType( resolvedModalBlock, nextBlockName );
+					if ( convertedBlock ) {
+						blockEditorDispatch.replaceBlocks(
+							resolvedModalBlockClientId,
+							convertedBlock
+						);
+					}
+				};
+
+				const selectedModalBlockControls = isResolvedBlockEditable
+					? el(
+							'div',
+							{ className: 'icts-sector-card__modal-selected-block-controls' },
+							el( SelectControl, {
+								label: __( 'Selected block type', 'icts-europe' ),
+								value: resolvedModalBlock.name,
+								options: [
+									{ label: __( 'Heading', 'icts-europe' ), value: 'core/heading' },
+									{ label: __( 'Paragraph', 'icts-europe' ), value: 'core/paragraph' },
+								],
+								onChange: changeSelectedBlockType,
+							} ),
+							resolvedModalBlock.name === 'core/heading'
+								? el( SelectControl, {
+										label: __( 'Heading level', 'icts-europe' ),
+										value: String( resolvedModalBlock.attributes?.level || 2 ),
+										options: [
+											{ label: __( 'H1', 'icts-europe' ), value: '1' },
+											{ label: __( 'H2', 'icts-europe' ), value: '2' },
+											{ label: __( 'H3', 'icts-europe' ), value: '3' },
+											{ label: __( 'H4', 'icts-europe' ), value: '4' },
+											{ label: __( 'H5', 'icts-europe' ), value: '5' },
+											{ label: __( 'H6', 'icts-europe' ), value: '6' },
+										],
+										onChange: ( value ) =>
+											blockEditorDispatch.updateBlockAttributes(
+												resolvedModalBlockClientId,
+												{ level: Number( value ) }
+											),
+								  } )
+								: null
+					  )
+					: null;
+
+				const cardInspector = el(
 					InspectorControls,
 					null,
-					el(
-						PanelBody,
-						{ title: __( 'Card Settings', 'icts-europe' ), initialOpen: true },
-						el( TextControl, {
-							label: __( 'Learn More label', 'icts-europe' ),
-							value: buttonLabel,
-							onChange: ( value ) => setAttributes( { buttonLabel: value } ),
-						} )
-					),
-					el(
-						PanelBody,
-						{ title: __( 'Typography', 'icts-europe' ), initialOpen: false },
-						el( SelectControl, {
-							label: __( 'Heading element', 'icts-europe' ),
-							value: headingTag || 'p',
-							options: [
-								{ label: __( 'Heading 2', 'icts-europe' ), value: 'h2' },
-								{ label: __( 'Heading 3', 'icts-europe' ), value: 'h3' },
-								{ label: __( 'Heading 4', 'icts-europe' ), value: 'h4' },
-								{ label: __( 'Heading 5', 'icts-europe' ), value: 'h5' },
-								{ label: __( 'Heading 6', 'icts-europe' ), value: 'h6' },
-								{ label: __( 'Paragraph', 'icts-europe' ), value: 'p' },
-							],
-							onChange: ( value ) => setAttributes( { headingTag: value } ),
-						} ),
-						el( SelectControl, {
-							label: __( 'Heading font size', 'icts-europe' ),
-							value: headingFontSize || '',
-							options: FONT_SIZE_OPTIONS,
-							onChange: ( value ) => setAttributes( { headingFontSize: value } ),
-						} ),
-						el( SelectControl, {
-							label: __( 'Heading font weight', 'icts-europe' ),
-							value: headingFontWeight || '',
-							options: [
-								{ label: __( 'Theme default', 'icts-europe' ), value: '' },
-								{ label: '300', value: '300' },
-								{ label: '400', value: '400' },
-								{ label: '500', value: '500' },
-								{ label: '600', value: '600' },
-								{ label: '700', value: '700' },
-								{ label: '800', value: '800' },
-								{ label: '900', value: '900' },
-							],
-							onChange: ( value ) => setAttributes( { headingFontWeight: value } ),
-						} ),
-						el( SelectControl, {
-							label: __( 'Body font size', 'icts-europe' ),
-							value: textFontSize || '',
-							options: FONT_SIZE_OPTIONS,
-							onChange: ( value ) => setAttributes( { textFontSize: value } ),
-						} ),
-						el( SelectControl, {
-							label: __( 'Body font weight', 'icts-europe' ),
-							value: textFontWeight || '',
-							options: [
-								{ label: __( 'Theme default', 'icts-europe' ), value: '' },
-								{ label: '300', value: '300' },
-								{ label: '400', value: '400' },
-								{ label: '500', value: '500' },
-								{ label: '600', value: '600' },
-								{ label: '700', value: '700' },
-								{ label: '800', value: '800' },
-								{ label: '900', value: '900' },
-							],
-							onChange: ( value ) => setAttributes( { textFontWeight: value } ),
-						} )
-					),
+				el(
+					PanelBody,
+					{ title: __( 'Card Settings', 'icts-europe' ), initialOpen: true },
+					el( TextControl, {
+						label: __( 'Learn More label', 'icts-europe' ),
+						value: buttonLabel,
+						onChange: ( value ) => setAttributes( { buttonLabel: value } ),
+					} )
+				),
+				el(
+					PanelBody,
+					{ title: __( 'Typography', 'icts-europe' ), initialOpen: false },
+					el( SelectControl, {
+						label: __( 'Heading element', 'icts-europe' ),
+						value: headingTag || 'p',
+						options: [
+							{ label: __( 'Heading 2', 'icts-europe' ), value: 'h2' },
+							{ label: __( 'Heading 3', 'icts-europe' ), value: 'h3' },
+							{ label: __( 'Heading 4', 'icts-europe' ), value: 'h4' },
+							{ label: __( 'Heading 5', 'icts-europe' ), value: 'h5' },
+							{ label: __( 'Heading 6', 'icts-europe' ), value: 'h6' },
+							{ label: __( 'Paragraph', 'icts-europe' ), value: 'p' },
+						],
+						onChange: ( value ) => setAttributes( { headingTag: value } ),
+					} ),
+					el( SelectControl, {
+						label: __( 'Heading font size', 'icts-europe' ),
+						value: headingFontSize || '',
+						options: FONT_SIZE_OPTIONS,
+						onChange: ( value ) => setAttributes( { headingFontSize: value } ),
+					} ),
+					el( SelectControl, {
+						label: __( 'Heading font weight', 'icts-europe' ),
+						value: headingFontWeight || '',
+						options: [
+							{ label: __( 'Theme default', 'icts-europe' ), value: '' },
+							{ label: '300', value: '300' },
+							{ label: '400', value: '400' },
+							{ label: '500', value: '500' },
+							{ label: '600', value: '600' },
+							{ label: '700', value: '700' },
+							{ label: '800', value: '800' },
+							{ label: '900', value: '900' },
+						],
+						onChange: ( value ) => setAttributes( { headingFontWeight: value } ),
+					} ),
+					el( SelectControl, {
+						label: __( 'Body font size', 'icts-europe' ),
+						value: textFontSize || '',
+						options: FONT_SIZE_OPTIONS,
+						onChange: ( value ) => setAttributes( { textFontSize: value } ),
+					} ),
+					el( SelectControl, {
+						label: __( 'Body font weight', 'icts-europe' ),
+						value: textFontWeight || '',
+						options: [
+							{ label: __( 'Theme default', 'icts-europe' ), value: '' },
+							{ label: '300', value: '300' },
+							{ label: '400', value: '400' },
+							{ label: '500', value: '500' },
+							{ label: '600', value: '600' },
+							{ label: '700', value: '700' },
+							{ label: '800', value: '800' },
+							{ label: '900', value: '900' },
+						],
+						onChange: ( value ) => setAttributes( { textFontWeight: value } ),
+					} )
+				),
 					el(
 						PanelBody,
 						{ title: __( 'Modal', 'icts-europe' ), initialOpen: false },
 						el( SelectControl, {
 							label: __( 'Modal background color', 'icts-europe' ),
-							value: modalBackgroundColorSlug || 'brand-primary-hover',
-							options: modalBackgroundOptions,
-							onChange: ( value ) =>
-								setAttributes( {
-									modalBackgroundColorSlug: value || '',
-									modalBackgroundColor: '',
-								} ),
-						} )
+						value: modalBackgroundColorSlug || 'brand-primary-hover',
+						options: modalBackgroundOptions,
+						onChange: ( value ) =>
+							setAttributes( {
+								modalBackgroundColorSlug: value || '',
+								modalBackgroundColor: '',
+							} ),
+					} ),
+						isSelectedBlockInModal
+							? el(
+									Fragment,
+									null,
+									el( SelectControl, {
+										label: __( 'Selected block type', 'icts-europe' ),
+										value: selectedBlock.name,
+										options: [
+											{ label: __( 'Heading', 'icts-europe' ), value: 'core/heading' },
+											{ label: __( 'Paragraph', 'icts-europe' ), value: 'core/paragraph' },
+										],
+										onChange: changeSelectedBlockType,
+									} ),
+									selectedBlock.name === 'core/heading'
+										? el( SelectControl, {
+												label: __( 'Heading level', 'icts-europe' ),
+												value: String( selectedBlock.attributes?.level || 2 ),
+												options: [
+													{ label: __( 'H1', 'icts-europe' ), value: '1' },
+													{ label: __( 'H2', 'icts-europe' ), value: '2' },
+													{ label: __( 'H3', 'icts-europe' ), value: '3' },
+													{ label: __( 'H4', 'icts-europe' ), value: '4' },
+													{ label: __( 'H5', 'icts-europe' ), value: '5' },
+													{ label: __( 'H6', 'icts-europe' ), value: '6' },
+												],
+												onChange: ( value ) =>
+													blockEditorDispatch.updateBlockAttributes(
+														selectedBlockClientId,
+														{ level: Number( value ) }
+													),
+										  } )
+										: null
+							  )
+							: null
 					)
+				);
+
+			const templateButtons = el(
+				'div',
+				{ className: 'icts-sector-card__modal-layout-actions' },
+				el(
+					Button,
+					{
+						variant: 'secondary',
+						onClick: () => applyModalTemplate( 'simple' ),
+					},
+					__( 'Simple', 'icts-europe' )
 				),
+				el(
+					Button,
+					{
+						variant: 'secondary',
+						onClick: () => applyModalTemplate( 'twoColumn' ),
+					},
+					__( '2 Column', 'icts-europe' )
+				),
+				el(
+					Button,
+					{
+						variant: 'secondary',
+						onClick: () => applyModalTemplate( 'features' ),
+					},
+					__( 'Feature List', 'icts-europe' )
+				)
+			);
+
+			return el(
+				Fragment,
+				null,
+				cardInspector,
 				el(
 					'div',
 					blockProps,
@@ -369,50 +525,89 @@
 						'div',
 						{
 							className: 'icts-sector-card__modal-editor',
-							style: {
-								background: modalBackgroundValue,
-							},
+							style: { background: modalBackgroundValue },
 						},
 						el(
 							'p',
 							{ className: 'icts-sector-card__modal-editor-label' },
 							__( 'Modal content', 'icts-europe' )
 						),
+						templateButtons,
 						el(
-							'div',
-							{ className: 'icts-sector-card__modal-layout-actions' },
-							el(
-								Button,
-								{
-									variant: 'secondary',
-									onClick: () => applyModalTemplate( 'simple' ),
-								},
-								__( 'Simple', 'icts-europe' )
-							),
-							el(
-								Button,
-								{
-									variant: 'secondary',
-									onClick: () => applyModalTemplate( 'twoColumn' ),
-								},
-								__( '2 Column', 'icts-europe' )
-							),
-							el(
-								Button,
-								{
-									variant: 'secondary',
-									onClick: () => applyModalTemplate( 'features' ),
-								},
-								__( 'Feature List', 'icts-europe' )
-							)
+							Button,
+							{
+								variant: 'primary',
+								onClick: () => setModalEditorOpen( true ),
+								className: 'icts-sector-card__modal-editor-open',
+							},
+							__( 'Edit modal content', 'icts-europe' )
 						),
-						el( InnerBlocks, {
-							template: MODAL_TEMPLATE,
-							templateInsertUpdatesSelection: false,
-							renderAppender: InnerBlocks.ButtonBlockAppender,
-						} )
+						el(
+							'p',
+							{ className: 'icts-sector-card__modal-editor-hint' },
+							__(
+								'Open the modal editor to edit this card’s detailed content in a larger canvas.',
+								'icts-europe'
+							)
+						)
 					)
-				)
+				),
+				isModalEditorOpen
+					? el(
+							'div',
+							{
+								className: 'icts-sector-card__modal-editor-overlay',
+								role: 'presentation',
+							},
+							el( 'div', {
+								className: 'icts-sector-card__modal-editor-backdrop',
+								onClick: () => setModalEditorOpen( false ),
+							} ),
+							el(
+								'div',
+								{
+									className: 'icts-sector-card__modal-editor-dialog',
+									role: 'dialog',
+									'aria-modal': 'true',
+									'aria-label': __( 'Edit modal content', 'icts-europe' ),
+								},
+								el(
+									'div',
+									{ className: 'icts-sector-card__modal-editor-header' },
+									el(
+										'h2',
+										{ className: 'icts-sector-card__modal-editor-title' },
+										__( 'Edit modal content', 'icts-europe' )
+									),
+									el( Button, {
+										icon: 'no-alt',
+										label: __( 'Close', 'icts-europe' ),
+										className: 'icts-sector-card__modal-editor-close',
+										onClick: () => setModalEditorOpen( false ),
+									} )
+								),
+								el(
+									'div',
+									{ className: 'icts-sector-card__modal-editor-overlay-inner' },
+									templateButtons,
+									selectedModalBlockControls,
+									el(
+										'div',
+										{
+											className: 'icts-sector-card__modal-editor-canvas',
+											style: { background: modalBackgroundValue },
+										},
+									el( InnerBlocks, {
+										template: MODAL_TEMPLATE,
+										templateInsertUpdatesSelection: false,
+										__experimentalCaptureToolbars: true,
+										renderAppender: InnerBlocks.ButtonBlockAppender,
+									} )
+								)
+							)
+					  )
+					  )
+					: null
 			);
 		},
 		save() {

@@ -76,3 +76,117 @@
 	gap: 8px;
 	margin: 0 0 12px;
 }
+
+.wp-block-icts-sector-card .icts-sector-card__modal-editor-hint {
+	margin: 0;
+	font-size: var(--wp--preset--font-size--x-small, 0.875rem);
+	color: var(--wp--preset--color--secondary);
+}
+
+.wp-block-icts-sector-card .icts-sector-card__modal-editor-open {
+	margin-left: auto;
+}
+
+.icts-sector-card__modal-editor-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+}
+
+.icts-sector-card__modal-editor-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+}
+
+.icts-sector-card__modal-editor-dialog {
+	position: relative;
+	inline-size: min(96vw, 1240px);
+	block-size: min(92vh, 920px);
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+	display: flex;
+	flex-direction: column;
+	padding: 24px;
+	overflow: visible;
+}
+
+.icts-sector-card__modal-editor-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.icts-sector-card__modal-editor-title {
+	margin: 0;
+	font-size: 1.8rem;
+	line-height: 1.2;
+}
+
+.icts-sector-card__modal-editor-close {
+	flex-shrink: 0;
+}
+
+.icts-sector-card__modal-editor-overlay-inner {
+	display: flex;
+	flex-direction: column;
+	block-size: 100%;
+	min-block-size: 0;
+}
+
+.icts-sector-card__modal-editor-overlay-inner .icts-sector-card__modal-layout-actions {
+	margin: 0 0 16px;
+}
+
+.icts-sector-card__modal-selected-block-controls {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 10px 14px;
+	inline-size: min(100%, 960px);
+	margin: 0 auto 16px;
+	padding: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.24);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.icts-sector-card__modal-editor-canvas {
+	inline-size: min(100%, 960px);
+	min-block-size: 420px;
+	block-size: 100%;
+	margin: 0 auto;
+	padding: clamp(16px, 2.8vw, 32px);
+	border-radius: 10px;
+	overflow: auto;
+	color: var(--wp--preset--color--white);
+	position: relative;
+}
+
+.icts-sector-card__modal-editor-canvas .block-editor-block-list__layout > *:first-child {
+	margin-block-start: 0;
+}
+
+.icts-sector-card__modal-editor-canvas .block-editor-block-list__layout > *:last-child {
+	margin-block-end: 0;
+}
+
+@media (max-width: 782px) {
+	.icts-sector-card__modal-editor-overlay {
+		padding: 12px;
+	}
+
+	.icts-sector-card__modal-editor-dialog {
+		padding: 16px;
+		block-size: min(94vh, 920px);
+	}
+
+	.icts-sector-card__modal-editor-canvas {
+		inline-size: 100%;
+	}
+}

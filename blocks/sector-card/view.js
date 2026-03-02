@@ -10,6 +10,7 @@
 	].join( ',' );
 
 	const openerMap = new WeakMap();
+	const closeTimerMap = new WeakMap();
 	let activeModal = null;
 
 	const getFocusable = ( container ) =>
@@ -20,13 +21,13 @@
 	const lockScroll = () => document.body.classList.add( 'has-icts-sector-modal-open' );
 	const unlockScroll = () => document.body.classList.remove( 'has-icts-sector-modal-open' );
 
-	const closeModal = ( modal, restoreFocus = true ) => {
+	const finishCloseModal = ( modal, restoreFocus = true ) => {
 		if ( ! modal ) {
 			return;
 		}
 
 		modal.hidden = true;
-		modal.classList.remove( 'is-open' );
+		modal.classList.remove( 'is-open', 'is-closing' );
 
 		if ( activeModal === modal ) {
 			activeModal = null;
@@ -41,6 +42,38 @@
 		}
 	};
 
+	const closeModal = ( modal, restoreFocus = true ) => {
+		if ( ! modal || modal.hidden ) {
+			return;
+		}
+
+		const existingTimer = closeTimerMap.get( modal );
+		if ( existingTimer ) {
+			window.clearTimeout( existingTimer );
+		}
+
+		const panel = modal.querySelector( '.icts-sector-card__modal-panel' );
+		modal.classList.remove( 'is-open' );
+		modal.classList.add( 'is-closing' );
+
+		const complete = () => finishCloseModal( modal, restoreFocus );
+		let completed = false;
+		const completeOnce = () => {
+			if ( completed ) {
+				return;
+			}
+			completed = true;
+			complete();
+		};
+
+		if ( panel ) {
+			panel.addEventListener( 'transitionend', completeOnce, { once: true } );
+		}
+
+		const fallbackTimer = window.setTimeout( completeOnce, 260 );
+		closeTimerMap.set( modal, fallbackTimer );
+	};
+
 	const openModal = ( modal, opener ) => {
 		if ( ! modal ) {
 			return;
@@ -53,8 +86,16 @@
 		openerMap.set( modal, opener );
 		activeModal = modal;
 
+		const existingTimer = closeTimerMap.get( modal );
+		if ( existingTimer ) {
+			window.clearTimeout( existingTimer );
+		}
+
 		modal.hidden = false;
-		modal.classList.add( 'is-open' );
+		modal.classList.remove( 'is-closing' );
+		window.requestAnimationFrame( () => {
+			modal.classList.add( 'is-open' );
+		} );
 		lockScroll();
 
 		const panel = modal.querySelector( '.icts-sector-card__modal-panel' );
@@ -65,6 +106,52 @@
 		const focusable = getFocusable( panel );
 		( focusable[ 0 ] || panel ).focus();
 	};
+
+	const initCardReveal = () => {
+		const cards = Array.from( document.querySelectorAll( '.wp-block-icts-sector-card' ) );
+		if ( ! cards.length ) {
+			return;
+		}
+
+		cards.forEach( ( card, index ) => {
+			card.classList.add( 'has-icts-reveal' );
+			card.style.setProperty( '--icts-card-delay', `${ Math.min( index * 90, 720 ) }ms` );
+		} );
+
+		if (
+			window.matchMedia &&
+			window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches
+		) {
+			cards.forEach( ( card ) => card.classList.add( 'is-inview' ) );
+			return;
+		}
+
+		if ( ! ( 'IntersectionObserver' in window ) ) {
+			cards.forEach( ( card ) => card.classList.add( 'is-inview' ) );
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			( entries, localObserver ) => {
+				entries.forEach( ( entry ) => {
+					if ( ! entry.isIntersecting ) {
+						return;
+					}
+
+					entry.target.classList.add( 'is-inview' );
+					localObserver.unobserve( entry.target );
+				} );
+			},
+			{
+				threshold: 0.15,
+				rootMargin: '0px 0px -6% 0px',
+			}
+		);
+
+		cards.forEach( ( card ) => observer.observe( card ) );
+	};
+
+	initCardReveal();
 
 	document.addEventListener( 'click', ( event ) => {
 		const opener = event.target.closest( '.icts-sector-card__learn-more[data-modal-target]' );
