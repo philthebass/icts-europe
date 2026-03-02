@@ -400,6 +400,11 @@
 	},
 	"styles": {
 		"blocks": {
+			"core/column": {
+				"border": {
+					"radius": "6px"
+				}
+			},
 			"core/buttons": {
 				"spacing": {
 					"padding": {
