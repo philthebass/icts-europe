@@ -79,6 +79,18 @@
 /* Desktop mega menu
 --------------------------------------------- */
 @media (min-width: 860px) {
+	body.icts-mega-menu-open {
+		overflow: hidden;
+		padding-top: var(--icts-mega-header-height, 0px);
+	}
+
+	body.icts-mega-menu-open header.site-header {
+		position: fixed;
+		inset-inline: 0;
+		top: var(--wp-admin--admin-bar--height, 0px);
+		z-index: 90;
+	}
+
 	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega {
 		position: static;
 	}

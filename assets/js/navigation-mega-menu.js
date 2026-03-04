@@ -52,6 +52,37 @@
         document.documentElement.style.setProperty('--icts-mega-top', top + 'px');
     }
 
+    function updateDesktopMegaOpenState(nav) {
+        if (!desktopQuery.matches) {
+            document.body.classList.remove('icts-mega-menu-open');
+            document.documentElement.style.setProperty('--icts-mega-header-height', '0px');
+            return;
+        }
+
+        var hasOpen = !!nav.querySelector(
+            '.wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega.is-icts-mega-open, .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega.is-icts-mega-closing'
+        );
+
+        if (hasOpen) {
+            var header = nav.closest('header');
+            if (header) {
+                var headerRect = header.getBoundingClientRect();
+                document.documentElement.style.setProperty(
+                    '--icts-mega-header-height',
+                    Math.max(headerRect.height, 0) + 'px'
+                );
+            }
+        } else {
+            document.documentElement.style.setProperty('--icts-mega-header-height', '0px');
+        }
+
+        document.body.classList.toggle('icts-mega-menu-open', hasOpen);
+
+        if (hasOpen) {
+            setMegaTop(nav);
+        }
+    }
+
     function setExpanded(item, expanded) {
         var toggle = getToggle(item);
         if (toggle) {
@@ -188,6 +219,7 @@
 
     function closeDesktopItem(item, immediate, done) {
         closeDesktopFlyoutsWithin(item, true);
+        var nav = item.closest('.wp-block-navigation');
 
         if (item._ictsCloseTimer) {
             window.clearTimeout(item._ictsCloseTimer);
@@ -205,6 +237,9 @@
         var isClosing = item.classList.contains('is-icts-mega-closing');
 
         if (!isOpen && !isClosing && !panelVisible) {
+            if (nav) {
+                updateDesktopMegaOpenState(nav);
+            }
             if (typeof done === 'function') {
                 done();
             }
@@ -220,6 +255,9 @@
             item.classList.remove('is-icts-mega-open');
             setExpanded(item, false);
             setPanelHidden(item, true);
+            if (nav) {
+                updateDesktopMegaOpenState(nav);
+            }
             if (typeof done === 'function') {
                 done();
             }
@@ -234,6 +272,9 @@
             setExpanded(item, false);
             setPanelHidden(item, true);
             item._ictsCloseTimer = null;
+            if (nav) {
+                updateDesktopMegaOpenState(nav);
+            }
             if (typeof done === 'function') {
                 done();
             }
@@ -245,6 +286,7 @@
         getTopLevelItems(nav).forEach(function (item) {
             closeDesktopItem(item, immediate);
         });
+        updateDesktopMegaOpenState(nav);
     }
 
     function openDesktopItem(item) {
@@ -258,6 +300,11 @@
         item.classList.add('is-icts-mega-open');
 
         setExpanded(item, true);
+
+        var nav = item.closest('.wp-block-navigation');
+        if (nav) {
+            updateDesktopMegaOpenState(nav);
+        }
     }
 
     function revealMobileParent(mobileContainer) {
@@ -865,6 +912,7 @@
 
                 if (openItem && openItem === clickedItem) {
                     closeDesktopItem(clickedItem, false);
+                    updateDesktopMegaOpenState(nav);
                     return;
                 }
 
@@ -873,6 +921,7 @@
                         setMegaTop(nav);
                         refreshDesktopFlyoutOffsets(nav);
                         openDesktopItem(clickedItem);
+                        updateDesktopMegaOpenState(nav);
                     });
                     return;
                 }
@@ -880,6 +929,7 @@
                 setMegaTop(nav);
                 refreshDesktopFlyoutOffsets(nav);
                 openDesktopItem(clickedItem);
+                updateDesktopMegaOpenState(nav);
             },
             true
         );
@@ -891,6 +941,7 @@
 
             if (!nav.contains(event.target)) {
                 closeDesktopFromOutside(nav);
+                updateDesktopMegaOpenState(nav);
                 return;
             }
 
@@ -907,11 +958,13 @@
             }
 
             closeDesktopFromOutside(nav);
+            updateDesktopMegaOpenState(nav);
         });
 
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 closeDesktopFromOutside(nav);
+                updateDesktopMegaOpenState(nav);
             }
         });
     }
@@ -933,6 +986,7 @@
                 if (!desktopQuery.matches) {
                     closeDesktopAll(nav, true);
                 }
+                updateDesktopMegaOpenState(nav);
             });
         };
 

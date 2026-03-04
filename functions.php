@@ -850,6 +850,45 @@ function template_part_areas( array $areas ) {
 add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_areas' );
 
 /**
+ * Shortcode: output current year.
+ */
+function current_year_shortcode() {
+    return esc_html( wp_date( 'Y' ) );
+}
+
+add_shortcode( 'icts_current_year', __NAMESPACE__ . '\current_year_shortcode' );
+
+/**
+ * Footer: replace hardcoded copyright year with current year.
+ *
+ * This targets footer copyright paragraphs that include "Site By EarlyMarketing.com"
+ * so it works for both file-based and Site Editor-saved template parts.
+ */
+function update_footer_copyright_year( $block_content, $block ) {
+    if ( ! is_string( $block_content ) || '' === $block_content ) {
+        return $block_content;
+    }
+
+    if ( false === strpos( $block_content, 'Site By EarlyMarketing.com' ) ) {
+        return $block_content;
+    }
+
+    $year    = wp_date( 'Y' );
+    $updated = preg_replace_callback(
+        '/(©\s*)(\d{4})/u',
+        static function ( $matches ) use ( $year ) {
+            return $matches[1] . $year;
+        },
+        $block_content,
+        1
+    );
+
+    return is_string( $updated ) ? $updated : $block_content;
+}
+
+add_filter( 'render_block_core/paragraph', __NAMESPACE__ . '\update_footer_copyright_year', 10, 2 );
+
+/**
  * Admin: Customers list – show a small logo next to the title.
  */
 \add_filter(

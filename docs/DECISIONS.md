@@ -78,6 +78,8 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 
 2026-02-27 — Tuned Sector Grid/Card editor controls for predictable content design — Editors requested fewer container spacing overrides plus flexible card typography controls — Sector Grid now relies on default spacing (no custom spacing controls) and exposes core layout/grid controls, while Sector Card now supports heading element switching (`h2`–`h6`/`p`) and configurable heading/body font size and weight.
 
+2026-03-04 — Made footer copyright year dynamic at render time — Footer template-part content in Site Editor and theme files contained hardcoded years — Added render filter for footer copyright paragraph (`Site By EarlyMarketing.com`) to replace `© YYYY` with current year automatically, plus reusable `[icts_current_year]` shortcode.
+
 2026-02-27 — Constrained Sector Card font-size controls to theme preset tokens — Free-text size inputs were too open-ended for editor consistency — Heading/body font size controls now use preset dropdowns (theme token slugs), with frontend mapping to `--wp--preset--font-size--*` variables and backward compatibility for existing legacy values.
 
 2026-02-27 — Locked Sector Grid container layout to grid-only defaults — Editors should not switch card container layout types and break card alignment patterns — Sector Grid now disables layout editing/switching at container level, defaults to `type: grid`, and sets default `minimumColumnWidth` to `20rem` while preserving child grid item positioning controls.

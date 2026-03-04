@@ -347,6 +347,12 @@ body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
 	display: none;
 }
 
+/* Remove default site-block flow gap before footer template part */
+:where(.wp-site-blocks) > footer.site-footer,
+:where(.wp-site-blocks) > .site-footer.wp-block-template-part {
+	margin-block-start: 0;
+}
+
 .row-logos > figure {
 	flex-shrink: 1 !important;
 }
