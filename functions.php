@@ -946,6 +946,87 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
         </style>';
     }
 );
+
+/**
+ * Admin: Partners list – show featured image thumbnail.
+ */
+\add_filter(
+    'manage_partner_posts_columns',
+    function ( $columns ) {
+
+        $new = [];
+
+        foreach ( $columns as $key => $label ) {
+            // Insert our column before the Title column so it appears as second column.
+            if ( 'title' === $key ) {
+                $new['partner_thumb'] = __( 'Image', 'icts-europe' );
+            }
+
+            $new[ $key ] = $label;
+        }
+
+        return $new;
+    }
+);
+
+\add_action(
+    'manage_partner_posts_custom_column',
+    function ( $column, $post_id ) {
+
+        if ( 'partner_thumb' !== $column ) {
+            return;
+        }
+
+        $thumb_id = \get_post_thumbnail_id( $post_id );
+
+        if ( $thumb_id ) {
+            $src = \wp_get_attachment_image_url( $thumb_id, 'full' );
+
+            if ( $src ) {
+                echo '<span class="icts-admin-partner-thumb"><img src="' . esc_url( $src ) . '" alt="" loading="lazy" decoding="async" /></span>';
+                return;
+            }
+        }
+
+        echo '<span aria-hidden="true">—</span>';
+    },
+    10,
+    2
+);
+
+\add_action(
+    'admin_head-edit.php',
+    function () {
+        $screen = \get_current_screen();
+
+        if ( 'edit-partner' !== $screen->id ) {
+            return;
+        }
+
+        echo '<style>
+            .column-partner_thumb {
+                width: 80px;
+                text-align: center;
+            }
+            .column-partner_thumb .icts-admin-partner-thumb {
+                width: 64px;
+                height: 40px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .column-partner_thumb .icts-admin-partner-thumb img {
+                max-width: 64px;
+                max-height: 40px;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                object-position: center;
+                display: block;
+            }
+        </style>';
+    }
+);
 // Polylang: Register Team Member archive slug for translation.
 \add_action( 'init', function () {
     if ( \function_exists( 'pll_register_string' ) ) {
