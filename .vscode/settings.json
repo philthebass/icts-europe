@@ -1,0 +1,6 @@
+{
+  "intelephense.environment.includePaths": [
+    "vendor/php-stubs/wordpress-stubs",
+    "/Users/philipevans/Local Sites/iesaero/app/public"
+  ]
+}

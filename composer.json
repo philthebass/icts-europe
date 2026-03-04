@@ -1,0 +1,12 @@
+{
+    "name": "philipevans/icts-europe",
+    "authors": [
+        {
+            "name": "philthebass",
+            "email": "phil@phil-evans.com"
+        }
+    ],
+    "require-dev": {
+        "php-stubs/wordpress-stubs": "^6.9"
+    }
+}
