@@ -393,3 +393,39 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 .gform_wrapper.gform-theme--orbital .gform_required_legend .gfield_required_asterisk {
 	color: var(--gf-ctrl-label-color-req);
 }
+
+.gform_wrapper.gform-theme--orbital input:not([type="submit"]),
+.gform_wrapper.gform-theme--orbital select,
+.gform_wrapper.gform-theme--orbital textarea {
+	font-family: var(--wp--preset--font-family--nunito-sans);
+}
+
+.gform_wrapper.gform-theme--orbital input:not([type="submit"])::placeholder,
+.gform_wrapper.gform-theme--orbital textarea::placeholder {
+	font-family: var(--wp--preset--font-family--nunito-sans);
+	color: #A1A7AD;
+	opacity: 1;
+}
+
+/* Gravity Form ID 1: hide required legend + tighten field spacing */
+#gform_wrapper_1.gform_wrapper.gform-theme--orbital .gform_required_legend {
+	display: none;
+}
+
+#gform_wrapper_1.gform_wrapper.gform-theme--orbital {
+	--gf-field-gap-y: 0.5rem;
+}
+
+#gform_wrapper_1.gform_wrapper.gform-theme--orbital .gform_fields {
+	row-gap: 0.5rem;
+}
+
+#gform_wrapper_1.gform_wrapper.gform-theme--orbital .gfield {
+	margin-bottom: 0.5rem;
+}
+
+#gform_wrapper_1.gform_wrapper.gform-theme--orbital .gform_footer,
+#gform_wrapper_1.gform_wrapper.gform-theme--orbital .gform_page_footer {
+	margin-top: 0.5rem;
+	padding-top: 0;
+}
