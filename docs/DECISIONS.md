@@ -95,3 +95,7 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-03-02 — Added optional `Horizontal Stepper` style variation for How It Works — Needed a second visual option before final design delivery without changing content model — `icts/how-it-works` now exposes a block style variation that switches timeline rail/panel layout to a desktop horizontal presentation while keeping existing mobile behavior.
 
 2026-03-02 — Temporarily enabled global border-radius controls in editor — Needed short-term visual tuning flexibility for selected layouts before launch lock-down — `settings.border.radius` is now `true`; plan is to switch it back to `false` before production handoff.
+
+2026-03-06 — Added dynamic Latest News Slider block with category color token support — Needed a reusable post-driven card slider matching existing hero/solutions interaction patterns — New `icts/latest-news-slider` renders latest posts server-side with linked cards, grouped Flickity slides + indicators, Yoast-primary-category fallback logic, and category marker colors sourced from category term meta token slug (`icts_category_color_slug`).
+
+2026-03-06 — Aligned Latest News Slider UX with Hero/Solutions preview and indicator behavior — Editors needed parity controls and users needed visible autoplay progress feedback — Added `Preview first slide only` toggle (inspector + block toolbar) for editor, plus autoplay indicator fill animation with hover-pause, no-autoplay fallback, and reduced-motion handling.

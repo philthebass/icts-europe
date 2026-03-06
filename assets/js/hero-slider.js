@@ -26,7 +26,7 @@
             const flkty = new Flickity(sliderEl, {
                 cellSelector: '.icts-hero-slider__slide',
                 wrapAround: true,
-                autoPlay: autoPlayMs || false,
+                autoPlay: false,
                 pauseAutoPlayOnHover: !!autoPlayMs,
                 prevNextButtons: isEditor ? true : false,
                 pageDots: false,
@@ -46,6 +46,7 @@
                     );
                 }
                 container.classList.toggle('is-hero-no-autoplay', !autoPlayMs);
+                container.classList.remove('is-hero-playing');
             }
             // Preserve editor-selected slide across re-renders
             let savedIndex = 0;
@@ -129,6 +130,80 @@
                     container.dataset.ictsSelectedIndex = String(index);
                 }
             });
+
+            if (autoPlayMs && !isEditor) {
+                flkty.options.autoPlay = autoPlayMs;
+                flkty.stopPlayer();
+
+                let isInViewport = false;
+                let isPlaying = false;
+                let pageIsFullyLoaded = document.readyState === 'complete';
+
+                function startAutoplayCycle() {
+                    if (isPlaying) {
+                        return;
+                    }
+
+                    flkty.stopPlayer();
+                    flkty.playPlayer();
+                    isPlaying = true;
+
+                    if (container) {
+                        container.classList.add('is-hero-playing');
+                    }
+                }
+
+                function stopAutoplayCycle() {
+                    if (!isPlaying) {
+                        return;
+                    }
+
+                    flkty.stopPlayer();
+                    isPlaying = false;
+
+                    if (container) {
+                        container.classList.remove('is-hero-playing');
+                    }
+                }
+
+                function maybeStartAutoplay() {
+                    if (isInViewport && pageIsFullyLoaded) {
+                        setTimeout(startAutoplayCycle, 40);
+                    }
+                }
+
+                window.addEventListener(
+                    'load',
+                    function () {
+                        pageIsFullyLoaded = true;
+                        maybeStartAutoplay();
+                    },
+                    { once: true }
+                );
+
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(function (entry) {
+                                if (!entry.isIntersecting) {
+                                    isInViewport = false;
+                                    stopAutoplayCycle();
+                                    return;
+                                }
+
+                                isInViewport = true;
+                                maybeStartAutoplay();
+                            });
+                        },
+                        { threshold: 0.35 }
+                    );
+
+                    observer.observe(sliderEl);
+                } else {
+                    isInViewport = true;
+                    maybeStartAutoplay();
+                }
+            }
         });
     }
 

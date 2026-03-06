@@ -156,6 +156,7 @@ body.rtl .icts-hero-slider__content,
 .icts-hero-slider__title {
     margin: 0;
     font-weight: 600;
+    color: var(--wp--preset--color--white);
 }
 
 .icts-hero-slider__text {
@@ -329,7 +330,7 @@ body.rtl .icts-hero-slider__indicator-bar::after,
     border-color: #ffffff;
 }
 
-.icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::after {
+.icts-hero-slider.is-hero-playing .icts-hero-slider__indicator.is-active .icts-hero-slider__indicator-bar::after {
     animation: icts-hero-indicator-fill var(--icts-hero-autoplay, 7000ms) linear forwards;
 }
 

@@ -68,6 +68,7 @@
     max-width: var(--wp--style--global--content-size, 1320px);
     margin: 0 auto;
     padding: var(--icts-solutions-panel-padding);
+    border-radius: 6px;
     background-color: var(--wp--preset--color--light-grey-blue);
     overflow-x: hidden;
     overflow-x: clip;
@@ -315,7 +316,9 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
     opacity: 1;
 }
 
-.icts-solutions-slider__indicator.is-active .icts-solutions-slider__indicator-bar::after {
+.icts-solutions-slider.is-solutions-playing
+    .icts-solutions-slider__indicator.is-active
+    .icts-solutions-slider__indicator-bar::after {
     animation: icts-solutions-indicator-fill var(--icts-solutions-autoplay, 7000ms) linear forwards;
 }
 

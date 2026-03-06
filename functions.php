@@ -79,6 +79,13 @@ require_once __DIR__ . '/inc/blocks.php';
         $asset_ver( '/assets/js/solutions-slider.js' ),
         true
     );
+    \wp_register_script(
+        'icts-latest-news-slider-frontend',
+        get_template_directory_uri() . '/assets/js/latest-news-slider.js',
+        [ 'flickity' ],
+        $asset_ver( '/assets/js/latest-news-slider.js' ),
+        true
+    );
 
     \wp_register_script(
         'icts-sector-grid-editor',
@@ -117,6 +124,13 @@ require_once __DIR__ . '/inc/blocks.php';
         get_template_directory_uri() . '/assets/blocks/how-it-works-step/editor.js',
         [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
         $asset_ver( '/assets/blocks/how-it-works-step/editor.js' ),
+        true
+    );
+    \wp_register_script(
+        'icts-latest-news-slider-editor',
+        get_template_directory_uri() . '/assets/blocks/latest-news-slider/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components', 'wp-server-side-render' ],
+        $asset_ver( '/assets/blocks/latest-news-slider/editor.js' ),
         true
     );
 
@@ -184,6 +198,13 @@ require_once __DIR__ . '/inc/blocks.php';
         $asset_ver( '/assets/styles/blocks/how-it-works-step-editor.css' )
     );
 
+    \wp_register_style(
+        'icts-latest-news-slider-style',
+        get_template_directory_uri() . '/assets/styles/blocks/latest-news-slider.css',
+        [ 'flickity' ],
+        $asset_ver( '/assets/styles/blocks/latest-news-slider.css' )
+    );
+
     \register_block_type( 'icts-europe/hero-slider', [
         'editor_script' => $hero_editor_handle,
         'style'         => [ 'icts-hero-slider-style', 'flickity' ],
@@ -210,6 +231,7 @@ require_once __DIR__ . '/inc/blocks.php';
     \register_block_type_from_metadata( __DIR__ . '/blocks/sector-card' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/how-it-works' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/how-it-works-step' );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/latest-news-slider' );
 
     \register_block_style(
         'icts/how-it-works',
@@ -1066,6 +1088,85 @@ add_filter( 'render_block_core/paragraph', __NAMESPACE__ . '\update_footer_copyr
         </style>';
     }
 );
+
+/**
+ * Category term meta: brand color token for Latest News slider marker.
+ */
+function get_category_color_palette_choices() {
+    $palette = \wp_get_global_settings( [ 'color', 'palette', 'theme' ] );
+
+    if ( ! is_array( $palette ) || empty( $palette ) ) {
+        return [];
+    }
+
+    return array_values(
+        array_filter(
+            $palette,
+            static function ( $item ) {
+                return is_array( $item ) && ! empty( $item['slug'] ) && ! empty( $item['name'] );
+            }
+        )
+    );
+}
+
+function render_category_color_field_add() {
+    $choices = get_category_color_palette_choices();
+    ?>
+    <div class="form-field term-icts-category-color-wrap">
+        <label for="icts_category_color_slug"><?php esc_html_e( 'Marker color token', 'icts-europe' ); ?></label>
+        <select name="icts_category_color_slug" id="icts_category_color_slug">
+            <option value=""><?php esc_html_e( 'Default (Brand Secondary)', 'icts-europe' ); ?></option>
+            <?php foreach ( $choices as $choice ) : ?>
+                <option value="<?php echo esc_attr( $choice['slug'] ); ?>"><?php echo esc_html( $choice['name'] ); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <p><?php esc_html_e( 'Used by the Latest News slider category marker.', 'icts-europe' ); ?></p>
+    </div>
+    <?php
+}
+
+function render_category_color_field_edit( $term ) {
+    $choices  = get_category_color_palette_choices();
+    $selected = (string) \get_term_meta( $term->term_id, 'icts_category_color_slug', true );
+    ?>
+    <tr class="form-field term-icts-category-color-wrap">
+        <th scope="row">
+            <label for="icts_category_color_slug"><?php esc_html_e( 'Marker color token', 'icts-europe' ); ?></label>
+        </th>
+        <td>
+            <select name="icts_category_color_slug" id="icts_category_color_slug">
+                <option value=""><?php esc_html_e( 'Default (Brand Secondary)', 'icts-europe' ); ?></option>
+                <?php foreach ( $choices as $choice ) : ?>
+                    <option value="<?php echo esc_attr( $choice['slug'] ); ?>" <?php selected( $selected, $choice['slug'] ); ?>>
+                        <?php echo esc_html( $choice['name'] ); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <p class="description"><?php esc_html_e( 'Used by the Latest News slider category marker.', 'icts-europe' ); ?></p>
+        </td>
+    </tr>
+    <?php
+}
+
+function save_category_color_field( $term_id ) {
+    if ( ! isset( $_POST['icts_category_color_slug'] ) ) {
+        return;
+    }
+
+    $color_slug = sanitize_key( (string) \wp_unslash( $_POST['icts_category_color_slug'] ) );
+
+    if ( '' === $color_slug ) {
+        \delete_term_meta( $term_id, 'icts_category_color_slug' );
+        return;
+    }
+
+    \update_term_meta( $term_id, 'icts_category_color_slug', $color_slug );
+}
+
+\add_action( 'category_add_form_fields', __NAMESPACE__ . '\render_category_color_field_add' );
+\add_action( 'category_edit_form_fields', __NAMESPACE__ . '\render_category_color_field_edit' );
+\add_action( 'created_category', __NAMESPACE__ . '\save_category_color_field' );
+\add_action( 'edited_category', __NAMESPACE__ . '\save_category_color_field' );
 // Polylang: Register Team Member archive slug for translation.
 \add_action( 'init', function () {
     if ( \function_exists( 'pll_register_string' ) ) {

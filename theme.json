@@ -405,6 +405,11 @@
 					"radius": "6px"
 				}
 			},
+			"core/cover": {
+				"border": {
+					"radius": "6px"
+				}
+			},
 			"core/buttons": {
 				"spacing": {
 					"padding": {
@@ -432,6 +437,11 @@
 				"typography": {
 					"fontFamily": "var(--wp--preset--font-family--monospace)",
 					"fontSize": "var(--wp--preset--font-size--small)"
+				}
+			},
+			"core/image": {
+				"border": {
+					"radius": "6px"
 				}
 			},
 			"core/preformatted": {
@@ -525,6 +535,9 @@
 				}
 			},
 			"heading": {
+				"color": {
+					"text": "var(--wp--preset--color--brand-primary)"
+				},
 				"typography": {
 					"fontFamily": "var(--wp--preset--font-family--nunito-sans)",
 					"fontStyle": "normal",

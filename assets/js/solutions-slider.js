@@ -50,7 +50,7 @@
                 cellAlign: isStackedLayout ? 'left' : 'center',
                 contain: isStackedLayout,
                 wrapAround: !isStackedLayout,
-                autoPlay: autoPlayMs || false,
+                autoPlay: false,
                 pauseAutoPlayOnHover: !!autoPlayMs,
                 prevNextButtons: true,
                 pageDots: false,
@@ -66,6 +66,7 @@
                     );
                 }
                 container.classList.toggle('is-solutions-no-autoplay', !autoPlayMs);
+                container.classList.remove('is-solutions-playing');
             }
 
             var indicatorsWrap = container
@@ -147,6 +148,80 @@
             flkty.on('change', function (index) {
                 updateActiveIndicator(index);
             });
+
+            if (autoPlayMs) {
+                flkty.options.autoPlay = autoPlayMs;
+                flkty.stopPlayer();
+
+                var isInViewport = false;
+                var isPlaying = false;
+                var pageIsFullyLoaded = document.readyState === 'complete';
+
+                function startAutoplayCycle() {
+                    if (isPlaying) {
+                        return;
+                    }
+
+                    flkty.stopPlayer();
+                    flkty.playPlayer();
+                    isPlaying = true;
+
+                    if (container) {
+                        container.classList.add('is-solutions-playing');
+                    }
+                }
+
+                function stopAutoplayCycle() {
+                    if (!isPlaying) {
+                        return;
+                    }
+
+                    flkty.stopPlayer();
+                    isPlaying = false;
+
+                    if (container) {
+                        container.classList.remove('is-solutions-playing');
+                    }
+                }
+
+                function maybeStartAutoplay() {
+                    if (isInViewport && pageIsFullyLoaded) {
+                        setTimeout(startAutoplayCycle, 40);
+                    }
+                }
+
+                window.addEventListener(
+                    'load',
+                    function () {
+                        pageIsFullyLoaded = true;
+                        maybeStartAutoplay();
+                    },
+                    { once: true }
+                );
+
+                if ('IntersectionObserver' in window) {
+                    var observer = new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(function (entry) {
+                                if (!entry.isIntersecting) {
+                                    isInViewport = false;
+                                    stopAutoplayCycle();
+                                    return;
+                                }
+
+                                isInViewport = true;
+                                maybeStartAutoplay();
+                            });
+                        },
+                        { threshold: 0.35 }
+                    );
+
+                    observer.observe(sliderEl);
+                } else {
+                    isInViewport = true;
+                    maybeStartAutoplay();
+                }
+            }
         });
     }
 

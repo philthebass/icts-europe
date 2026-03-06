@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/latest-news-slider",
+  "version": "1.0.0",
+  "title": "Latest News Slider",
+  "category": "design",
+  "icon": "slides",
+  "description": "Dynamic slider that shows latest posts in grouped cards.",
+  "textdomain": "icts-europe",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Latest news"
+    },
+    "postsToShow": {
+      "type": "number",
+      "default": 9
+    },
+    "autoplay": {
+      "type": "number",
+      "default": 7000
+    },
+    "showAuthor": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDate": {
+      "type": "boolean",
+      "default": true
+    },
+    "categoryIds": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "number"
+      }
+    },
+    "preview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "icts-latest-news-slider-editor",
+  "style": "icts-latest-news-slider-style",
+  "viewScript": "icts-latest-news-slider-frontend",
+  "render": "file:./render.php"
+}
