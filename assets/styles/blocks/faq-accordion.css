@@ -93,6 +93,12 @@
 	color: var(--wp--preset--color--base);
 }
 
+.icts-faq-accordion__item.is-open .icts-faq-accordion__toggle,
+.icts-faq-accordion__item.is-open .icts-faq-accordion__question,
+.icts-faq-accordion__item.is-open .icts-faq-accordion__icon {
+	color: var(--wp--preset--color--brand-white, var(--wp--preset--color--white, var(--wp--preset--color--base)));
+}
+
 .icts-faq-accordion__question-wrap {
 	margin: 0;
 }

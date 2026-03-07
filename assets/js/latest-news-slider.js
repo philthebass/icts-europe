@@ -33,157 +33,151 @@
 					container.style.setProperty( '--icts-latest-news-autoplay', String( autoPlayMs ) + 'ms' );
 				}
 				container.classList.toggle( 'is-latest-news-no-autoplay', ! autoPlayMs );
+				container.classList.remove( 'is-latest-news-playing' );
 			}
 
 			var flkty = new Flickity( sliderEl, {
 				cellSelector: '.icts-latest-news-slider__cell',
 				wrapAround: true,
-				groupCells: true,
 				contain: true,
 				prevNextButtons: true,
 				pageDots: false,
 				autoPlay: false,
-				pauseAutoPlayOnHover: !!autoPlayMs,
+				pauseAutoPlayOnHover: false,
 				rightToLeft: isRtl,
-				adaptiveHeight: true
+				adaptiveHeight: false,
+				draggable: true
 			} );
-
-			function equalizeCardHeights() {
-				var cards = sliderEl.querySelectorAll( '.icts-latest-news-slider__card' );
-				if ( ! cards.length ) {
-					return;
-				}
-
-				cards.forEach( function ( card ) {
-					card.style.minHeight = '';
-				} );
-
-				var maxCardHeight = 0;
-				cards.forEach( function ( card ) {
-					var cardHeight = card.getBoundingClientRect().height;
-					if ( cardHeight > maxCardHeight ) {
-						maxCardHeight = cardHeight;
-					}
-				} );
-
-				if ( maxCardHeight > 0 ) {
-					var pixelHeight = String( Math.ceil( maxCardHeight ) ) + 'px';
-					cards.forEach( function ( card ) {
-						card.style.minHeight = pixelHeight;
-					} );
-				}
-			}
 
 			function refreshLayout() {
 				if ( ! flkty || flkty.isDestroyed ) {
 					return;
 				}
 
-				equalizeCardHeights();
-				flkty.resize();
-				flkty.reposition();
+				var maxCellHeight = 0;
+				sliderEl.querySelectorAll( '.icts-latest-news-slider__cell' ).forEach( function ( cell ) {
+					cell.style.minHeight = '';
+					var cellHeight = cell.getBoundingClientRect().height;
+					if ( cellHeight > maxCellHeight ) {
+						maxCellHeight = cellHeight;
+					}
+				} );
 
-				if ( flkty.viewport ) {
-					var maxCellHeight = 0;
+				if ( maxCellHeight > 0 ) {
+					var pixelHeight = String( Math.ceil( maxCellHeight ) ) + 'px';
 					sliderEl.querySelectorAll( '.icts-latest-news-slider__cell' ).forEach( function ( cell ) {
-						var cellHeight = cell.getBoundingClientRect().height;
-						if ( cellHeight > maxCellHeight ) {
-							maxCellHeight = cellHeight;
-						}
+						cell.style.minHeight = pixelHeight;
 					} );
-
-					if ( maxCellHeight > 0 ) {
-						flkty.viewport.style.height = String( Math.ceil( maxCellHeight ) ) + 'px';
+					if ( flkty.viewport ) {
+						flkty.viewport.style.height = pixelHeight;
 					}
 				}
+
+				flkty.resize();
+				flkty.reposition();
 			}
 
-			flkty.on( 'settle', refreshLayout );
-
 			setTimeout( refreshLayout, 0 );
+			setTimeout( refreshLayout, 120 );
 			window.addEventListener( 'load', refreshLayout, { once: true } );
 			window.addEventListener( 'resize', refreshLayout );
-
 			if ( autoPlayMs ) {
-				flkty.options.autoPlay = autoPlayMs;
-				flkty.stopPlayer();
 				var isInViewport = false;
-				var isPlaying = false;
+				var isHovered = false;
+				var autoplayTimer = null;
 				var pageIsFullyLoaded = document.readyState === 'complete';
 				var initialLayoutReady = false;
 
-				function startAutoplayCycle() {
-					if ( isPlaying ) {
+				function clearAutoplayTimer() {
+					if ( autoplayTimer ) {
+						window.clearTimeout( autoplayTimer );
+						autoplayTimer = null;
+					}
+				}
+
+				function updatePlayingState( playing ) {
+					if ( container ) {
+						container.classList.toggle( 'is-latest-news-playing', playing );
+					}
+				}
+
+				function scheduleNextAutoplay() {
+					clearAutoplayTimer();
+
+					if ( ! isInViewport || ! pageIsFullyLoaded || ! initialLayoutReady || isHovered ) {
+						updatePlayingState( false );
 						return;
 					}
 
-					flkty.stopPlayer();
-					flkty.playPlayer();
-					isPlaying = true;
+					updatePlayingState( true );
+					autoplayTimer = window.setTimeout( function () {
+						autoplayTimer = null;
+
+						if ( ! isInViewport || ! pageIsFullyLoaded || ! initialLayoutReady || isHovered ) {
+							updatePlayingState( false );
+							return;
+						}
+
+						flkty.next( true );
+					}, autoPlayMs );
+				}
+
+				function startAutoplayCycle() {
+					scheduleNextAutoplay();
 				}
 
 				function stopAutoplayCycle() {
-					if ( ! isPlaying ) {
-						return;
-					}
-
-					flkty.stopPlayer();
-					isPlaying = false;
+					clearAutoplayTimer();
+					updatePlayingState( false );
 				}
 
-				function maybeStartAutoplay() {
-					if ( isInViewport && pageIsFullyLoaded && initialLayoutReady ) {
-						setTimeout( startAutoplayCycle, 40 );
-					}
-				}
+				// Flickity's arrow buttons do not always trigger pointerDown on the carousel.
+				// Clear the current timer on manual nav so the next slide waits a full interval.
+				sliderEl.querySelectorAll( '.flickity-prev-next-button' ).forEach( function ( buttonEl ) {
+					buttonEl.addEventListener( 'click', stopAutoplayCycle );
+				} );
 
 				window.addEventListener(
 					'load',
 					function () {
 						pageIsFullyLoaded = true;
-						maybeStartAutoplay();
+						refreshLayout();
+						startAutoplayCycle();
 					},
 					{ once: true }
 				);
 
-				var pendingImages = 0;
-				var images = sliderEl.querySelectorAll( 'img' );
+				sliderEl.addEventListener( 'mouseenter', function () {
+					isHovered = true;
+					stopAutoplayCycle();
+				} );
+
+				sliderEl.addEventListener( 'mouseleave', function () {
+					isHovered = false;
+					startAutoplayCycle();
+				} );
+
+				flkty.on( 'pointerDown', stopAutoplayCycle );
+				flkty.on( 'settle', function () {
+					refreshLayout();
+					if ( isInViewport && pageIsFullyLoaded && initialLayoutReady && ! isHovered ) {
+						scheduleNextAutoplay();
+					}
+				} );
 
 				function completeInitialLayout() {
 					if ( initialLayoutReady ) {
 						return;
 					}
 
-					refreshLayout();
-					flkty.select( 0, false, true );
 					initialLayoutReady = true;
-					maybeStartAutoplay();
+					refreshLayout();
+					startAutoplayCycle();
 				}
 
-				if ( images.length ) {
-					images.forEach( function ( img ) {
-						if ( img.complete ) {
-							return;
-						}
-
-						pendingImages += 1;
-
-						var onImageDone = function () {
-							pendingImages -= 1;
-							refreshLayout();
-							if ( pendingImages <= 0 ) {
-								completeInitialLayout();
-							}
-						};
-
-						img.addEventListener( 'load', onImageDone, { once: true } );
-						img.addEventListener( 'error', onImageDone, { once: true } );
-					} );
-				}
-
-				if ( pendingImages === 0 ) {
-					setTimeout( completeInitialLayout, 0 );
-				}
+				// Do not gate autoplay on all lazy-loaded images.
+				// Initialize immediately and let periodic layout refresh handle late image loads.
+				setTimeout( completeInitialLayout, 0 );
 
 				if ( 'IntersectionObserver' in window ) {
 					var observer = new IntersectionObserver(
@@ -196,20 +190,19 @@
 								}
 
 								isInViewport = true;
-								maybeStartAutoplay();
+								startAutoplayCycle();
 							} );
 						},
-						{
-							threshold: 0.35
-						}
+						{ threshold: 0.35 }
 					);
 
 					observer.observe( sliderEl );
 				} else {
 					isInViewport = true;
-					maybeStartAutoplay();
+					startAutoplayCycle();
 				}
 			} else {
+				flkty.on( 'settle', refreshLayout );
 				sliderEl.querySelectorAll( 'img' ).forEach( function ( img ) {
 					if ( ! img.complete ) {
 						img.addEventListener( 'load', refreshLayout, { once: true } );
