@@ -14,6 +14,25 @@
 	margin-inline: calc(50% - 50vw) !important;
 }
 
+/* Always neutralize auto flow margins on this block */
+.wp-block-icts-latest-news-slider {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* Prevent inherited layout spacing around the wrapper */
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-latest-news-slider,
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-latest-news-slider.alignfull {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+/* Dynamic/rendered wrapper can appear without wp-block-* class */
+:root :where(.is-layout-flow, .is-layout-constrained) > .icts-latest-news-slider-block {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
 .icts-latest-news-slider__inner {
 	max-width: var(--wp--style--global--content-size, 1200px);
 	margin-inline: auto;
