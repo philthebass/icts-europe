@@ -41,6 +41,8 @@
                 pageDots: true,
                 prevNextButtons: false,
                 adaptiveHeight: true,
+                selectedAttraction: 0.01,
+                friction: 0.18,
                 autoPlay: false,
                 pauseAutoPlayOnHover: !!autoPlayMs
             });

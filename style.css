@@ -435,3 +435,30 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	margin-top: 0.5rem;
 	padding-top: 0;
 }
+
+
+.icts-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+.icts-card > .wp-block-image {
+	margin: 0;
+}
+
+.icts-card__body {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+}
+
+.icts-card__buttons {
+	margin-top: auto !important;
+}
+
+.is-layout-grid > .icts-card,
+.is-layout-grid > .wp-block-group.icts-card {
+	height: 100%;
+}
