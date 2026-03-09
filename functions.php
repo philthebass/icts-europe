@@ -127,6 +127,20 @@ require_once __DIR__ . '/inc/blocks.php';
         true
     );
     \wp_register_script(
+        'icts-steps-primary-editor',
+        get_template_directory_uri() . '/assets/blocks/steps-primary/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor' ],
+        $asset_ver( '/assets/blocks/steps-primary/editor.js' ),
+        true
+    );
+    \wp_register_script(
+        'icts-steps-primary-step-editor',
+        get_template_directory_uri() . '/assets/blocks/steps-primary-step/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components' ],
+        $asset_ver( '/assets/blocks/steps-primary-step/editor.js' ),
+        true
+    );
+    \wp_register_script(
         'icts-latest-news-slider-editor',
         get_template_directory_uri() . '/assets/blocks/latest-news-slider/editor.js',
         [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-block-editor', 'wp-components', 'wp-server-side-render' ],
@@ -139,6 +153,13 @@ require_once __DIR__ . '/inc/blocks.php';
         get_template_directory_uri() . '/blocks/how-it-works/view.js',
         [],
         $asset_ver( '/blocks/how-it-works/view.js' ),
+        true
+    );
+    \wp_register_script(
+        'icts-steps-primary-view',
+        get_template_directory_uri() . '/blocks/steps-primary/view.js',
+        [],
+        $asset_ver( '/blocks/steps-primary/view.js' ),
         true
     );
 
@@ -197,6 +218,30 @@ require_once __DIR__ . '/inc/blocks.php';
         [],
         $asset_ver( '/assets/styles/blocks/how-it-works-step-editor.css' )
     );
+    \wp_register_style(
+        'icts-steps-primary-style',
+        get_template_directory_uri() . '/assets/styles/blocks/steps-primary.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/steps-primary.css' )
+    );
+    \wp_register_style(
+        'icts-steps-primary-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/steps-primary-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/steps-primary-editor.css' )
+    );
+    \wp_register_style(
+        'icts-steps-primary-step-style',
+        get_template_directory_uri() . '/assets/styles/blocks/steps-primary-step.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/steps-primary-step.css' )
+    );
+    \wp_register_style(
+        'icts-steps-primary-step-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/steps-primary-step-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/steps-primary-step-editor.css' )
+    );
 
     \wp_register_style(
         'icts-latest-news-slider-style',
@@ -231,6 +276,8 @@ require_once __DIR__ . '/inc/blocks.php';
     \register_block_type_from_metadata( __DIR__ . '/blocks/sector-card' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/how-it-works' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/how-it-works-step' );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/steps-primary' );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/steps-primary-step' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/latest-news-slider' );
 
     \register_block_style(

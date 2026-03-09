@@ -1,0 +1,34 @@
+.wp-block-icts-steps-primary .icts-steps-primary__heading {
+	max-width: min(100%, 980px);
+	margin: 0 auto clamp(0.8rem, 1.5vw, 1.1rem);
+	text-align: left;
+}
+
+.wp-block-icts-steps-primary .icts-steps-primary__list {
+	display: grid;
+	gap: 1.15rem;
+	max-width: min(100%, 980px);
+	margin-inline: auto;
+}
+
+.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step {
+	width: clamp(700px, 76vw, 890px);
+	max-width: 100%;
+}
+
+.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step:nth-child(odd) {
+	justify-self: start;
+}
+
+.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step:nth-child(even) {
+	justify-self: end;
+}
+
+@media (max-width: 960px) {
+	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step,
+	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step:nth-child(even),
+	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step:nth-child(odd) {
+		width: 100%;
+		justify-self: stretch;
+	}
+}

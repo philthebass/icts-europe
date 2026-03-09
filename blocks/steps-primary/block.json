@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/steps-primary",
+  "version": "1.0.0",
+  "title": "Steps Primary",
+  "category": "design",
+  "icon": "list-view",
+  "description": "Alternating step cards with image and content.",
+  "textdomain": "icts-europe",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "How it works"
+    }
+  },
+  "editorScript": "icts-steps-primary-editor",
+  "editorStyle": "icts-steps-primary-editor",
+  "style": "icts-steps-primary-style",
+  "viewScript": "icts-steps-primary-view"
+}

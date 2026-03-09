@@ -2,49 +2,11 @@
    ------------------------------- */
 
 .block-testimonials-slider {
-    --icts-testimonials-strands-width: clamp(128px, 10vw, 180px);
-    --icts-testimonials-strands-height: clamp(980px, 82vw, 1260px);
-    --icts-testimonials-strands-trim: clamp(14px, 1.5vw, 24px);
-    --icts-testimonials-strands-gap: clamp(2rem, 4vw, 3.25rem);
-    --icts-testimonials-side-strands-width: clamp(240px, 20vw, 340px);
-    --icts-testimonials-side-strands-height: clamp(56px, 5vw, 84px);
-    --icts-testimonials-side-strands-offset: clamp(-68px, -4vw, -28px);
-    --icts-testimonials-side-strands-y: 42%;
-
     position: relative;
     isolation: isolate;
-    padding: 4rem 0 calc(5rem + var(--icts-testimonials-strands-gap));
+    padding: 4rem 0 5rem;
     overflow-x: hidden;
     overflow-x: clip;
-    background-image: url("../../images/solutions-slider-strands.svg");
-    background-repeat: no-repeat;
-    background-position: center calc(100% + var(--icts-testimonials-strands-trim));
-    background-size: var(--icts-testimonials-strands-width) var(--icts-testimonials-strands-height);
-}
-
-.block-testimonials-slider::before,
-.block-testimonials-slider::after {
-    content: "";
-    position: absolute;
-    top: var(--icts-testimonials-side-strands-y);
-    width: var(--icts-testimonials-side-strands-height);
-    height: var(--icts-testimonials-side-strands-width);
-    background-image: url("../../images/solutions-slider-strands.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.block-testimonials-slider::before {
-    left: var(--icts-testimonials-side-strands-offset);
-    transform: translateY(-50%) rotate(90deg);
-}
-
-.block-testimonials-slider::after {
-    right: var(--icts-testimonials-side-strands-offset);
-    transform: translateY(-50%) rotate(-90deg);
 }
 
 .wp-block-acf-testimonials-slider,
@@ -201,11 +163,6 @@
 
 @media (max-width: 781px) {
     .block-testimonials-slider {
-        padding-bottom: calc(4.5rem + var(--icts-testimonials-strands-gap));
-    }
-
-    .block-testimonials-slider::before,
-    .block-testimonials-slider::after {
-        display: none;
+        padding-bottom: 4.5rem;
     }
 }

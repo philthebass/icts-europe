@@ -1,0 +1,13 @@
+.wp-block-icts-steps-primary-step .icts-steps-primary-step__card {
+	outline: 1px solid var(--wp--preset--color--border-light);
+}
+
+.wp-block-icts-steps-primary-step .icts-steps-primary-step__media {
+	display: grid;
+	place-items: center;
+	padding: 0.75rem;
+}
+
+.wp-block-icts-steps-primary-step .icts-steps-primary-step__media .components-button {
+	white-space: nowrap;
+}

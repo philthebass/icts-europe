@@ -8,6 +8,7 @@
         MediaUpload,
         MediaUploadCheck,
         RichText,
+        PlainText,
         InnerBlocks,
         BlockControls
     } = wp.blockEditor || wp.editor;
@@ -18,7 +19,9 @@
         ToolbarButton,
         RangeControl,
         FocalPointPicker,
-        ToggleControl
+        ToggleControl,
+        ColorPalette,
+        BaseControl
     } = wp.components;
 
     registerBlockType('icts-europe/solutions-slide', {
@@ -227,17 +230,64 @@
                 default: ''
             },
             preview: { type: 'boolean', default: false },
-            autoplay: { type: 'number', default: 7000 }
+            autoplay: { type: 'number', default: 7000 },
+            containerBgColor: { type: 'string', default: '' },
+            showStrands: { type: 'boolean', default: true },
+            arrowLineColor: { type: 'string', default: '' },
+            arrowColor: { type: 'string', default: '' },
+            indicatorBorderColor: { type: 'string', default: '' },
+            indicatorFillColor: { type: 'string', default: '' },
+            headingColor: { type: 'string', default: '' }
         },
         edit: function (props) {
             const { attributes, setAttributes } = props;
-            const { heading, subheading, preview, autoplay } = attributes;
+            const {
+                heading,
+                subheading,
+                preview,
+                autoplay,
+                containerBgColor,
+                showStrands,
+                arrowLineColor,
+                arrowColor,
+                indicatorBorderColor,
+                indicatorFillColor,
+                headingColor
+            } = attributes;
             const { useRef, useEffect } = wp.element;
             const previewRef = useRef(null);
             const appender =
                 InnerBlocks && InnerBlocks.ButtonBlockAppender
                     ? InnerBlocks.ButtonBlockAppender
                     : undefined;
+            const editorSettings =
+                wp.data && wp.data.select && wp.data.select('core/block-editor')
+                    ? wp.data.select('core/block-editor').getSettings()
+                    : {};
+            const themeColors =
+                (editorSettings && (editorSettings.colors || editorSettings.__experimentalFeatures?.color?.palette?.theme)) ||
+                [];
+            const arrowFill = arrowColor || '';
+            const sectionStyle = {};
+
+            if (containerBgColor) {
+                sectionStyle.backgroundColor = containerBgColor;
+            }
+            if (arrowFill) {
+                sectionStyle['--icts-solutions-arrow-fill'] = arrowFill;
+            }
+            if (arrowLineColor) {
+                sectionStyle['--icts-solutions-arrow-stroke'] = arrowLineColor;
+            }
+            if (indicatorBorderColor) {
+                sectionStyle['--icts-solutions-indicator-border-color'] = indicatorBorderColor;
+            }
+            if (indicatorFillColor) {
+                sectionStyle['--icts-solutions-indicator-fill-color'] = indicatorFillColor;
+            }
+            if (headingColor) {
+                sectionStyle['--icts-solutions-heading-color'] = headingColor;
+            }
 
             useEffect(function () {
                 const root = previewRef.current;
@@ -301,7 +351,10 @@
             return el(
                 'div',
                 {
-                    className: 'icts-solutions-slider-block' + (preview ? ' is-previewing' : ''),
+                    className:
+                        'icts-solutions-slider-block' +
+                        (preview ? ' is-previewing' : '') +
+                        (showStrands === false ? ' is-strands-hidden' : ''),
                     ref: previewRef
                 },
                 [
@@ -346,7 +399,114 @@
                                 onChange: function (value) {
                                     setAttributes({ autoplay: value || 7000 });
                                 }
-                            })
+                            }),
+                            el(ToggleControl, {
+                                label: __('Show background strands', 'icts-europe'),
+                                checked: showStrands !== false,
+                                __nextHasNoMarginBottom: true,
+                                onChange: function (value) {
+                                    setAttributes({ showStrands: !!value });
+                                }
+                            }),
+                            el(BaseControl, {
+                                label: __('Container background color', 'icts-europe'),
+                                __nextHasNoMarginBottom: true
+                            }, [
+                                el(ColorPalette, {
+                                    key: 'container-bg-color',
+                                    colors: themeColors,
+                                    value: containerBgColor,
+                                    onChange: function (value) {
+                                        setAttributes({ containerBgColor: value || '' });
+                                    }
+                                })
+                            ]),
+                            el(BaseControl, {
+                                label: __('Arrow line color', 'icts-europe'),
+                                __nextHasNoMarginBottom: true
+                            }, [
+                                el(ColorPalette, {
+                                    key: 'arrow-line-color',
+                                    colors: themeColors,
+                                    value: arrowLineColor,
+                                    onChange: function (value) {
+                                        setAttributes({ arrowLineColor: value || '' });
+                                    }
+                                })
+                            ]),
+                            el(BaseControl, {
+                                label: __('Arrow fill color', 'icts-europe'),
+                                __nextHasNoMarginBottom: true
+                            }, [
+                                el(ColorPalette, {
+                                    key: 'arrow-color',
+                                    colors: themeColors,
+                                    value: arrowColor,
+                                    onChange: function (value) {
+                                        setAttributes({ arrowColor: value || '' });
+                                    }
+                                })
+                            ]),
+                            el(BaseControl, {
+                                label: __('Heading color', 'icts-europe'),
+                                __nextHasNoMarginBottom: true
+                            }, [
+                                el(ColorPalette, {
+                                    key: 'heading-color',
+                                    colors: themeColors,
+                                    value: headingColor,
+                                    onChange: function (value) {
+                                        setAttributes({ headingColor: value || '' });
+                                    }
+                                })
+                            ]),
+                            el(BaseControl, {
+                                label: __('Indicator border color', 'icts-europe'),
+                                __nextHasNoMarginBottom: true
+                            }, [
+                                el(ColorPalette, {
+                                    key: 'indicator-border-color',
+                                    colors: themeColors,
+                                    value: indicatorBorderColor,
+                                    onChange: function (value) {
+                                        setAttributes({ indicatorBorderColor: value || '' });
+                                    }
+                                })
+                            ]),
+                            el(BaseControl, {
+                                label: __('Indicator fill color', 'icts-europe'),
+                                __nextHasNoMarginBottom: true
+                            }, [
+                                el(ColorPalette, {
+                                    key: 'indicator-fill-color',
+                                    colors: themeColors,
+                                    value: indicatorFillColor,
+                                    onChange: function (value) {
+                                        setAttributes({ indicatorFillColor: value || '' });
+                                    }
+                                })
+                            ]),
+                            (
+                                arrowLineColor ||
+                                arrowColor ||
+                                containerBgColor ||
+                                indicatorBorderColor ||
+                                indicatorFillColor ||
+                                headingColor
+                            ) &&
+                                el(Button, {
+                                    variant: 'secondary',
+                                    onClick: function () {
+                                        setAttributes({
+                                            containerBgColor: '',
+                                            arrowLineColor: '',
+                                            arrowColor: '',
+                                            indicatorBorderColor: '',
+                                            indicatorFillColor: '',
+                                            headingColor: ''
+                                        });
+                                    }
+                                }, __('Reset appearance colors', 'icts-europe'))
                         )
                     ),
                     el(
@@ -355,35 +515,34 @@
                             key: 'slider',
                             className:
                                 'icts-solutions-slider' + (preview ? ' is-solutions-previewing' : ''),
-                            'data-autoplay': String(autoplay || 7000)
+                            'data-autoplay': String(autoplay || 7000),
+                            style: sectionStyle
                         },
                         [
                             el('div', { className: 'icts-solutions-slider__intro', key: 'intro' }, [
-                                el(RichText, {
-                                    key: 'heading',
-                                    tagName: 'h2',
-                                    className: 'icts-solutions-slider__heading',
-                                    value: heading,
-                                    allowedFormats: [],
-                                    placeholder: __('Our Technology Stack', 'icts-europe'),
-                                    onChange: function (value) {
-                                        setAttributes({ heading: value });
-                                    }
-                                }),
-                                el(RichText, {
-                                    key: 'subheading',
-                                    tagName: 'p',
-                                    className: 'icts-solutions-slider__subheading',
-                                    allowedFormats: [],
-                                    value: subheading,
-                                    placeholder: __(
-                                        'Trusted by the industry to deliver smoother operations and financial savings.',
-                                        'icts-europe'
-                                    ),
-                                    onChange: function (value) {
-                                        setAttributes({ subheading: value });
-                                    }
-                                })
+                                el('h2', { key: 'heading-wrap', className: 'icts-solutions-slider__heading' }, [
+                                    el(PlainText, {
+                                        key: 'heading',
+                                        value: heading,
+                                        placeholder: __('Our Technology Stack', 'icts-europe'),
+                                        onChange: function (value) {
+                                            setAttributes({ heading: value });
+                                        }
+                                    })
+                                ]),
+                                el('p', { key: 'subheading-wrap', className: 'icts-solutions-slider__subheading' }, [
+                                    el(PlainText, {
+                                        key: 'subheading',
+                                        value: subheading,
+                                        placeholder: __(
+                                            'Trusted by the industry to deliver smoother operations and financial savings.',
+                                            'icts-europe'
+                                        ),
+                                        onChange: function (value) {
+                                            setAttributes({ subheading: value });
+                                        }
+                                    })
+                                ])
                             ]),
                             el(
                                 'div',
@@ -409,50 +568,91 @@
             );
         },
         save: function (props) {
-            const { heading, subheading, autoplay } = props.attributes;
+            const {
+                heading,
+                subheading,
+                autoplay,
+                containerBgColor,
+                showStrands,
+                arrowLineColor,
+                arrowColor,
+                indicatorBorderColor,
+                indicatorFillColor,
+                headingColor
+            } = props.attributes;
+            const arrowFill = arrowColor || '';
+            const sectionStyle = {};
 
-            return el('div', { className: 'icts-solutions-slider-block' }, [
-                el(
-                    'section',
-                    {
-                        key: 'slider',
-                        className: 'icts-solutions-slider',
-                        'data-autoplay': String(autoplay || 7000)
-                    },
-                    [
-                        el('div', { className: 'icts-solutions-slider__intro', key: 'intro' }, [
-                            heading
-                                ? el(RichText.Content, {
-                                      key: 'heading',
-                                      tagName: 'h2',
-                                      className: 'icts-solutions-slider__heading',
-                                      value: heading
-                                  })
-                                : null,
-                            subheading
-                                ? el(RichText.Content, {
-                                      key: 'subheading',
-                                      tagName: 'p',
-                                      className: 'icts-solutions-slider__subheading',
-                                      value: subheading
-                                  })
-                                : null
-                        ]),
-                        el(
-                            'div',
-                            { className: 'icts-solutions-slider__track js-icts-solutions-slider', key: 'track' },
-                            el(InnerBlocks.Content)
-                        ),
-                        el('div', {
-                            key: 'indicators',
-                            className:
-                                'icts-solutions-slider__indicators js-icts-solutions-slider-indicators',
-                            role: 'tablist',
-                            'aria-label': 'Solutions slider pagination'
-                        })
-                    ]
-                )
-            ]);
+            if (containerBgColor) {
+                sectionStyle.backgroundColor = containerBgColor;
+            }
+            if (arrowFill) {
+                sectionStyle['--icts-solutions-arrow-fill'] = arrowFill;
+            }
+            if (arrowLineColor) {
+                sectionStyle['--icts-solutions-arrow-stroke'] = arrowLineColor;
+            }
+            if (indicatorBorderColor) {
+                sectionStyle['--icts-solutions-indicator-border-color'] = indicatorBorderColor;
+            }
+            if (indicatorFillColor) {
+                sectionStyle['--icts-solutions-indicator-fill-color'] = indicatorFillColor;
+            }
+            if (headingColor) {
+                sectionStyle['--icts-solutions-heading-color'] = headingColor;
+            }
+
+            return el(
+                'div',
+                {
+                    className:
+                        'icts-solutions-slider-block' +
+                        (showStrands === false ? ' is-strands-hidden' : '')
+                },
+                [
+                    el(
+                        'section',
+                        {
+                            key: 'slider',
+                            className: 'icts-solutions-slider',
+                            'data-autoplay': String(autoplay || 7000),
+                            style: sectionStyle
+                        },
+                        [
+                            el('div', { className: 'icts-solutions-slider__intro', key: 'intro' }, [
+                                heading
+                                    ? el(RichText.Content, {
+                                          key: 'heading',
+                                          tagName: 'h2',
+                                          className: 'icts-solutions-slider__heading',
+                                          value: heading
+                                      })
+                                    : null,
+                                subheading
+                                    ? el(RichText.Content, {
+                                          key: 'subheading',
+                                          tagName: 'p',
+                                          className: 'icts-solutions-slider__subheading',
+                                          value: subheading
+                                      })
+                                    : null
+                            ]),
+                            el(
+                                'div',
+                                { className: 'icts-solutions-slider__track js-icts-solutions-slider', key: 'track' },
+                                el(InnerBlocks.Content)
+                            ),
+                            el('div', {
+                                key: 'indicators',
+                                className:
+                                    'icts-solutions-slider__indicators js-icts-solutions-slider-indicators',
+                                role: 'tablist',
+                                'aria-label': 'Solutions slider pagination'
+                            })
+                        ]
+                    )
+                ]
+            );
         }
     });
 })(window.wp);

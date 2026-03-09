@@ -26,7 +26,7 @@
 }
 
 /* Hide carousel until Flickity has initialised (front end only) */
-.client-logos-slider__carousel {
+.client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel {
     width: 100%;
     opacity: 0;
     visibility: hidden;
@@ -34,7 +34,7 @@
 }
 
 /* Front-end: once JS adds .is-ready we show it */
-.client-logos-slider__carousel.is-ready {
+.client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel.is-ready {
     opacity: 1;
     visibility: visible;
 }
@@ -131,6 +131,27 @@
     align-items: center;
     opacity: 1 !important;
     visibility: visible !important;
+}
+
+/* Site Editor iframe preview (FSE) */
+.editor-styles-wrapper .client-logos-slider.is-editor-preview .client-logos-slider__carousel,
+.block-editor-iframe__body .client-logos-slider.is-editor-preview .client-logos-slider__carousel {
+    display: flex !important;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.editor-styles-wrapper .client-logos-slider.is-editor-preview .client-logos-slider__cell:nth-child(n + 13),
+.block-editor-iframe__body .client-logos-slider.is-editor-preview .client-logos-slider__cell:nth-child(n + 13) {
+    display: none !important;
+}
+
+.editor-styles-wrapper .client-logos-slider.is-editor-preview .client-logos-slider__cell,
+.block-editor-iframe__body .client-logos-slider.is-editor-preview .client-logos-slider__cell {
+    display: flex !important;
 }
 
 /* Optional: limit number shown in editor so it does not feel crammed */

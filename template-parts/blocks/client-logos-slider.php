@@ -23,6 +23,11 @@ $block_id = 'client-logos-slider-' . $block['id'];
 // Base class for the block.
 $classes = 'client-logos-slider';
 
+// Mark editor preview explicitly so CSS can avoid front-end-only hidden states.
+if ( is_admin() ) {
+    $classes .= ' is-editor-preview';
+}
+
 // Only apply alignfull on the front end so the editor layout stays sane.
 if ( ! is_admin() && ! empty( $block['align'] ) && 'full' === $block['align'] ) {
     $classes .= ' alignfull';

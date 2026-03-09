@@ -24,6 +24,11 @@
         var(--icts-solutions-strands-width) var(--icts-solutions-strands-height);
 }
 
+.icts-solutions-slider-block.is-strands-hidden {
+    background-image: none;
+    padding-block: 0;
+}
+
 /* Always neutralize auto flow margins on this block */
 .wp-block-icts-europe-solutions-slider {
 	margin-block-start: 0 !important;
@@ -47,8 +52,8 @@
     --icts-solutions-content-gap: 1rem;
     --icts-solutions-slide-gap: clamp(1.5rem, 4vw, 3rem);
     --icts-solutions-panel-padding: clamp(1.75rem, 4vw, 3rem);
-    --icts-solutions-arrow-width: 48px;
-    --icts-solutions-arrow-height: 46px;
+    --icts-solutions-arrow-width: 52px;
+    --icts-solutions-arrow-height: 52px;
     --icts-solutions-arrow-edge-offset: 18px;
     --icts-solutions-arrow-gap-to-content: 18px;
     --icts-solutions-arrow-safe-zone: calc(
@@ -61,7 +66,12 @@
     --icts-solutions-indicator-height: 13px;
     --icts-solutions-indicator-border-width: 2px;
     --icts-solutions-indicator-radius: 2px;
-    --icts-solutions-indicator-color: var(--wp--preset--color--brand-primary);
+    --icts-solutions-indicator-border-color: var(--wp--preset--color--brand-primary);
+    --icts-solutions-indicator-fill-color: var(--wp--preset--color--brand-primary);
+    --icts-solutions-arrow-stroke: var(--wp--preset--color--brand-primary);
+    --icts-solutions-arrow-fill: transparent;
+    --icts-solutions-heading-color: var(--wp--preset--color--brand-primary);
+    --icts-solutions-indicator-gap: clamp(1rem, 2.2vw, 1.5rem);
 
     position: relative;
     width: 100%;
@@ -91,7 +101,7 @@
 }
 
 .icts-solutions-slider__heading {
-    color: var(--wp--preset--color--brand-primary);
+    color: var(--icts-solutions-heading-color);
     font-weight: 300;
     font-size: clamp(2rem, 5vw, 2.5rem);
 }
@@ -104,6 +114,18 @@
     width: 100%;
     box-sizing: border-box;
     position: relative;
+}
+
+/* Prevent pre-init flash without breaking Flickity measurements. */
+.js-icts-solutions-slider {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.js-icts-solutions-slider.is-icts-solutions-slider-ready {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 180ms ease;
 }
 
 .icts-solutions-slider__track .flickity-viewport {
@@ -135,19 +157,20 @@
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon {
-    display: none;
-}
-
-.icts-solutions-slider__track .flickity-prev-next-button::before {
-    content: "";
     display: block;
     width: 100%;
     height: 100%;
-    background: center / contain no-repeat url("../../images/solutions-slider-arrow.svg");
+    left: 0;
+    top: 0;
+    overflow: visible;
 }
 
-.icts-solutions-slider__track .flickity-prev-next-button.previous::before {
-    transform: scaleX(-1);
+.icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon .icts-solutions-arrow-fill-shape {
+    fill: var(--icts-solutions-arrow-fill, transparent);
+}
+
+.icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon .icts-solutions-arrow-stroke-shape {
+    fill: var(--icts-solutions-arrow-stroke);
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button:hover,
@@ -175,6 +198,10 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--icts-solutions-content-gap);
+    padding-bottom: calc(
+        var(--icts-solutions-indicator-height) +
+        var(--icts-solutions-indicator-gap)
+    );
 }
 
 .icts-solutions-slider__content > * {
@@ -280,7 +307,7 @@ body.rtl .icts-solutions-slider__indicators,
     inset: 0;
     border-radius: inherit;
     border: var(--icts-solutions-indicator-border-width) solid
-        var(--icts-solutions-indicator-color);
+        var(--icts-solutions-indicator-border-color);
     z-index: 1;
     pointer-events: none;
 }
@@ -290,7 +317,7 @@ body.rtl .icts-solutions-slider__indicators,
     position: absolute;
     inset: var(--icts-solutions-indicator-border-width);
     border-radius: inherit;
-    background-color: var(--icts-solutions-indicator-color);
+    background-color: var(--icts-solutions-indicator-fill-color);
     transform: scaleX(0);
     transform-origin: left center;
     z-index: 0;
@@ -337,12 +364,6 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
     .icts-solutions-slider__indicator.is-active .icts-solutions-slider__indicator-bar::after {
         animation: none;
         transform: scaleX(1);
-    }
-}
-
-@media (min-width: 901px) and (max-width: 1100px) {
-    .icts-solutions-slider__content {
-        padding-bottom: calc(var(--icts-solutions-indicator-height) + 1.25rem);
     }
 }
 
@@ -402,6 +423,10 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
         inset: auto;
     }
 
+    .icts-solutions-slider__content {
+        padding-bottom: 0;
+    }
+
     .icts-solutions-slider__track .flickity-prev-next-button {
         display: none;
     }
@@ -416,6 +441,31 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
     padding-inline-start: 0;
     color: #646970;
     font-size: 12px;
+}
+
+/* Keep editor heading/paragraph fields visually inline (no white input boxes). */
+:where(.block-editor-page, .editor-styles-wrapper)
+    .icts-solutions-slider__heading
+    .block-editor-plain-text,
+:where(.block-editor-page, .editor-styles-wrapper)
+    .icts-solutions-slider__subheading
+    .block-editor-plain-text {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+:where(.block-editor-page, .editor-styles-wrapper)
+    .icts-solutions-slider__heading
+    .block-editor-plain-text,
+:where(.block-editor-page, .editor-styles-wrapper)
+    .icts-solutions-slider__subheading
+    .block-editor-plain-text {
+    width: 100%;
+    text-align: center;
 }
 
 :where(.block-editor-page, .editor-styles-wrapper) .wp-block[data-type="icts-europe/solutions-slider"].has-child-selected
@@ -457,4 +507,9 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
         var(--icts-solutions-strands-width) var(--icts-solutions-strands-height),
         var(--icts-solutions-strands-width) var(--icts-solutions-strands-height);
     padding-block: var(--icts-solutions-strands-gap);
+}
+
+:where(.block-editor-page, .editor-styles-wrapper) .icts-solutions-slider-block.is-strands-hidden {
+    background-image: none;
+    padding-block: 0;
 }

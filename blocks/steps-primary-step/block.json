@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "icts/steps-primary-step",
+  "version": "1.0.0",
+  "title": "Steps Primary Step",
+  "category": "design",
+  "icon": "format-image",
+  "description": "Single step card for Steps Primary.",
+  "textdomain": "icts-europe",
+  "parent": ["icts/steps-primary"],
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Step 1:"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number"
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "editorScript": "icts-steps-primary-step-editor",
+  "editorStyle": "icts-steps-primary-step-editor",
+  "style": "icts-steps-primary-step-style"
+}

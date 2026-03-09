@@ -462,3 +462,47 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 .is-layout-grid > .wp-block-group.icts-card {
 	height: 100%;
 }
+
+/* Vertical Strands Background */
+/* Base section helpers */
+.section-strands-bg-vertical,
+.bubbles-bg {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Vertical Strands Background */
+.section-strands-bg-vertical::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  bottom: 0;
+  left: 50%;
+  width: 160px;
+  transform: translateX(-50%);
+  z-index: -2;
+  pointer-events: none;
+  background-image: url('/wp-content/uploads/2026/03/strands-bg-vertical.svg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 160px auto;
+}
+
+/* Bubbles Background */
+.bubbles-bg::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: 0;
+  bottom: -20px;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url('/wp-content/uploads/2026/03/bubbles-right.svg'),
+    url('/wp-content/uploads/2026/03/bubbles-left.svg');
+  background-repeat: no-repeat, no-repeat;
+  background-position: top right, bottom left;
+  background-size: auto 60%, auto 60%;
+}

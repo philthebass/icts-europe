@@ -1,0 +1,4 @@
+.wp-block-icts-steps-primary-step .icts-steps-primary-step__title:empty,
+.wp-block-icts-steps-primary-step .icts-steps-primary-step__description:empty {
+	display: none;
+}
