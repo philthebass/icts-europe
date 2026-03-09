@@ -394,22 +394,7 @@ body.rtl .icts-solutions-slider__indicator-bar::after,
 
     .icts-solutions-slider__track .flickity-viewport {
         overflow: hidden;
-        background-color: var(--wp--preset--color--light-grey-blue);
-    }
-
-    .icts-solutions-slider__track::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 1px;
-        background-color: var(--wp--preset--color--light-grey-blue);
-        pointer-events: none;
-        z-index: 2;
-    }
-
-    .icts-solutions-slider__track::after {
-        right: 0;
+        background-color: transparent;
     }
 
     .icts-solutions-slider__media {
