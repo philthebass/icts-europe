@@ -167,10 +167,13 @@
 
 .icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon .icts-solutions-arrow-fill-shape {
     fill: var(--icts-solutions-arrow-fill, transparent);
+    fill-rule: nonzero;
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon .icts-solutions-arrow-stroke-shape {
     fill: var(--icts-solutions-arrow-stroke);
+    fill-rule: evenodd;
+    clip-rule: evenodd;
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button:hover,

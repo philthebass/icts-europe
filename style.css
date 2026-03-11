@@ -506,3 +506,75 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
   background-position: top right, bottom left;
   background-size: auto 60%, auto 60%;
 }
+
+/* features card grid and cards */
+.feature-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background: #fff;
+	border-radius: 0.5rem;
+	overflow: hidden;
+	text-align: center;
+}
+
+/* neutralise Stack gap if the card is still a Stack block */
+.feature-card.is-layout-flex {
+	gap: 0;
+}
+
+.feature-card__image {
+	aspect-ratio: 16 / 9;
+	width: 100%;
+	margin: 0;
+}
+
+.feature-card__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.feature-card__content {
+	display: grid;
+	grid-template-rows: 6.5rem minmax(2.5rem, auto) 1fr;
+	flex: 1;
+	padding: var(--wp--preset--spacing--small);
+	gap: 0 !important;
+	row-gap: 0 !important;
+}
+
+/* neutralise Group/Stack flow spacing inside the content wrapper */
+.feature-card__content.is-layout-flow > * + *,
+.feature-card__content.is-layout-constrained > * + * {
+	margin-block-start: 0;
+}
+
+.feature-card__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding-top: var(--wp--preset--spacing--small);
+}
+
+.feature-card__icon svg,
+.feature-card__icon img {
+	max-height: 4.5rem;
+	width: auto;
+}
+
+.feature-card__title {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	text-align: center;
+	text-wrap: balance;
+}
+
+.feature-card__body {
+	margin: 0;
+}

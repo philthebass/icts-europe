@@ -8,6 +8,19 @@
 	padding: clamp(2rem, 3vw, 3rem) 0;
 }
 
+/* Neutralize inherited layout flow spacing for this block */
+.wp-block-icts-steps-primary {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-steps-primary,
+:where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-steps-primary.alignfull,
+:root :where(.is-layout-flow, .is-layout-constrained) > .wp-block-icts-steps-primary {
+	margin-block-start: 0 !important;
+	margin-block-end: 0 !important;
+}
+
 .wp-block-icts-steps-primary .icts-steps-primary__heading {
 	max-width: min(100%, 980px);
 	margin: 0 auto clamp(0.8rem, 1.5vw, 1.1rem);

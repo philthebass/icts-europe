@@ -34,3 +34,10 @@
 	color: var(--wp--preset--color--main) !important;
 	outline-color: var(--wp--preset--color--main);
 }
+
+/* Button - Tint Style
+--------------------------------------------- */
+
+.wp-block-button.is-style-secondary-button .wp-block-button__link:hover {
+	background-color: var(--wp--preset--color--white) !important;
+}

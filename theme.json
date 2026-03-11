@@ -22,11 +22,6 @@
 	],
 	"settings": {
 		"appearanceTools": true,
-		"border": {
-			"color": false,
-			"style": false,
-			"width": false
-		},
 		"color": {
 			"custom": false,
 			"customDuotone": false,
@@ -41,6 +36,56 @@
 					"color": "rgb(0, 53, 101)",
 					"name": "Brand Primary",
 					"slug": "brand-primary"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.1)",
+					"name": "Brand Primary 10%",
+					"slug": "brand-primary-10"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.2)",
+					"name": "Brand Primary 20%",
+					"slug": "brand-primary-20"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.3)",
+					"name": "Brand Primary 30%",
+					"slug": "brand-primary-30"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.4)",
+					"name": "Brand Primary 40%",
+					"slug": "brand-primary-40"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.5)",
+					"name": "Brand Primary 50%",
+					"slug": "brand-primary-50"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.6)",
+					"name": "Brand Primary 60%",
+					"slug": "brand-primary-60"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.7)",
+					"name": "Brand Primary 70%",
+					"slug": "brand-primary-70"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.8)",
+					"name": "Brand Primary 80%",
+					"slug": "brand-primary-80"
+				},
+				{
+					"color": "rgba(0, 53, 101, 0.9)",
+					"name": "Brand Primary 90%",
+					"slug": "brand-primary-90"
+				},
+				{
+					"color": "rgba(0, 53, 101, 1)",
+					"name": "Brand Primary 100%",
+					"slug": "brand-primary-100"
 				},
 				{
 					"color": "rgb(2, 68, 128)",
