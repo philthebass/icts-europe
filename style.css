@@ -393,7 +393,7 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 ---------------------------------------------------------------------------- */
 
 .gform_wrapper.gform-theme--orbital .gform_required_legend {
-	color: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--primary);
 }
 
 .gform_wrapper.gform-theme--orbital .gform_required_legend .gfield_required_asterisk {
@@ -411,6 +411,40 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	font-family: var(--wp--preset--font-family--nunito-sans);
 	color: #A1A7AD;
 	opacity: 1;
+}
+
+/* Gravity Forms button interaction (match theme button hover animation) */
+.gform_wrapper.gform-theme--orbital .gform_button,
+.gform_wrapper.gform-theme--orbital .gform_next_button,
+.gform_wrapper.gform-theme--orbital .gform_previous_button,
+.gform_wrapper.gform-theme--orbital input[type="submit"],
+.gform_wrapper.gform-theme--orbital button[type="submit"] {
+	font-size: var(--wp--preset--font-size--small);
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		border-color 0.2s ease,
+		outline-color 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.15s ease;
+}
+
+.gform_wrapper.gform-theme--orbital .gform_button:hover,
+.gform_wrapper.gform-theme--orbital .gform_next_button:hover,
+.gform_wrapper.gform-theme--orbital .gform_previous_button:hover,
+.gform_wrapper.gform-theme--orbital input[type="submit"]:hover,
+.gform_wrapper.gform-theme--orbital button[type="submit"]:hover {
+	background-color: var(--wp--preset--color--brand-primary-hover) !important;
+	transform: translateY(-2px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.gform_wrapper.gform-theme--orbital .gform_button:focus-visible,
+.gform_wrapper.gform-theme--orbital .gform_next_button:focus-visible,
+.gform_wrapper.gform-theme--orbital .gform_previous_button:focus-visible,
+.gform_wrapper.gform-theme--orbital input[type="submit"]:focus-visible,
+.gform_wrapper.gform-theme--orbital button[type="submit"]:focus-visible {
+	transform: translateY(-2px);
 }
 
 /* Gravity Form ID 1: hide required legend + tighten field spacing */
@@ -434,6 +468,157 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 #gform_wrapper_1.gform_wrapper.gform-theme--orbital .gform_page_footer {
 	margin-top: 0.5rem;
 	padding-top: 0;
+}
+
+/* Gravity Forms reusable split contact layout (works across translated form IDs)
+   Add form CSS class: gf-contact-split
+   Field CSS classes:
+   - Composite 2-up field (Name / Email): gfcs-left-pair
+   - Left full width fields: gfcs-left-full
+   - Optional left half width simple fields: gfcs-left-half
+   - Right message field: gfcs-message
+---------------------------------------------------------------------------- */
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gform_fields {
+	--gfcs-column-gap: 2rem;
+	--gfcs-row-gap: 1rem;
+	display: grid !important;
+	grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+	column-gap: var(--gfcs-column-gap) !important;
+	row-gap: var(--gfcs-row-gap) !important;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-half {
+	grid-column: span 4 !important;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair {
+	grid-column: 1 / span 6 !important;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-full {
+	grid-column: 1 / span 6 !important;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message {
+	grid-column: 7 / -1 !important;
+	grid-row: 1 / span 4 !important;
+	align-self: stretch !important;
+	display: grid !important;
+	grid-template-rows: auto 1fr auto !important;
+	align-items: stretch !important;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .ginput_container_textarea {
+	grid-row: 2;
+	min-height: 0;
+	display: flex;
+	flex-direction: column !important;
+	align-items: stretch !important;
+	width: 100%;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message textarea {
+	flex: 1 1 auto;
+	height: 100% !important;
+	min-height: 100% !important;
+	margin-bottom: 0;
+	width: 100%;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .gfield_description.ginput_counter,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .gfield_description.charleft.ginput_counter {
+	float: none !important;
+	clear: both;
+	display: block;
+	width: 100%;
+	margin-top: 0.5rem;
+	text-align: left;
+	position: static !important;
+	inset: auto !important;
+	right: auto !important;
+	left: auto !important;
+}
+
+/* Orbital/GF can render the counter outside the textarea field wrapper.
+   Force it to behave as a normal block element anywhere in this form layout. */
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .charleft.ginput_counter.gfield_description,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .ginput_counter.gfield_description,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .ginput_counter {
+	grid-row: 3 !important;
+	align-self: start !important;
+	position: static !important;
+	inset: auto !important;
+	top: auto !important;
+	right: auto !important;
+	bottom: auto !important;
+	left: auto !important;
+	float: none !important;
+	clear: both !important;
+	display: block !important;
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0.5rem 0 0 !important;
+	padding: 0 !important;
+	text-align: left !important;
+	justify-self: start !important;
+	transform: none !important;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .ginput_container,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .ginput_container_textarea {
+	width: 100%;
+}
+
+/* Composite field internals (Name / Email confirmation) */
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: var(--gfcs-column-gap);
+	row-gap: 0.75rem;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex > span,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex > div,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex .name_first,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex .name_last,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex .ginput_left,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex .ginput_right {
+	margin: 0;
+	width: 100%;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex input {
+	width: 100%;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gform_footer,
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gform_page_footer {
+	display: flex;
+	justify-content: center;
+	margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gform_fields {
+		grid-template-columns: 1fr !important;
+	}
+
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-half,
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair,
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-full,
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message {
+		grid-column: 1 / -1 !important;
+		grid-row: auto !important;
+	}
+
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-left-pair .ginput_complex {
+		grid-template-columns: 1fr;
+	}
+
+	:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message textarea {
+		min-height: 12rem;
+	}
 }
 
 
