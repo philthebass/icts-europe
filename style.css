@@ -532,15 +532,22 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 :is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .gfield_description.ginput_counter,
 :is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .gfield_description.charleft.ginput_counter {
 	float: none !important;
-	clear: both;
-	display: block;
-	width: 100%;
-	margin-top: 0.5rem;
-	text-align: left;
+	clear: both !important;
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 0.5rem 0 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding: 0 !important;
+	text-align: left !important;
 	position: static !important;
 	inset: auto !important;
 	right: auto !important;
 	left: auto !important;
+	justify-self: start !important;
+	align-self: start !important;
+	transform: none !important;
 }
 
 /* Orbital/GF can render the counter outside the textarea field wrapper.
@@ -571,6 +578,10 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 :is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .ginput_container,
 :is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .ginput_container_textarea {
 	width: 100%;
+}
+
+:is(.gform_wrapper.gf-contact-split, .gform_wrapper form.gf-contact-split) .gfield.gfcs-message .ginput_container_textarea {
+	display: block !important;
 }
 
 /* Composite field internals (Name / Email confirmation) */
@@ -654,6 +665,7 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 /* Vertical Strands Background */
 /* Base section helpers */
 .section-strands-bg-vertical,
+.section-strands-bg-horizontal,
 .bubbles-bg {
   position: relative;
   overflow: hidden;
@@ -675,6 +687,24 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
   background-repeat: no-repeat;
   background-position: center top;
   background-size: 160px auto;
+}
+
+/* Horizontal Strands Background */
+.section-strands-bg-horizontal::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 160px;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center;
+  z-index: -2;
+  pointer-events: none;
+  background-image: url('/wp-content/uploads/2026/03/strands-bg-vertical.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% auto;
 }
 
 /* Bubbles Background */

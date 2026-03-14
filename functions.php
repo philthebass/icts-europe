@@ -249,6 +249,12 @@ require_once __DIR__ . '/inc/blocks.php';
         [ 'flickity' ],
         $asset_ver( '/assets/styles/blocks/latest-news-slider.css' )
     );
+    \wp_register_style(
+        'icts-post-author-card-style',
+        get_template_directory_uri() . '/assets/styles/blocks/post-author-card.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/post-author-card.css' )
+    );
 
     \register_block_type( 'icts-europe/hero-slider', [
         'editor_script' => $hero_editor_handle,
@@ -279,6 +285,13 @@ require_once __DIR__ . '/inc/blocks.php';
     \register_block_type_from_metadata( __DIR__ . '/blocks/steps-primary' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/steps-primary-step' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/latest-news-slider' );
+    \register_block_type(
+        'icts-europe/post-author-card',
+        [
+            'style'           => 'icts-post-author-card-style',
+            'render_callback' => __NAMESPACE__ . '\render_post_author_card_block',
+        ]
+    );
 
     \register_block_style(
         'icts/how-it-works',
@@ -398,6 +411,228 @@ function get_post_archive_label( $text ) {
 	}
 
 	return $label;
+}
+
+/**
+ * Get translated single-post author card label.
+ *
+ * @return string
+ */
+function get_single_post_written_by_label() {
+	$label = \__( 'Written by:', 'icts-europe' );
+
+	if ( \function_exists( 'pll_translate_string' ) && \function_exists( 'pll_current_language' ) ) {
+		$current_lang = (string) \pll_current_language( 'slug' );
+		$translated   = '' !== $current_lang ? \pll_translate_string( $label, $current_lang ) : $label;
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	} elseif ( \function_exists( 'pll__' ) ) {
+		$translated = \pll__( $label );
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	}
+
+	return $label;
+}
+
+/**
+ * Register post-level Team Member author override field (ACF).
+ *
+ * Field key/name:
+ * - display_author_team_member
+ *
+ * Shown on:
+ * - Standard Posts only
+ *
+ * @return void
+ */
+function register_post_author_override_acf_field_group() {
+	if ( ! \function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	\acf_add_local_field_group(
+		[
+			'key'                   => 'group_icts_post_author_override',
+			'title'                 => 'Post Author Override',
+			'fields'                => [
+				[
+					'key'               => 'field_icts_display_author_team_member',
+					'label'             => 'Display Team Member as Author',
+					'name'              => 'display_author_team_member',
+					'aria-label'        => '',
+					'type'              => 'post_object',
+					'instructions'      => 'Optional: select a Management Team profile to display in the author card for this post.',
+					'required'          => 0,
+					'conditional_logic' => 0,
+					'wrapper'           => [
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					],
+					'post_type'         => [ 'team-member' ],
+					'taxonomy'          => '',
+					'return_format'     => 'id',
+					'multiple'          => 0,
+					'allow_null'        => 1,
+					'ui'                => 1,
+					'bidirectional'     => 0,
+				],
+			],
+			'location'              => [
+				[
+					[
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'post',
+					],
+				],
+			],
+			'menu_order'            => 0,
+			'position'              => 'side',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'hide_on_screen'        => '',
+			'active'                => true,
+			'description'           => '',
+			'show_in_rest'          => 0,
+		]
+	);
+}
+\add_action( 'acf/init', __NAMESPACE__ . '\register_post_author_override_acf_field_group' );
+
+/**
+ * Resolve selected management team member override for a post.
+ *
+ * @param int $post_id Post ID.
+ * @return int Team member post ID or 0 when unavailable.
+ */
+function get_display_author_team_member_id( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return 0;
+	}
+
+	$selected_id = 0;
+
+	if ( \function_exists( 'get_field' ) ) {
+		$field_value = \get_field( 'display_author_team_member', $post_id );
+		if ( \is_object( $field_value ) && isset( $field_value->ID ) ) {
+			$selected_id = (int) $field_value->ID;
+		} elseif ( \is_array( $field_value ) && isset( $field_value['ID'] ) ) {
+			$selected_id = (int) $field_value['ID'];
+		} else {
+			$selected_id = (int) $field_value;
+		}
+	}
+
+	if ( $selected_id <= 0 ) {
+		$selected_id = (int) \get_post_meta( $post_id, 'display_author_team_member', true );
+	}
+
+	if ( $selected_id <= 0 ) {
+		return 0;
+	}
+
+	$team_post = \get_post( $selected_id );
+	if ( ! ( $team_post instanceof \WP_Post ) || 'team-member' !== $team_post->post_type || 'publish' !== $team_post->post_status ) {
+		return 0;
+	}
+
+	return $selected_id;
+}
+
+/**
+ * Render author display block for single posts.
+ *
+ * Shows selected Team Member card when available, else falls back to post author + date.
+ *
+ * @param array  $attributes Block attributes.
+ * @param string $content    Block content.
+ * @param object $block      Parsed block instance.
+ * @return string
+ */
+function render_post_author_card_block( $attributes = [], $content = '', $block = null ) {
+	if ( ! \is_singular( 'post' ) ) {
+		return '';
+	}
+
+	$post_id = \get_the_ID();
+	if ( ! $post_id && $block && \is_object( $block ) && isset( $block->context['postId'] ) ) {
+		$post_id = (int) $block->context['postId'];
+	}
+	$post_id = (int) $post_id;
+
+	if ( $post_id <= 0 ) {
+		return '';
+	}
+
+	$team_member_id = get_display_author_team_member_id( $post_id );
+	$post_date      = get_post_archive_localized_date( $post_id );
+
+	if ( $team_member_id > 0 ) {
+		$team_name  = (string) \get_the_title( $team_member_id );
+		$team_link  = \get_permalink( $team_member_id );
+		$job_title  = '';
+		if ( \function_exists( 'get_field' ) ) {
+			$job_title = (string) \get_field( 'job_title', $team_member_id );
+		}
+		if ( '' === \trim( $job_title ) ) {
+			$job_title = (string) \get_post_meta( $team_member_id, 'job_title', true );
+		}
+		$image_html = \get_the_post_thumbnail(
+			$team_member_id,
+			'medium_large',
+			[
+				'class'    => 'icts-post-author-card__image',
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+				'alt'      => \trim( \wp_strip_all_tags( \get_post_meta( \get_post_thumbnail_id( $team_member_id ), '_wp_attachment_image_alt', true ) ) ),
+			]
+		);
+
+		$output  = '<aside class="icts-post-author-card icts-post-author-card--team-member">';
+		if ( '' !== $team_link ) {
+			$output .= '<a class="icts-post-author-card__image-link" href="' . \esc_url( $team_link ) . '">';
+		}
+		if ( '' !== $image_html ) {
+			$output .= $image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+		if ( '' !== $team_link ) {
+			$output .= '</a>';
+		}
+		$output .= '<div class="icts-post-author-card__content">';
+		$output .= '<p class="icts-post-author-card__label">' . \esc_html( get_single_post_written_by_label() ) . '</p>';
+		if ( '' !== $team_link ) {
+			$output .= '<h3 class="icts-post-author-card__name"><a href="' . \esc_url( $team_link ) . '">' . \esc_html( $team_name ) . '</a></h3>';
+		} else {
+			$output .= '<h3 class="icts-post-author-card__name">' . \esc_html( $team_name ) . '</h3>';
+		}
+		if ( '' !== $job_title ) {
+			$output .= '<p class="icts-post-author-card__role">' . \esc_html( $job_title ) . '</p>';
+		}
+		if ( '' !== $post_date ) {
+			$output .= '<p class="icts-post-author-card__date">' . \esc_html( $post_date ) . '</p>';
+		}
+		$output .= '</div>';
+		$output .= '</aside>';
+
+		return $output;
+	}
+
+	$author_id    = (int) \get_post_field( 'post_author', $post_id );
+	$author_name  = (string) \get_the_author_meta( 'display_name', $author_id );
+	$fallback_out = '<div class="icts-post-author-fallback">';
+	$fallback_out .= '<span class="icts-post-author-fallback__name">' . \esc_html( $author_name ) . '</span>';
+	if ( '' !== $post_date ) {
+		$fallback_out .= '<span class="icts-post-author-fallback__date">' . \esc_html( $post_date ) . '</span>';
+	}
+	$fallback_out .= '</div>';
+
+	return $fallback_out;
 }
 
 /**
@@ -1962,6 +2197,12 @@ function save_category_color_field( $term_id ) {
             'archive_label_no_posts_found',
             'No posts found.',
             'Theme: Archive'
+        );
+
+        \pll_register_string(
+            'single_post_written_by_label',
+            'Written by:',
+            'Theme: Single Post'
         );
     }
 } 

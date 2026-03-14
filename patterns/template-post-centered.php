@@ -18,20 +18,18 @@
 
 <!-- wp:post-title {"level":1,"fontFamily":"secondary"} /-->
 
-<!-- wp:group {"style":{"spacing":{"blockGap":"10px"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}},"typography":{"fontStyle":"normal","fontWeight":"500"}},"textColor":"secondary","fontSize":"small","layout":{"type":"flex","flexWrap":"nowrap"}} -->
-<div class="wp-block-group has-secondary-color has-text-color has-link-color has-small-font-size" style="font-style:normal;font-weight:500"><!-- wp:post-author {"showBio":false} /-->
-
-<!-- wp:paragraph {"textColor":"secondary"} -->
-<p class="has-secondary-color has-text-color"><?php esc_html_e( '·', 'icts-europe' ); ?></p>
-<!-- /wp:paragraph -->
-
-<!-- wp:post-date /--></div>
-<!-- /wp:group -->
-
 <!-- wp:post-featured-image {"style":{"spacing":{"margin":{"top":"var:preset|spacing|large","right":"var:preset|spacing|large","bottom":"var:preset|spacing|large","left":"var:preset|spacing|large"}}}} /--></div>
 <!-- /wp:group -->
 
-<!-- wp:post-content {"align":"wide","layout":{"type":"constrained"}} /-->
+<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|large"}}}} -->
+<div class="wp-block-columns alignwide"><!-- wp:column {"width":"72%"} -->
+<div class="wp-block-column" style="flex-basis:72%"><!-- wp:post-content {"align":"wide","layout":{"type":"constrained"}} /--></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"28%","className":"icts-single-post__author-column"} -->
+<div class="wp-block-column icts-single-post__author-column" style="flex-basis:28%"><!-- wp:icts-europe/post-author-card /--></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
 
 <!-- wp:group {"metadata":{"name":"Tags"},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:group {"className":"post-meta","style":{"border":{"radius":"5px"},"spacing":{"margin":{"top":"var:preset|spacing|large"}}},"fontSize":"small","layout":{"type":"flex","justifyContent":"space-between"}} -->
