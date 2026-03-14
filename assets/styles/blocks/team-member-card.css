@@ -1,10 +1,10 @@
 .team-member-card {
-	--icts-team-member-card-gap: clamp(0.35rem, 0.7vw, 0.55rem);
-	--icts-team-member-card-image-gap: clamp(0.9rem, 1.2vw, 1.1rem);
+	--icts-team-member-card-gap: clamp(0.45rem, 0.8vw, 0.7rem);
+	--icts-team-member-card-image-gap: clamp(1rem, 1.5vw, 1.35rem);
 	--icts-team-member-card-bottom-gap: clamp(1rem, 1.3vw, 1.25rem);
-	--icts-team-member-card-inline-padding: calc(1rem / 2);
+	--icts-team-member-card-inline-padding: clamp(1rem, 1.2vw, 1.25rem);
 	--icts-team-member-card-wrapper-gap: clamp(0.75rem, 1.2vw, 1.25rem);
-	background-color: var(--wp--preset--color--light-grey-blue);
+	background-color: var(--wp--preset--color--white);
 	border-radius: 6px;
 	overflow: hidden;
 	display: flex;
@@ -15,11 +15,11 @@
 .team-member-card__image-link {
 	display: block;
 	inline-size: 100%;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 4 / 4.3;
 	position: relative;
 	isolation: isolate;
 	overflow: hidden;
-	border-radius: 6px;
+	border-radius: 0;
 }
 
 .team-member-card__image-link::after {
@@ -45,7 +45,7 @@
 	inline-size: 100%;
 	block-size: 100%;
 	object-fit: cover;
-	border-radius: 6px;
+	border-radius: 0;
 	transform: scale(1);
 	transform-origin: center;
 	transition: transform 0.25s ease;
@@ -60,24 +60,40 @@
 
 .team-member-card__name {
 	margin: 0;
-	text-align: center;
+	text-align: left;
 	line-height: 1.2;
+	font-size: var(--wp--preset--font-size--h-5);
+	font-weight: 600;
 }
 
 .team-member-card__body {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	text-align: center;
+	align-items: stretch;
+	text-align: left;
 	gap: var(--icts-team-member-card-gap);
 	padding-inline: var(--icts-team-member-card-inline-padding);
 	padding-top: var(--icts-team-member-card-image-gap);
 	padding-bottom: var(--icts-team-member-card-bottom-gap);
+	flex: 1 1 auto;
 }
 
 .team-member-card__role {
 	margin: 0;
-	text-align: center;
+	text-align: left;
+	font-size: var(--wp--preset--font-size--h-6);
+	font-weight: 400;
+	color: var(--wp--preset--color--main);
+	line-height: 1.35;
+	min-block-size: calc(1.35em * 2);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.team-member-card__name + .team-member-card__role {
+	margin-top: -0.35rem;
 }
 
 .team-member-card__name a {
@@ -93,6 +109,18 @@
 
 .team-member-card__name a:visited {
 	color: var(--wp--preset--color--brand-primary);
+}
+
+.team-member-card__bio {
+	margin: 0;
+	font-size: var(--wp--preset--font-size--base);
+	color: var(--wp--preset--color--main);
+}
+
+.team-member-card__button.wp-element-button {
+	margin-top: auto;
+	inline-size: 100%;
+	text-align: center;
 }
 
 .editor-styles-wrapper .team-member-card__name a,
@@ -114,11 +142,11 @@
 .block-editor-page .team-member-card__image-link {
 	display: block;
 	inline-size: 100%;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 4 / 4.3;
 	position: relative;
 	isolation: isolate;
 	overflow: hidden;
-	border-radius: 6px;
+	border-radius: 0;
 }
 
 .editor-styles-wrapper .team-member-card__image,
@@ -129,7 +157,7 @@
 	inline-size: 100%;
 	block-size: 100%;
 	object-fit: cover;
-	border-radius: 6px;
+	border-radius: 0;
 	transform: scale(1);
 	transform-origin: center;
 	transition: transform 0.25s ease;
@@ -138,24 +166,55 @@
 .editor-styles-wrapper .team-member-card__name,
 .block-editor-page .team-member-card__name {
 	margin: 0;
-	text-align: center;
+	text-align: left;
+	font-size: var(--wp--preset--font-size--h-5);
+	font-weight: 600;
 }
 
 .editor-styles-wrapper .team-member-card__body,
 .block-editor-page .team-member-card__body {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	text-align: center;
+	align-items: stretch;
+	text-align: left;
 	gap: var(--icts-team-member-card-gap);
 	padding-inline: var(--icts-team-member-card-inline-padding);
 	padding-top: var(--icts-team-member-card-image-gap);
 	padding-bottom: var(--icts-team-member-card-bottom-gap);
+	flex: 1 1 auto;
 }
 
 .editor-styles-wrapper .team-member-card__role,
 .block-editor-page .team-member-card__role {
 	margin: 0;
+	text-align: left;
+	font-size: var(--wp--preset--font-size--h-6);
+	font-weight: 400;
+	color: var(--wp--preset--color--main);
+	line-height: 1.35;
+	min-block-size: calc(1.35em * 2);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.editor-styles-wrapper .team-member-card__name + .team-member-card__role,
+.block-editor-page .team-member-card__name + .team-member-card__role {
+	margin-top: -0.35rem;
+}
+
+.editor-styles-wrapper .team-member-card__bio,
+.block-editor-page .team-member-card__bio {
+	margin: 0;
+	font-size: var(--wp--preset--font-size--base);
+	color: var(--wp--preset--color--main);
+}
+
+.editor-styles-wrapper .team-member-card__button.wp-element-button,
+.block-editor-page .team-member-card__button.wp-element-button {
+	margin-top: auto;
+	inline-size: 100%;
 	text-align: center;
 }
 

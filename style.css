@@ -419,6 +419,9 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 .gform_wrapper.gform-theme--orbital .gform_previous_button,
 .gform_wrapper.gform-theme--orbital input[type="submit"],
 .gform_wrapper.gform-theme--orbital button[type="submit"] {
+	background-color: var(--wp--preset--color--brand-primary) !important;
+	border-color: var(--wp--preset--color--brand-primary) !important;
+	color: var(--wp--preset--color--white) !important;
 	font-size: var(--wp--preset--font-size--small);
 	transition:
 		background-color 0.2s ease,

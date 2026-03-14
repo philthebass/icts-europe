@@ -363,6 +363,442 @@ function enqueue_style_sheet() {
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
 
 /**
+ * Whether current request should use enhanced post archive controls/cards.
+ *
+ * @return bool
+ */
+function is_post_archive_filters_context() {
+	return \is_home() || \is_category() || \is_tag();
+}
+
+/**
+ * Get translated label for post archive UI strings.
+ *
+ * @param string $text Default text.
+ * @return string
+ */
+function get_post_archive_label( $text ) {
+	$label = (string) $text;
+
+	if ( \function_exists( 'pll_translate_string' ) && \function_exists( 'pll_current_language' ) ) {
+		$current_lang = (string) \pll_current_language( 'slug' );
+		$translated   = '' !== $current_lang ? \pll_translate_string( (string) $text, $current_lang ) : (string) $text;
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	} elseif ( \function_exists( 'pll__' ) ) {
+		$translated = \pll__( (string) $text );
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	}
+
+	if ( $label === (string) $text ) {
+		$label = \__( (string) $text, 'icts-europe' );
+	}
+
+	return $label;
+}
+
+/**
+ * Render a post date localized to the active Polylang language (if present).
+ *
+ * @param int $post_id Post ID.
+ * @return string
+ */
+function get_post_archive_localized_date( $post_id ) {
+	$post_id  = (int) $post_id;
+	$format   = (string) \get_option( 'date_format', 'F j, Y' );
+	$datetime = \get_post_datetime( $post_id );
+
+	if ( ! ( $datetime instanceof \DateTimeInterface ) ) {
+		return '';
+	}
+
+	$timestamp = (int) $datetime->getTimestamp();
+
+	if ( \function_exists( 'pll_current_language' ) && \function_exists( 'switch_to_locale' ) ) {
+		$locale = (string) \pll_current_language( 'locale' );
+		if ( '' !== $locale ) {
+			$switched = \switch_to_locale( $locale );
+			$date     = \wp_date( $format, $timestamp );
+			if ( $switched && \function_exists( 'restore_previous_locale' ) ) {
+				\restore_previous_locale();
+			}
+			return (string) $date;
+		}
+	}
+
+	return (string) \wp_date( $format, $timestamp );
+}
+
+/**
+ * Resolve primary category for a post (Yoast primary fallback to first category).
+ *
+ * @param int $post_id Post ID.
+ * @return \WP_Term|null
+ */
+function get_post_archive_primary_category_term( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return null;
+	}
+
+	$primary_term_id = (int) \get_post_meta( $post_id, '_yoast_wpseo_primary_category', true );
+	if ( $primary_term_id > 0 ) {
+		$primary_term = \get_term( $primary_term_id, 'category' );
+		if ( $primary_term instanceof \WP_Term && ! \is_wp_error( $primary_term ) ) {
+			return $primary_term;
+		}
+	}
+
+	$terms = \get_the_category( $post_id );
+	if ( ! empty( $terms ) && $terms[0] instanceof \WP_Term ) {
+		return $terms[0];
+	}
+
+	return null;
+}
+
+/**
+ * Get category marker inline style from term color token.
+ *
+ * @param \WP_Term|null $term Category term.
+ * @return string
+ */
+function get_post_archive_category_marker_style( $term ) {
+	if ( ! ( $term instanceof \WP_Term ) ) {
+		return 'background-color:var(--wp--preset--color--brand-secondary);';
+	}
+
+	$color_slug = (string) \get_term_meta( $term->term_id, 'icts_category_color_slug', true );
+	if ( '' === $color_slug || ! \preg_match( '/^[a-z0-9-]+$/', $color_slug ) ) {
+		$color_slug = 'brand-secondary';
+	}
+
+	return \sprintf( 'background-color:var(--wp--preset--color--%s);', \esc_attr( $color_slug ) );
+}
+
+/**
+ * Build archive card HTML for one post.
+ *
+ * @param int $post_id Post ID.
+ * @return string
+ */
+function render_post_archive_card_html( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return '';
+	}
+
+	$permalink = \get_permalink( $post_id );
+	$title     = \get_the_title( $post_id );
+	$date_text = get_post_archive_localized_date( $post_id );
+	$author    = \get_the_author_meta( 'display_name', (int) \get_post_field( 'post_author', $post_id ) );
+	$thumb     = \get_the_post_thumbnail(
+		$post_id,
+		'large',
+		[
+			'class'    => 'icts-archive-post-card__image',
+			'loading'  => 'lazy',
+			'decoding' => 'async',
+			'alt'      => \trim( \wp_strip_all_tags( \get_post_meta( \get_post_thumbnail_id( $post_id ), '_wp_attachment_image_alt', true ) ) ),
+		]
+	);
+
+	$primary_term  = get_post_archive_primary_category_term( $post_id );
+	$category_name = $primary_term instanceof \WP_Term ? $primary_term->name : '';
+	$marker_style  = get_post_archive_category_marker_style( $primary_term );
+	$button_label  = get_post_archive_label( 'Find out more' );
+
+	$image_html = $thumb;
+	if ( '' === $image_html ) {
+		$image_html = '<div class="icts-archive-post-card__image-placeholder" aria-hidden="true"></div>';
+	}
+
+	$output  = '<li class="wp-block-post post-' . $post_id . ' post type-post status-publish format-standard hentry icts-archive-post-item">';
+	$output .= '<article class="icts-archive-post-card">';
+	$output .= '<a class="icts-archive-post-card__image-link" href="' . \esc_url( $permalink ) . '">';
+	$output .= $image_html;
+	$output .= '</a>';
+	$output .= '<div class="icts-archive-post-card__body">';
+
+	if ( '' !== $category_name ) {
+		$output .= '<p class="icts-archive-post-card__category">';
+		$output .= '<span class="icts-archive-post-card__category-marker" style="' . $marker_style . '"></span>';
+		$output .= '<span class="icts-archive-post-card__category-text">' . \esc_html( $category_name ) . '</span>';
+		$output .= '</p>';
+	}
+
+	$output .= '<h3 class="icts-archive-post-card__title"><a href="' . \esc_url( $permalink ) . '">' . \esc_html( $title ) . '</a></h3>';
+	$output .= '<p class="icts-archive-post-card__meta"><span class="icts-archive-post-card__date">' . \esc_html( $date_text ) . '</span><span class="icts-archive-post-card__author">' . \esc_html( $author ) . '</span></p>';
+	$output .= '<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex icts-archive-post-card__buttons">';
+	$output .= '<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" href="' . \esc_url( $permalink ) . '">' . \esc_html( $button_label ) . '</a></div>';
+	$output .= '</div>';
+	$output .= '</div>';
+	$output .= '</article>';
+	$output .= '</li>';
+
+	return $output;
+}
+
+/**
+ * Render pagination HTML for archive filter results.
+ *
+ * @param int $current_page Current page.
+ * @param int $total_pages  Max page.
+ * @return string
+ */
+function render_post_archive_pagination_html( $current_page, $total_pages ) {
+	$current_page = (int) $current_page;
+	$total_pages  = (int) $total_pages;
+
+	if ( $total_pages <= 1 ) {
+		return '';
+	}
+
+	$pagination = '<nav class="wp-block-query-pagination is-layout-flex">';
+
+	if ( $current_page > 1 ) {
+		$previous_page = $current_page - 1;
+		$pagination   .= '<a class="wp-block-query-pagination-previous is-style-wp-block-button__link" href="#" data-icts-page="' . \esc_attr( (string) $previous_page ) . '">' . \esc_html__( 'Previous Page', 'icts-europe' ) . '</a>';
+	}
+
+	$pagination .= '<div class="wp-block-query-pagination-numbers">';
+	for ( $page = 1; $page <= $total_pages; $page++ ) {
+		if ( $page === $current_page ) {
+			$pagination .= '<span aria-current="page" class="page-numbers current">' . \esc_html( (string) $page ) . '</span>';
+			continue;
+		}
+
+		$pagination .= '<a class="page-numbers" href="#" data-icts-page="' . \esc_attr( (string) $page ) . '">' . \esc_html( (string) $page ) . '</a>';
+	}
+	$pagination .= '</div>';
+
+	if ( $current_page < $total_pages ) {
+		$next_page  = $current_page + 1;
+		$pagination .= '<a class="wp-block-query-pagination-next is-style-wp-block-button__link" href="#" data-icts-page="' . \esc_attr( (string) $next_page ) . '">' . \esc_html__( 'Next Page', 'icts-europe' ) . '</a>';
+	}
+
+	$pagination .= '</nav>';
+
+	return $pagination;
+}
+
+/**
+ * Build WP_Query args for post archive filter requests.
+ *
+ * @param \WP_REST_Request $request REST request.
+ * @return array
+ */
+function get_post_archive_filters_query_args( $request ) {
+	$page         = max( 1, (int) $request->get_param( 'page' ) );
+	$per_page     = (int) $request->get_param( 'per_page' );
+	$per_page     = $per_page > 0 ? min( 24, $per_page ) : 6;
+	$search       = \sanitize_text_field( (string) $request->get_param( 'search' ) );
+	$category     = (int) $request->get_param( 'category' );
+	$archive_type = \sanitize_key( (string) $request->get_param( 'archive_type' ) );
+	$archive_term = (int) $request->get_param( 'archive_term' );
+	$lang_param   = \sanitize_key( (string) $request->get_param( 'lang' ) );
+
+	$args = [
+		'post_type'           => 'post',
+		'post_status'         => 'publish',
+		'ignore_sticky_posts' => true,
+		'posts_per_page'      => $per_page,
+		'paged'               => $page,
+		's'                   => $search,
+		'suppress_filters'    => false,
+	];
+
+	if ( '' !== $lang_param ) {
+		$args['lang']             = $lang_param;
+		$args['suppress_filters'] = false;
+	} elseif ( \function_exists( 'pll_current_language' ) ) {
+		$current_lang = (string) \pll_current_language( 'slug' );
+		if ( '' !== $current_lang ) {
+			$args['lang']             = $current_lang;
+			$args['suppress_filters'] = false;
+		}
+	}
+
+	if ( $category > 0 ) {
+		$args['cat'] = $category;
+	} elseif ( 'category' === $archive_type && $archive_term > 0 ) {
+		$args['cat'] = $archive_term;
+	}
+
+	if ( 'tag' === $archive_type && $archive_term > 0 ) {
+		$args['tag_id'] = $archive_term;
+	}
+
+	return $args;
+}
+
+/**
+ * REST callback for filtered archive posts.
+ *
+ * @param \WP_REST_Request $request Request object.
+ * @return \WP_REST_Response
+ */
+function get_post_archive_filters_rest_response( \WP_REST_Request $request ) {
+	$args  = get_post_archive_filters_query_args( $request );
+	$query = new \WP_Query( $args );
+
+	$items_html = '';
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			$items_html .= render_post_archive_card_html( (int) \get_the_ID() );
+		}
+	} else {
+		$items_html = '<li class="wp-block-post icts-archive-post-empty"><p>' . \esc_html( get_post_archive_label( 'No posts found.' ) ) . '</p></li>';
+	}
+
+	$current_page    = max( 1, (int) $query->get( 'paged' ) );
+	$pagination_html = render_post_archive_pagination_html( $current_page, (int) $query->max_num_pages );
+
+	\wp_reset_postdata();
+
+	return \rest_ensure_response(
+		[
+			'success' => true,
+			'data'    => [
+				'items_html'      => $items_html,
+				'pagination_html' => $pagination_html,
+			],
+		]
+	);
+}
+
+/**
+ * Register post archive filters REST route.
+ */
+function register_post_archive_filters_rest_route() {
+	\register_rest_route(
+		'icts-europe/v1',
+		'/archive-posts',
+		[
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => __NAMESPACE__ . '\get_post_archive_filters_rest_response',
+			'permission_callback' => '__return_true',
+		]
+	);
+}
+add_action( 'rest_api_init', __NAMESPACE__ . '\register_post_archive_filters_rest_route' );
+
+/**
+ * Enqueue post archive filters/search assets and pass runtime config.
+ */
+function enqueue_post_archive_filters_assets() {
+	if ( ! is_post_archive_filters_context() ) {
+		return;
+	}
+
+	$theme_dir = \get_template_directory();
+	$theme_uri = \get_template_directory_uri();
+	$theme_ver = \wp_get_theme()->get( 'Version' );
+
+	$script_rel = '/assets/js/post-archive-filters.js';
+	$style_rel  = '/assets/styles/blocks/post-archive-filters.css';
+	$script_abs = $theme_dir . $script_rel;
+	$style_abs  = $theme_dir . $style_rel;
+
+	\wp_enqueue_style(
+		'icts-post-archive-filters',
+		$theme_uri . $style_rel,
+		[],
+		\file_exists( $style_abs ) ? (string) \filemtime( $style_abs ) : $theme_ver
+	);
+
+	\wp_enqueue_script(
+		'icts-post-archive-filters',
+		$theme_uri . $script_rel,
+		[],
+		\file_exists( $script_abs ) ? (string) \filemtime( $script_abs ) : $theme_ver,
+		true
+	);
+
+	$terms_args = [
+		'taxonomy'   => 'category',
+		'hide_empty' => true,
+		'orderby'    => 'name',
+		'order'      => 'ASC',
+	];
+
+	if ( \function_exists( 'pll_current_language' ) ) {
+		$current_lang = (string) \pll_current_language( 'slug' );
+		if ( '' !== $current_lang ) {
+			$terms_args['lang'] = $current_lang;
+		}
+	}
+
+	$categories = \get_terms( $terms_args );
+
+	$category_options = [];
+	if ( ! \is_wp_error( $categories ) && ! empty( $categories ) ) {
+		foreach ( $categories as $category ) {
+			if ( ! ( $category instanceof \WP_Term ) ) {
+				continue;
+			}
+
+			$category_options[] = [
+				'id'   => (int) $category->term_id,
+				'name' => $category->name,
+			];
+		}
+	}
+
+	$queried_object = \get_queried_object();
+	$archive_type   = 'none';
+	$archive_term   = 0;
+
+	if ( \is_category() && $queried_object instanceof \WP_Term ) {
+		$archive_type = 'category';
+		$archive_term = (int) $queried_object->term_id;
+	} elseif ( \is_tag() && $queried_object instanceof \WP_Term ) {
+		$archive_type = 'tag';
+		$archive_term = (int) $queried_object->term_id;
+	}
+
+	$current_page = max( 1, (int) \get_query_var( 'paged' ) );
+	$current_cat  = isset( $_GET['icts_cat'] ) ? absint( (int) \wp_unslash( $_GET['icts_cat'] ) ) : 0;
+	if ( 0 === $current_cat && 'category' === $archive_type ) {
+		$current_cat = $archive_term;
+	}
+
+	$per_page = (int) \get_query_var( 'posts_per_page' );
+	if ( $per_page <= 0 ) {
+		$per_page = (int) \get_option( 'posts_per_page', 6 );
+	}
+
+	\wp_localize_script(
+		'icts-post-archive-filters',
+		'ictsPostArchiveFilters',
+		[
+			'enabled'         => true,
+			'restUrl'         => \esc_url_raw( \rest_url() ),
+			'currentPage'     => $current_page,
+			'perPage'         => $per_page,
+			'currentSearch'   => \get_search_query(),
+			'currentCategory' => $current_cat,
+			'archiveType'     => $archive_type,
+			'archiveTerm'     => $archive_term,
+			'currentLang'     => \function_exists( 'pll_current_language' ) ? (string) \pll_current_language( 'slug' ) : '',
+			'categories'      => $category_options,
+			'i18n'            => [
+				'searchLabel'       => get_post_archive_label( 'Search posts' ),
+				'searchPlaceholder' => get_post_archive_label( 'Search' ),
+				'filterLabel'       => get_post_archive_label( 'Filter by category' ),
+				'allCategories'     => get_post_archive_label( 'All categories' ),
+				'noResults'         => get_post_archive_label( 'No posts found.' ),
+			],
+		]
+	);
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_post_archive_filters_assets', 30 );
+
+/**
  * Render header search modal in front end only.
  */
 function render_header_search_modal() {
@@ -449,6 +885,197 @@ function render_header_search_trigger_button( $block_content, $block ) {
 	return '' !== $output ? $output : $block_content;
 }
 add_filter( 'render_block_core/button', __NAMESPACE__ . '\render_header_search_trigger_button', 10, 2 );
+
+/**
+ * Localize archive title for the posts page on multilingual sites.
+ *
+ * On is_home(), WordPress can resolve the title from the default-language
+ * page_for_posts option. Force the current Polylang translation when available.
+ *
+ * @param string $title Archive title.
+ * @return string
+ */
+function filter_posts_archive_title_for_polylang( $title ) {
+	if ( ! \is_home() ) {
+		return $title;
+	}
+
+	$posts_page_id = (int) \get_option( 'page_for_posts' );
+	if ( $posts_page_id <= 0 ) {
+		return $title;
+	}
+
+	if ( \function_exists( 'pll_current_language' ) && \function_exists( 'pll_get_post' ) ) {
+		$current_lang       = (string) \pll_current_language( 'slug' );
+		$translated_page_id = '' !== $current_lang ? (int) \pll_get_post( $posts_page_id, $current_lang ) : 0;
+		if ( $translated_page_id > 0 ) {
+			$translated_title = \get_the_title( $translated_page_id );
+			if ( \is_string( $translated_title ) && '' !== \trim( $translated_title ) ) {
+				return $translated_title;
+			}
+		}
+	}
+
+	$default_title = \get_the_title( $posts_page_id );
+	if ( \is_string( $default_title ) && '' !== \trim( $default_title ) ) {
+		return $default_title;
+	}
+
+	return $title;
+}
+add_filter( 'get_the_archive_title', __NAMESPACE__ . '\filter_posts_archive_title_for_polylang', 20 );
+
+/**
+ * Resolve translated posts page title for current language.
+ *
+ * @return string
+ */
+function get_translated_posts_page_title() {
+	$posts_page_id = (int) \get_option( 'page_for_posts' );
+	if ( $posts_page_id <= 0 ) {
+		return '';
+	}
+
+	if ( \function_exists( 'pll_current_language' ) && \function_exists( 'pll_get_post' ) ) {
+		$current_lang       = (string) \pll_current_language( 'slug' );
+		$translated_page_id = '' !== $current_lang ? (int) \pll_get_post( $posts_page_id, $current_lang ) : 0;
+		if ( $translated_page_id > 0 ) {
+			$translated_title = (string) \get_the_title( $translated_page_id );
+			if ( '' !== \trim( $translated_title ) ) {
+				return $translated_title;
+			}
+		}
+	}
+
+	$default_title = (string) \get_the_title( $posts_page_id );
+	return '' !== \trim( $default_title ) ? $default_title : '';
+}
+
+/**
+ * Build a safe fallback Query Title heading for blog archives.
+ *
+ * @param array  $block            Parsed block data.
+ * @param string $translated_title Translated posts-page title.
+ * @return string
+ */
+function get_home_query_title_fallback_html( $block, $translated_title ) {
+	$classes = [ 'wp-block-query-title' ];
+	$styles  = [];
+
+	$attrs = [];
+	if ( isset( $block['attrs'] ) && \is_array( $block['attrs'] ) ) {
+		$attrs = $block['attrs'];
+	}
+
+	if ( ! empty( $attrs['className'] ) && \is_string( $attrs['className'] ) ) {
+		$classes[] = $attrs['className'];
+	}
+
+	if ( ! empty( $attrs['textColor'] ) && \is_string( $attrs['textColor'] ) ) {
+		$slug      = \sanitize_html_class( $attrs['textColor'] );
+		$classes[] = 'has-' . $slug . '-color';
+		$classes[] = 'has-text-color';
+	}
+
+	if ( ! empty( $attrs['fontSize'] ) && \is_string( $attrs['fontSize'] ) ) {
+		$slug      = \sanitize_html_class( $attrs['fontSize'] );
+		$classes[] = 'has-' . $slug . '-font-size';
+	}
+
+	if ( isset( $attrs['style']['color']['text'] ) && \is_string( $attrs['style']['color']['text'] ) && '' !== \trim( $attrs['style']['color']['text'] ) ) {
+		$styles[] = 'color:' . \esc_attr( $attrs['style']['color']['text'] );
+	}
+
+	$class_attr = \trim( \implode( ' ', \array_filter( $classes ) ) );
+	$style_attr = \implode( ';', $styles );
+
+	if ( '' !== $style_attr ) {
+		$style_attr .= ';';
+	}
+
+	return \sprintf(
+		'<h1 class="%1$s"%2$s>%3$s</h1>',
+		\esc_attr( $class_attr ),
+		'' !== $style_attr ? ' style="' . \esc_attr( $style_attr ) . '"' : '',
+		\esc_html( $translated_title )
+	);
+}
+
+/**
+ * Force Query Title block to use translated posts-page title on blog archive.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Parsed block data.
+ * @return string
+ */
+function filter_home_query_title_block_for_polylang( $block_content, $block ) {
+	if ( ! \is_home() || \is_admin() ) {
+		return $block_content;
+	}
+
+	if ( empty( $block['blockName'] ) || 'core/query-title' !== $block['blockName'] ) {
+		return $block_content;
+	}
+
+	$translated_title = get_translated_posts_page_title();
+	if ( '' === $translated_title ) {
+		return $block_content;
+	}
+	$fallback_html = get_home_query_title_fallback_html( $block, $translated_title );
+
+	$trimmed_content = \trim( (string) $block_content );
+	if ( '' === $trimmed_content ) {
+		return $fallback_html;
+	}
+
+	$previous_libxml_state = \libxml_use_internal_errors( true );
+	$document              = new \DOMDocument( '1.0', 'UTF-8' );
+	$loaded                = $document->loadHTML(
+		'<?xml encoding="utf-8" ?><div data-icts-query-title-wrapper>' . $block_content . '</div>',
+		LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+	);
+
+	if ( ! $loaded ) {
+		\libxml_use_internal_errors( $previous_libxml_state );
+		\libxml_clear_errors();
+		return $fallback_html;
+	}
+
+	$replaced = false;
+	foreach ( [ 'h1', 'h2', 'h3', 'p' ] as $tag_name ) {
+		$nodes = $document->getElementsByTagName( $tag_name );
+		if ( $nodes->length > 0 ) {
+			$nodes->item( 0 )->nodeValue = $translated_title;
+			$replaced                    = true;
+			break;
+		}
+	}
+
+	if ( ! $replaced ) {
+		\libxml_use_internal_errors( $previous_libxml_state );
+		\libxml_clear_errors();
+		return $fallback_html;
+	}
+
+	$wrappers = $document->getElementsByTagName( 'div' );
+	$wrapper  = $wrappers->length > 0 ? $wrappers->item( 0 ) : null;
+	if ( ! $wrapper ) {
+		\libxml_use_internal_errors( $previous_libxml_state );
+		\libxml_clear_errors();
+		return $fallback_html;
+	}
+
+	$output = '';
+	foreach ( $wrapper->childNodes as $child_node ) {
+		$output .= $document->saveHTML( $child_node );
+	}
+
+	\libxml_use_internal_errors( $previous_libxml_state );
+	\libxml_clear_errors();
+
+	return '' !== $output ? $output : $fallback_html;
+}
+add_filter( 'render_block', __NAMESPACE__ . '\filter_home_query_title_block_for_polylang', 20, 2 );
 
 /**
  * Render a custom front-end language switcher for Polylang.
@@ -1266,6 +1893,30 @@ function save_category_color_field( $term_id ) {
         );
 
         \pll_register_string(
+            'team_member_archive_intro',
+            'We will need some text to go here.',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_card_view_profile',
+            'View profile',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'team_member_card_read_more',
+            '[read more ..]',
+            'Theme: Team Member'
+        );
+
+        \pll_register_string(
+            'breadcrumb_home',
+            'Home',
+            'Theme: Breadcrumbs'
+        );
+
+        \pll_register_string(
             'faq_block_heading_default',
             'FAQs',
             'Theme: FAQ'
@@ -1275,6 +1926,42 @@ function save_category_color_field( $term_id ) {
             'faq_block_empty_preview',
             'No FAQs found. Add FAQ posts to populate this block.',
             'Theme: FAQ'
+        );
+
+        \pll_register_string(
+            'archive_label_search_posts',
+            'Search posts',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
+            'archive_label_search_placeholder',
+            'Search',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
+            'archive_label_filter_by_category',
+            'Filter by category',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
+            'archive_label_all_categories',
+            'All categories',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
+            'archive_label_find_out_more',
+            'Find out more',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
+            'archive_label_no_posts_found',
+            'No posts found.',
+            'Theme: Archive'
         );
     }
 } 
@@ -1305,6 +1992,63 @@ function get_team_member_archive_title_label() {
  */
 function get_team_member_archive_page_heading_label() {
     $label = \__( 'Meet our Executive and Management Teams', 'icts-europe' );
+
+    if ( \function_exists( 'pll__' ) ) {
+        $translated = \pll__( $label );
+        if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+            $label = $translated;
+        }
+    }
+
+    return $label;
+}
+
+/**
+ * Return localized intro paragraph for Team Member archive page.
+ *
+ * @return string
+ */
+function get_team_member_archive_intro_label() {
+    $label = \__(
+        'We will need some text to go here.',
+        'icts-europe'
+    );
+
+    if ( \function_exists( 'pll__' ) ) {
+        $translated = \pll__( $label );
+        if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+            $label = $translated;
+        }
+    }
+
+    return $label;
+}
+
+/**
+ * Return localized Team Member card "View profile" label.
+ *
+ * @return string
+ */
+function get_team_member_card_view_profile_label() {
+    $label = \__( 'View profile', 'icts-europe' );
+
+    if ( \function_exists( 'pll__' ) ) {
+        $translated = \pll__( $label );
+        if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+            $label = $translated;
+        }
+    }
+
+    return $label;
+}
+
+/**
+ * Return localized Team Member card "read more" label.
+ *
+ * @return string
+ */
+function get_team_member_card_read_more_label() {
+    $label = \__( '[read more ..]', 'icts-europe' );
 
     if ( \function_exists( 'pll__' ) ) {
         $translated = \pll__( $label );
@@ -1377,11 +2121,6 @@ function filter_team_member_archive_heading( $block_content, $block ) {
         return $block_content;
     }
 
-    $default_heading = 'Meet our Executive and Management Teams';
-    if ( false === \strpos( \wp_strip_all_tags( $block_content ), $default_heading ) ) {
-        return $block_content;
-    }
-
     $replacement_heading = get_team_member_archive_page_heading_label();
 
     $previous_libxml_state = \libxml_use_internal_errors( true );
@@ -1422,6 +2161,107 @@ function filter_team_member_archive_heading( $block_content, $block ) {
     return '' !== $output ? $output : $block_content;
 }
 add_filter( 'render_block_core/heading', __NAMESPACE__ . '\filter_team_member_archive_heading', 10, 2 );
+
+/**
+ * Replace Team Member archive intro paragraph text with a translatable Polylang string.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Parsed block data.
+ * @return string
+ */
+function filter_team_member_archive_intro_paragraph( $block_content, $block ) {
+    if ( ! \is_post_type_archive( 'team-member' ) ) {
+        return $block_content;
+    }
+
+    if ( empty( $block['attrs'] ) || ! \is_array( $block['attrs'] ) ) {
+        return $block_content;
+    }
+
+    $plain_content = \wp_strip_all_tags( $block_content );
+    if (
+        false === \strpos( $plain_content, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' ) &&
+        false === \strpos( $plain_content, 'We will need some text to go here.' )
+    ) {
+        return $block_content;
+    }
+
+    $replacement_text    = get_team_member_archive_intro_label();
+    $replacement_html    = \esc_html( $replacement_text );
+    $replacement_with_br = \str_replace( ' Phasellus', '<br>Phasellus', $replacement_html );
+
+    $previous_libxml_state = \libxml_use_internal_errors( true );
+    $document              = new \DOMDocument( '1.0', 'UTF-8' );
+    $loaded                = $document->loadHTML(
+        '<?xml encoding="utf-8" ?><div data-icts-team-intro-wrapper>' . $block_content . '</div>',
+        \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD
+    );
+
+    if ( ! $loaded ) {
+        \libxml_use_internal_errors( $previous_libxml_state );
+        \libxml_clear_errors();
+        return $block_content;
+    }
+
+    $wrapper   = $document->getElementsByTagName( 'div' )->item( 0 );
+    $paragraph = $document->getElementsByTagName( 'p' )->item( 0 );
+
+    if ( ! $wrapper || ! $paragraph ) {
+        \libxml_use_internal_errors( $previous_libxml_state );
+        \libxml_clear_errors();
+        return $block_content;
+    }
+
+    while ( $paragraph->firstChild ) {
+        $paragraph->removeChild( $paragraph->firstChild );
+    }
+
+    $fragment = $document->createDocumentFragment();
+    $fragment->appendXML( $replacement_with_br );
+    $paragraph->appendChild( $fragment );
+
+    $output = '';
+    foreach ( $wrapper->childNodes as $child_node ) {
+        $output .= $document->saveHTML( $child_node );
+    }
+
+    \libxml_use_internal_errors( $previous_libxml_state );
+    \libxml_clear_errors();
+
+    return '' !== $output ? $output : $block_content;
+}
+add_filter( 'render_block_core/paragraph', __NAMESPACE__ . '\filter_team_member_archive_intro_paragraph', 10, 2 );
+
+/**
+ * Translate Yoast breadcrumb item labels through Polylang string translations.
+ *
+ * @param array $links Breadcrumb link items.
+ * @return array
+ */
+function filter_yoast_breadcrumb_links_translation( $links ) {
+    if ( ! \function_exists( 'pll__' ) || ! \is_array( $links ) ) {
+        return $links;
+    }
+
+    foreach ( $links as $index => $link ) {
+        if ( ! \is_array( $link ) || empty( $link['text'] ) || ! \is_string( $link['text'] ) ) {
+            continue;
+        }
+
+        $original_text = \trim( \wp_strip_all_tags( $link['text'] ) );
+        if ( '' === $original_text ) {
+            continue;
+        }
+
+        $translated_text = \pll__( $original_text );
+        if ( \is_string( $translated_text ) && '' !== \trim( $translated_text ) ) {
+            $links[ $index ]['text'] = $translated_text;
+        }
+    }
+
+    return $links;
+}
+add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_links_translation', 20, 1 );
 
 \add_filter( 'register_post_type_args', function ( $args, $post_type ) {
 

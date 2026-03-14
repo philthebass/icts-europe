@@ -36,6 +36,26 @@ $permalink = get_permalink( $loop_post_id );
 
 // Job title from ACF (field name: job_title).
 $job_title = function_exists( 'get_field' ) ? get_field( 'job_title', $loop_post_id ) : '';
+$biog      = function_exists( 'get_field' ) ? get_field( 'biog', $loop_post_id ) : '';
+
+$biog_text         = '';
+$biog_is_truncated = false;
+
+if ( is_string( $biog ) && '' !== trim( $biog ) ) {
+	$biog_plain = trim( preg_replace( '/\s+/u', ' ', wp_strip_all_tags( $biog ) ) );
+
+	if ( '' !== $biog_plain ) {
+		$max_length = 210;
+		if ( mb_strlen( $biog_plain ) > $max_length ) {
+			$biog_text = mb_substr( $biog_plain, 0, $max_length );
+			$biog_text = preg_replace( '/\s+\S*$/u', '', $biog_text );
+			$biog_text = rtrim( (string) $biog_text, " \t\n\r\0\x0B.,;:!?" );
+			$biog_is_truncated = true;
+		} else {
+			$biog_text = $biog_plain;
+		}
+	}
+}
 
 // Portrait from featured image.
 $portrait = get_the_post_thumbnail(
@@ -56,16 +76,29 @@ $portrait = get_the_post_thumbnail(
     <?php endif; ?>
 
     <div class="team-member-card__body">
-        <h5 class="team-member-card__name">
+        <h3 class="team-member-card__name">
             <a href="<?php echo esc_url( $permalink ); ?>">
                 <?php echo esc_html( $title ); ?>
             </a>
-        </h5>
+        </h3>
 
         <?php if ( $job_title ) : ?>
             <p class="team-member-card__role">
                 <?php echo esc_html( $job_title ); ?>
             </p>
         <?php endif; ?>
+
+        <?php if ( $biog_text ) : ?>
+            <p class="team-member-card__bio">
+                <?php echo esc_html( $biog_text ); ?>
+                <?php if ( $biog_is_truncated ) : ?>
+                    … <a href="<?php echo esc_url( $permalink ); ?>" class="team-member-card__read-more"><?php echo esc_html( \ICTS_Europe\get_team_member_card_read_more_label() ); ?></a>
+                <?php endif; ?>
+            </p>
+        <?php endif; ?>
+
+        <a href="<?php echo esc_url( $permalink ); ?>" class="team-member-card__button wp-element-button">
+            <?php echo esc_html( \ICTS_Europe\get_team_member_card_view_profile_label() ); ?>
+        </a>
     </div>
 </article>
