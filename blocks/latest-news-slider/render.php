@@ -14,6 +14,7 @@ $posts_to_show = isset( $attributes['postsToShow'] ) ? (int) $attributes['postsT
 $autoplay      = isset( $attributes['autoplay'] ) ? (int) $attributes['autoplay'] : 7000;
 $show_author   = ! isset( $attributes['showAuthor'] ) || (bool) $attributes['showAuthor'];
 $show_date     = ! isset( $attributes['showDate'] ) || (bool) $attributes['showDate'];
+$related_by_current_post = ! empty( $attributes['relatedByCurrentPost'] );
 $category_ids  = isset( $attributes['categoryIds'] ) && is_array( $attributes['categoryIds'] )
 	? array_values(
 		array_filter(
@@ -30,6 +31,17 @@ if ( $autoplay < 0 ) {
 	$autoplay = 0;
 }
 
+$current_post_id = 0;
+
+if ( $related_by_current_post && is_singular( 'post' ) ) {
+	$current_post_id = (int) get_queried_object_id();
+}
+
+$translated_heading = $heading;
+if ( '' !== $translated_heading && function_exists( '\ICTS_Europe\get_post_archive_label' ) ) {
+	$translated_heading = \ICTS_Europe\get_post_archive_label( $translated_heading );
+}
+
 $query_args = [
 	'post_type'           => 'post',
 	'post_status'         => 'publish',
@@ -38,7 +50,20 @@ $query_args = [
 	'no_found_rows'       => true,
 ];
 
-if ( ! empty( $category_ids ) ) {
+if ( $current_post_id > 0 ) {
+	$query_args['post__not_in'] = [ $current_post_id ];
+
+	$related_category_ids = wp_get_post_categories(
+		$current_post_id,
+		[
+			'fields' => 'ids',
+		]
+	);
+
+	if ( ! empty( $related_category_ids ) ) {
+		$query_args['category__in'] = array_map( 'absint', $related_category_ids );
+	}
+} elseif ( ! empty( $category_ids ) ) {
 	$query_args['category__in'] = $category_ids;
 }
 
@@ -53,7 +78,15 @@ if ( $query->have_posts() ) {
 		$permalink  = get_permalink( $post_id );
 		$title      = get_the_title( $post_id );
 		$date_text  = get_the_date( 'F j, Y', $post_id );
-		$author     = get_the_author();
+		$author_name = '';
+		if ( function_exists( '\ICTS_Europe\get_post_display_author_data' ) ) {
+			$author_data = \ICTS_Europe\get_post_display_author_data( $post_id );
+			$author_name = isset( $author_data['name'] ) ? (string) $author_data['name'] : '';
+		} elseif ( function_exists( '\ICTS_Europe\get_post_display_author_name' ) ) {
+			$author_name = (string) \ICTS_Europe\get_post_display_author_name( $post_id );
+		} else {
+			$author_name = (string) get_the_author_meta( 'display_name', (int) get_post_field( 'post_author', $post_id ) );
+		}
 		$thumb_html = get_the_post_thumbnail(
 			$post_id,
 			'large',
@@ -89,7 +122,7 @@ if ( $query->have_posts() ) {
 			'permalink'             => $permalink,
 			'title'                 => $title,
 			'date_text'             => $date_text,
-			'author'                => $author,
+			'author'                => $author_name,
 			'thumb_html'            => $thumb_html,
 			'category_label'        => $category_label,
 			'category_marker_style' => sprintf( 'background-color:var(--wp--preset--color--%s);', esc_attr( $color_slug ) ),
@@ -109,7 +142,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-autoplay="<?php echo esc_attr( (string) $autoplay ); ?>">
 	<div class="icts-latest-news-slider__inner">
 		<?php if ( '' !== $heading ) : ?>
-			<h2 class="icts-latest-news-slider__heading"><?php echo esc_html( $heading ); ?></h2>
+			<h2 class="icts-latest-news-slider__heading"><?php echo esc_html( $translated_heading ); ?></h2>
 		<?php endif; ?>
 
 		<div class="icts-latest-news-slider__track js-icts-latest-news-slider">

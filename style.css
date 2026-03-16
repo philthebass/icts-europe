@@ -662,6 +662,25 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	height: 100%;
 }
 
+.stats-overlap-grid {
+	margin-block-start: calc(var(--wp--preset--spacing--x-large) * -1) !important;
+	margin-top: calc(var(--wp--preset--spacing--x-large) * -1) !important;
+	position: relative;
+	z-index: 2;
+}
+
+.stats-grid-width {
+	max-width: min(100%, 980px);
+	margin-inline: auto;
+}
+
+.stats-grid-width > .wp-block-group,
+.stats-grid-width > .wp-block-columns,
+.stats-grid-width > .wp-block-group.is-layout-grid,
+.stats-grid-width > .wp-block-columns.is-layout-grid {
+	width: 100%;
+}
+
 /* Vertical Strands Background */
 /* Base section helpers */
 .section-strands-bg-vertical,

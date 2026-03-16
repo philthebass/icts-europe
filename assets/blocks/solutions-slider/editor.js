@@ -10,7 +10,8 @@
         RichText,
         PlainText,
         InnerBlocks,
-        BlockControls
+        BlockControls,
+        useBlockProps
     } = wp.blockEditor || wp.editor;
     const {
         PanelBody,
@@ -212,7 +213,7 @@
         icon: 'images-alt2',
         category: 'layout',
         supports: {
-            align: false,
+            align: ['wide', 'full'],
             html: false,
             anchor: true
         },
@@ -240,7 +241,7 @@
             headingColor: { type: 'string', default: '' }
         },
         edit: function (props) {
-            const { attributes, setAttributes } = props;
+            const { attributes, setAttributes, className } = props;
             const {
                 heading,
                 subheading,
@@ -269,6 +270,10 @@
                 [];
             const arrowFill = arrowColor || '';
             const sectionStyle = {};
+            const computedClassName =
+                'icts-solutions-slider-block' +
+                (preview ? ' is-previewing' : '') +
+                (showStrands === false ? ' is-strands-hidden' : '');
 
             if (containerBgColor) {
                 sectionStyle.backgroundColor = containerBgColor;
@@ -348,15 +353,16 @@
                 };
             }, [preview]);
 
+            const blockProps = useBlockProps
+                ? useBlockProps({ className: computedClassName, ref: previewRef })
+                : {
+                      className: (className ? className + ' ' : '') + computedClassName,
+                      ref: previewRef
+                  };
+
             return el(
                 'div',
-                {
-                    className:
-                        'icts-solutions-slider-block' +
-                        (preview ? ' is-previewing' : '') +
-                        (showStrands === false ? ' is-strands-hidden' : ''),
-                    ref: previewRef
-                },
+                blockProps,
                 [
                     el(
                         BlockControls,
@@ -580,8 +586,11 @@
                 indicatorFillColor,
                 headingColor
             } = props.attributes;
+            const className = props.className || '';
             const arrowFill = arrowColor || '';
             const sectionStyle = {};
+            const computedClassName =
+                'icts-solutions-slider-block' + (showStrands === false ? ' is-strands-hidden' : '');
 
             if (containerBgColor) {
                 sectionStyle.backgroundColor = containerBgColor;
@@ -602,13 +611,15 @@
                 sectionStyle['--icts-solutions-heading-color'] = headingColor;
             }
 
+            const blockProps = useBlockProps && useBlockProps.save
+                ? useBlockProps.save({ className: computedClassName })
+                : {
+                      className: (className ? className + ' ' : '') + computedClassName
+                  };
+
             return el(
                 'div',
-                {
-                    className:
-                        'icts-solutions-slider-block' +
-                        (showStrands === false ? ' is-strands-hidden' : '')
-                },
+                blockProps,
                 [
                     el(
                         'section',

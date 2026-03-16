@@ -1,7 +1,36 @@
 {
     "key": "group_6974d43e4e62e",
-    "title": "Client Logos Slider (Block Controls)",
+    "title": "Logos Slider (Block Controls)",
     "fields": [
+        {
+            "key": "field_icts_logos_source_mode",
+            "label": "Logo Source",
+            "name": "logo_source_mode",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Choose whether logos come from Customers, Partners, or both.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "customers": "Customers only",
+                "partners": "Partners only",
+                "both": "Customers + Partners"
+            },
+            "default_value": "customers",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": "customers"
+        },
         {
             "key": "field_6974d43ea3c00",
             "label": "Customer Type Filter",
@@ -129,9 +158,9 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "This adds filters to the client slider block",
+    "description": "This adds filters to the logos slider block",
     "show_in_rest": 0,
     "display_title": "",
     "pll_display_field_instructions": 1,
-    "modified": 1769430169
+    "modified": 1773686182
 }

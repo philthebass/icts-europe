@@ -85,6 +85,18 @@
     z-index: 1;
 }
 
+/* Width variants via block alignment controls */
+.wp-block-icts-europe-solutions-slider.alignwide .icts-solutions-slider,
+.icts-solutions-slider-block.alignwide .icts-solutions-slider {
+    max-width: var(--wp--style--global--wide-size, 1600px);
+}
+
+.wp-block-icts-europe-solutions-slider.alignfull .icts-solutions-slider,
+.icts-solutions-slider-block.alignfull .icts-solutions-slider {
+    max-width: none;
+    border-radius: 0;
+}
+
 .icts-solutions-slider__intro {
     max-width: 70ch;
     margin: 0 auto clamp(1.25rem, 3vw, 2rem);

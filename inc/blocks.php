@@ -16,16 +16,16 @@ namespace ICTS_Europe;
             return;
         }
 
-        // Client Logos Slider block.
+        // Logos Slider block.
         \acf_register_block_type(
             [
                 'name'            => 'client-logos-slider',
-                'title'           => __( 'Client Logos Slider', 'icts-europe' ),
-                'description'     => __( 'Displays a responsive slider of client logos.', 'icts-europe' ),
+                'title'           => __( 'Logos Slider', 'icts-europe' ),
+                'description'     => __( 'Displays a responsive slider of customer and partner logos.', 'icts-europe' ),
                 'render_template' => \get_template_directory() . '/template-parts/blocks/client-logos-slider.php',
                 'category'        => 'widgets',
                 'icon'            => 'images-alt2',
-                'keywords'        => [ 'clients', 'logos', 'slider', 'carousel' ],
+                'keywords'        => [ 'logos', 'customers', 'partners', 'slider', 'carousel' ],
                 'align'           => 'full',
                 'supports'        => [
                     'align'  => [ 'full' ],

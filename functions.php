@@ -442,6 +442,7 @@ function get_single_post_written_by_label() {
  *
  * Field key/name:
  * - display_author_team_member
+ * - related_sidebar_content_items
  *
  * Shown on:
  * - Standard Posts only
@@ -476,6 +477,28 @@ function register_post_author_override_acf_field_group() {
 					'taxonomy'          => '',
 					'return_format'     => 'id',
 					'multiple'          => 0,
+					'allow_null'        => 1,
+					'ui'                => 1,
+					'bidirectional'     => 0,
+				],
+				[
+					'key'               => 'field_icts_related_sidebar_content_items',
+					'label'             => 'Related Sidebar Content',
+					'name'              => 'related_sidebar_content_items',
+					'aria-label'        => '',
+					'type'              => 'post_object',
+					'instructions'      => 'Optional: select related pages/posts to display as stacked cards beneath the author card.',
+					'required'          => 0,
+					'conditional_logic' => 0,
+					'wrapper'           => [
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					],
+					'post_type'         => [ 'post', 'page' ],
+					'taxonomy'          => '',
+					'return_format'     => 'id',
+					'multiple'          => 1,
 					'allow_null'        => 1,
 					'ui'                => 1,
 					'bidirectional'     => 0,
@@ -546,6 +569,247 @@ function get_display_author_team_member_id( $post_id ) {
 }
 
 /**
+ * Get display author name for a post using Team Member override when present.
+ *
+ * @param int $post_id Post ID.
+ * @return string
+ */
+function get_post_display_author_name( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return '';
+	}
+
+	$team_member_id = get_display_author_team_member_id( $post_id );
+	if ( $team_member_id > 0 ) {
+		return (string) \get_the_title( $team_member_id );
+	}
+
+	$author_id = (int) \get_post_field( 'post_author', $post_id );
+	return (string) \get_the_author_meta( 'display_name', $author_id );
+}
+
+/**
+ * Get display author data for a post using Team Member override when present.
+ *
+ * @param int $post_id Post ID.
+ * @return array{name:string,url:string,is_team_member:bool}
+ */
+function get_post_display_author_data( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return [
+			'name'           => '',
+			'url'            => '',
+			'is_team_member' => false,
+		];
+	}
+
+	$team_member_id = get_display_author_team_member_id( $post_id );
+	if ( $team_member_id > 0 ) {
+		return [
+			'name'           => (string) \get_the_title( $team_member_id ),
+			'url'            => (string) \get_permalink( $team_member_id ),
+			'is_team_member' => true,
+		];
+	}
+
+	$author_id = (int) \get_post_field( 'post_author', $post_id );
+
+	return [
+		'name'           => (string) \get_the_author_meta( 'display_name', $author_id ),
+		'url'            => '',
+		'is_team_member' => false,
+	];
+}
+
+/**
+ * Get selected related sidebar content IDs for a post.
+ *
+ * @param int $post_id Post ID.
+ * @return int[]
+ */
+function get_related_sidebar_content_ids( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return [];
+	}
+
+	$ids = [];
+
+	if ( \function_exists( 'get_field' ) ) {
+		$field_value = \get_field( 'related_sidebar_content_items', $post_id );
+		if ( \is_array( $field_value ) ) {
+			foreach ( $field_value as $item ) {
+				if ( \is_object( $item ) && isset( $item->ID ) ) {
+					$ids[] = (int) $item->ID;
+				} elseif ( \is_array( $item ) && isset( $item['ID'] ) ) {
+					$ids[] = (int) $item['ID'];
+				} else {
+					$ids[] = (int) $item;
+				}
+			}
+		} elseif ( $field_value ) {
+			$ids[] = (int) $field_value;
+		}
+	}
+
+	if ( empty( $ids ) ) {
+		$meta_value = \get_post_meta( $post_id, 'related_sidebar_content_items', true );
+		if ( \is_array( $meta_value ) ) {
+			$ids = array_map( 'intval', $meta_value );
+		} elseif ( \is_string( $meta_value ) && '' !== $meta_value ) {
+			$decoded = json_decode( $meta_value, true );
+			if ( \is_array( $decoded ) ) {
+				$ids = array_map( 'intval', $decoded );
+			}
+		}
+	}
+
+	$ids       = array_values( array_unique( array_filter( array_map( 'intval', $ids ) ) ) );
+	$validated = [];
+
+	foreach ( $ids as $candidate_id ) {
+		$candidate_post = \get_post( $candidate_id );
+		if ( ! ( $candidate_post instanceof \WP_Post ) ) {
+			continue;
+		}
+
+		if ( 'publish' !== $candidate_post->post_status ) {
+			continue;
+		}
+
+		if ( ! in_array( $candidate_post->post_type, [ 'post', 'page' ], true ) ) {
+			continue;
+		}
+
+		if ( $candidate_id === $post_id ) {
+			continue;
+		}
+
+		$validated[] = $candidate_id;
+	}
+
+	return $validated;
+}
+
+/**
+ * Get translated single-post related cards heading label.
+ *
+ * @return string
+ */
+function get_single_post_related_pages_label() {
+	$label = \__( 'Related pages:', 'icts-europe' );
+
+	if ( \function_exists( 'pll_translate_string' ) && \function_exists( 'pll_current_language' ) ) {
+		$current_lang = (string) \pll_current_language( 'slug' );
+		$translated   = '' !== $current_lang ? \pll_translate_string( $label, $current_lang ) : $label;
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	} elseif ( \function_exists( 'pll__' ) ) {
+		$translated = \pll__( $label );
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	}
+
+	return $label;
+}
+
+/**
+ * Get translated single-post related cards button label.
+ *
+ * @return string
+ */
+function get_single_post_related_learn_more_label() {
+	$label = \__( 'Learn more', 'icts-europe' );
+
+	if ( \function_exists( 'pll_translate_string' ) && \function_exists( 'pll_current_language' ) ) {
+		$current_lang = (string) \pll_current_language( 'slug' );
+		$translated   = '' !== $current_lang ? \pll_translate_string( $label, $current_lang ) : $label;
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	} elseif ( \function_exists( 'pll__' ) ) {
+		$translated = \pll__( $label );
+		if ( \is_string( $translated ) && '' !== \trim( $translated ) ) {
+			$label = $translated;
+		}
+	}
+
+	return $label;
+}
+
+/**
+ * Render related sidebar cards beneath single-post author card.
+ *
+ * @param int $post_id Current post ID.
+ * @return string
+ */
+function render_single_post_related_sidebar_cards( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return '';
+	}
+
+	$related_ids = get_related_sidebar_content_ids( $post_id );
+	if ( empty( $related_ids ) ) {
+		return '';
+	}
+
+	$fallback_image_url = \home_url( '/wp-content/uploads/2026/03/Airlines-1024x576.jpg' );
+
+	$cards_html = '';
+
+	foreach ( $related_ids as $related_id ) {
+		$permalink = \get_permalink( $related_id );
+		$title     = \get_the_title( $related_id );
+
+		if ( '' === (string) $permalink || '' === (string) $title ) {
+			continue;
+		}
+
+		$image_html = \get_the_post_thumbnail(
+			$related_id,
+			'medium_large',
+			[
+				'class'    => 'icts-post-related-sidebar__image',
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+			]
+		);
+
+		$cards_html .= '<article class="icts-post-related-sidebar__card">';
+		$cards_html .= '<a class="icts-post-related-sidebar__image-link" href="' . \esc_url( $permalink ) . '">';
+		if ( '' !== $image_html ) {
+			$cards_html .= $image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} else {
+			$cards_html .= '<img class="icts-post-related-sidebar__image icts-post-related-sidebar__image-fallback" src="' . \esc_url( $fallback_image_url ) . '" alt="" loading="lazy" decoding="async" />';
+		}
+		$cards_html .= '</a>';
+		$cards_html .= '<div class="icts-post-related-sidebar__content">';
+		$cards_html .= '<h4 class="icts-post-related-sidebar__title icts-post-author-card__name"><a href="' . \esc_url( $permalink ) . '">' . \esc_html( $title ) . '</a></h4>';
+		$cards_html .= '<a class="icts-post-related-sidebar__button wp-block-button__link wp-element-button" href="' . \esc_url( $permalink ) . '">' . \esc_html( get_single_post_related_learn_more_label() ) . '</a>';
+		$cards_html .= '</div>';
+		$cards_html .= '</article>';
+	}
+
+	if ( '' === $cards_html ) {
+		return '';
+	}
+
+	$output  = '<section class="icts-post-related-sidebar" aria-label="' . \esc_attr( get_single_post_related_pages_label() ) . '">';
+	$output .= '<h3 class="icts-post-related-sidebar__heading">' . \esc_html( get_single_post_related_pages_label() ) . '</h3>';
+	$output .= '<div class="icts-post-related-sidebar__stack">';
+	$output .= $cards_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	$output .= '</div>';
+	$output .= '</section>';
+
+	return $output;
+}
+
+/**
  * Render author display block for single posts.
  *
  * Shows selected Team Member card when available, else falls back to post author + date.
@@ -572,6 +836,7 @@ function render_post_author_card_block( $attributes = [], $content = '', $block 
 
 	$team_member_id = get_display_author_team_member_id( $post_id );
 	$post_date      = get_post_archive_localized_date( $post_id );
+	$related_cards  = render_single_post_related_sidebar_cards( $post_id );
 
 	if ( $team_member_id > 0 ) {
 		$team_name  = (string) \get_the_title( $team_member_id );
@@ -619,6 +884,7 @@ function render_post_author_card_block( $attributes = [], $content = '', $block 
 		}
 		$output .= '</div>';
 		$output .= '</aside>';
+		$output .= $related_cards; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		return $output;
 	}
@@ -631,6 +897,7 @@ function render_post_author_card_block( $attributes = [], $content = '', $block 
 		$fallback_out .= '<span class="icts-post-author-fallback__date">' . \esc_html( $post_date ) . '</span>';
 	}
 	$fallback_out .= '</div>';
+	$fallback_out .= $related_cards; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 	return $fallback_out;
 }
@@ -729,7 +996,7 @@ function render_post_archive_card_html( $post_id ) {
 	$permalink = \get_permalink( $post_id );
 	$title     = \get_the_title( $post_id );
 	$date_text = get_post_archive_localized_date( $post_id );
-	$author    = \get_the_author_meta( 'display_name', (int) \get_post_field( 'post_author', $post_id ) );
+	$author    = get_post_display_author_data( $post_id );
 	$thumb     = \get_the_post_thumbnail(
 		$post_id,
 		'large',
@@ -766,7 +1033,13 @@ function render_post_archive_card_html( $post_id ) {
 	}
 
 	$output .= '<h3 class="icts-archive-post-card__title"><a href="' . \esc_url( $permalink ) . '">' . \esc_html( $title ) . '</a></h3>';
-	$output .= '<p class="icts-archive-post-card__meta"><span class="icts-archive-post-card__date">' . \esc_html( $date_text ) . '</span><span class="icts-archive-post-card__author">' . \esc_html( $author ) . '</span></p>';
+	$output .= '<p class="icts-archive-post-card__meta"><span class="icts-archive-post-card__date">' . \esc_html( $date_text ) . '</span><span class="icts-archive-post-card__author">';
+	if ( ! empty( $author['url'] ) ) {
+		$output .= '<a href="' . \esc_url( $author['url'] ) . '">' . \esc_html( $author['name'] ) . '</a>';
+	} else {
+		$output .= \esc_html( $author['name'] );
+	}
+	$output .= '</span></p>';
 	$output .= '<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex icts-archive-post-card__buttons">';
 	$output .= '<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" href="' . \esc_url( $permalink ) . '">' . \esc_html( $button_label ) . '</a></div>';
 	$output .= '</div>';
@@ -2200,8 +2473,26 @@ function save_category_color_field( $term_id ) {
         );
 
         \pll_register_string(
+            'archive_label_related_articles',
+            'Related articles',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
             'single_post_written_by_label',
             'Written by:',
+            'Theme: Single Post'
+        );
+
+        \pll_register_string(
+            'single_post_related_pages_label',
+            'Related pages:',
+            'Theme: Single Post'
+        );
+
+        \pll_register_string(
+            'single_post_related_learn_more_label',
+            'Learn more',
             'Theme: Single Post'
         );
     }
