@@ -64,9 +64,20 @@ Required plugin settings
 Accessibility & Motion
 - Sliders pause on hover; respect prefers-reduced-motion. No visible Pause control required for now.
 - Indicators keyboard accessible; ARIA labels present.
+- Reusable reveal utility available: add `.icts-reveal-grid` to a container to animate children on viewport entry (optional `data-icts-reveal-item-selector` override; `data-icts-reveal-skip` per-item opt-out).
 - Navigation uses click-driven mega panels (desktop) and drawer panels (mobile), with reverse close animations.
 - Desktop supports second-level and fixed-position third-level flyouts; mobile supports parent-aware Back navigation.
 - Class-based menu icons (`nav-icon-*`) are shared across desktop and mobile submenu items.
+
+Editor usage (reveal utility)
+- In Site Editor, select the parent Grid/Group block and add `icts-reveal-grid` under Advanced → Additional CSS class(es).
+- Default behavior animates direct children of that container.
+- Optional for nested structures: add an HTML attribute on the parent block: `data-icts-reveal-item-selector=".wp-block-column"` (replace selector as needed).
+- Optional per-item opt-out: add HTML attribute `data-icts-reveal-skip` on any child that should not animate.
+- Copy/paste quick examples:
+  - Class: `icts-reveal-grid`
+  - Attribute (parent): `data-icts-reveal-item-selector=".wp-block-group > .wp-block-column"`
+  - Attribute (child): `data-icts-reveal-skip`
 
 Performance
 - No bundler required. Vendor JS: Flickity v2.x.
