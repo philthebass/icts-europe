@@ -42,6 +42,8 @@
     --icts-hero-content-padding-inline: var(--wp--preset--spacing--medium, 1.5rem);
     --icts-hero-content-padding-top: clamp(3rem, 7vh, 4rem);
     --icts-hero-content-gap: 1.25rem;
+    --icts-hero-content-panel-width: clamp(24rem, 48vw, 46rem);
+    --icts-hero-content-panel-radius: 1rem;
 
     /* Indicators */
     --icts-hero-indicators-offset: 4rem; /* space under bars */
@@ -119,12 +121,10 @@ body.rtl .icts-hero-slider__overlay,
 .icts-hero-slider__content {
     position: relative;
     z-index: 3;
-
     width: 100%;
     /* Align to global content width (theme.json layout.contentSize) */
     max-width: var(--wp--style--global--content-size, 1200px);
     margin-inline: auto;
-
     /* Extra gutter to match XD spacing */
     padding-inline: var(--icts-hero-content-padding-inline);
     padding-block:
@@ -142,6 +142,26 @@ body.rtl .icts-hero-slider__overlay,
     gap: var(--icts-hero-content-gap); /* equal spacing in the stack */
 
     min-height: 100%;               /* IMPORTANT: use full slide height */
+}
+
+.icts-hero-slider__content-panel {
+    width: min(100%, var(--icts-hero-content-panel-width));
+    padding: clamp(1rem, 1.4vw, 1.5rem);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--icts-hero-content-panel-radius);
+    background: linear-gradient(
+        140deg,
+        rgba(8, 11, 16, 0.8) 0%,
+        rgba(8, 11, 16, 0.68) 56%,
+        rgba(8, 11, 16, 0.5) 100%
+    );
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--icts-hero-content-gap);
 }
 
 /* RTL: align content to the right */
@@ -181,9 +201,14 @@ body.rtl .icts-hero-slider__content,
    Optional slide logo
    ========================================================= */
 .icts-hero-slider__logo {
-    width: 100%;
-    max-width: 260px;
     display: block;
+    width: fit-content;
+    max-width: min(100%, 280px);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(10, 19, 28, 0.16);
+    border-radius: 0.625rem;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
 }
 
 .icts-hero-slider__logo-link {
@@ -194,7 +219,9 @@ body.rtl .icts-hero-slider__content,
 .icts-hero-slider__logo img {
     display: block;
     width: 100%;
+    max-width: 260px;
     height: auto;
+    max-height: 52px;
 }
 
 /* =========================================================
@@ -367,6 +394,8 @@ body.rtl .icts-hero-slider__indicator-bar::after,
 @media (max-width: 960px) {
     .icts-hero-slider {
         --icts-hero-content-padding-top: 2.5rem;
+        --icts-hero-content-panel-width: 100%;
+        --icts-hero-content-panel-radius: 0.875rem;
         --icts-hero-indicators-offset: 1.75rem;
         --icts-hero-indicator-width: 48px;
         --icts-hero-indicator-height: 5px;
@@ -376,5 +405,33 @@ body.rtl .icts-hero-slider__indicator-bar::after,
     .icts-hero-slider__track {
         height: min(70vh, 480px);
         min-height: 360px;
+    }
+}
+
+@media (min-width: 961px) {
+    .icts-hero-slider__content {
+        width: min(
+            calc(
+                100% -
+                var(--wp--style--root--padding-left, 1.5rem) -
+                var(--wp--style--root--padding-right, 1.5rem)
+            ),
+            var(--wp--style--global--wide-size, 1400px)
+        );
+        max-width: none;
+        padding-inline: 0;
+    }
+
+    .icts-hero-slider__indicators {
+        width: min(
+            calc(
+                100% -
+                var(--wp--style--root--padding-left, 1.5rem) -
+                var(--wp--style--root--padding-right, 1.5rem)
+            ),
+            var(--wp--style--global--wide-size, 1400px)
+        );
+        max-width: none;
+        padding-inline: 0;
     }
 }

@@ -13,6 +13,24 @@
         sliders.forEach(function (sliderEl) {
             sliderEl.classList.add('is-icts-hero-slider-init');
 
+            // Ensure each slide has a dedicated content panel wrapper so
+            // logo/title/text/button always sit inside the same visual panel.
+            sliderEl.querySelectorAll('.icts-hero-slider__content').forEach(function (contentEl) {
+                const existingPanel = contentEl.querySelector('.icts-hero-slider__content-panel');
+                if (existingPanel && existingPanel.parentElement === contentEl) {
+                    return;
+                }
+
+                const panelEl = document.createElement('div');
+                panelEl.className = 'icts-hero-slider__content-panel';
+
+                while (contentEl.firstChild) {
+                    panelEl.appendChild(contentEl.firstChild);
+                }
+
+                contentEl.appendChild(panelEl);
+            });
+
             const isEditor = !!(document.body && document.body.classList.contains('block-editor-page'));
             const isRtl = !!(document.documentElement && document.documentElement.dir === 'rtl');
             const prefersReducedMotion = !!(

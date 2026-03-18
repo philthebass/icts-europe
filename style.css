@@ -681,6 +681,18 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	width: 100%;
 }
 
+.partner-usp-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--wp--preset--spacing--medium);
+}
+
+@media (max-width: 781px) {
+	.partner-usp-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
 /* Vertical Strands Background */
 /* Base section helpers */
 .section-strands-bg-vertical,

@@ -6,27 +6,11 @@
 	--icts-faq-item-padding-block: clamp(0.85rem, 1.4vw, 1.1rem);
 	--icts-faq-panel-padding-block-end: clamp(1rem, 2vw, 1.35rem);
 	--icts-faq-transition: 280ms ease;
-	--icts-faq-strands-width: clamp(128px, 10vw, 180px);
-	--icts-faq-strands-height: clamp(980px, 82vw, 1260px);
-	--icts-faq-strands-trim: clamp(14px, 1.5vw, 24px);
-	--icts-faq-strands-gap: clamp(2rem, 4vw, 3.25rem);
 
 	width: 100%;
 	position: relative;
-	isolation: isolate;
-	overflow: hidden;
 	margin-block: 0;
-	padding-block: var(--icts-faq-strands-gap);
-	background-image:
-		url("../../images/solutions-slider-strands.svg"),
-		url("../../images/solutions-slider-strands.svg");
-	background-repeat: no-repeat, no-repeat;
-	background-position:
-		center calc(0% - var(--icts-faq-strands-trim)),
-		center calc(100% + var(--icts-faq-strands-trim));
-	background-size:
-		var(--icts-faq-strands-width) var(--icts-faq-strands-height),
-		var(--icts-faq-strands-width) var(--icts-faq-strands-height);
+	padding-block: clamp(2rem, 4vw, 3.25rem);
 }
 
 /* Always neutralize auto flow margins on this block */
@@ -78,6 +62,11 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.45rem;
+}
+
+.icts-faq-accordion__controls.icts-archive-controls {
+	max-width: var(--icts-faq-content-max-width);
+	margin: clamp(1rem, 2.3vw, 1.65rem) auto 0;
 }
 
 .icts-faq-accordion__item {
@@ -210,5 +199,13 @@
 	.icts-faq-accordion__icon::after,
 	.icts-faq-accordion__panel {
 		transition: none;
+	}
+}
+
+@media (max-width: 781px) {
+	.icts-faq-accordion__controls.icts-archive-controls {
+		grid-template-columns: minmax(0, 1fr);
+		justify-content: stretch;
+		margin-bottom: var(--wp--preset--spacing--small);
 	}
 }

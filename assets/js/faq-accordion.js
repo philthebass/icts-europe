@@ -23,11 +23,19 @@
             accordion.classList.add('is-icts-faq-initialized');
 
             var itemList = accordion.querySelector('[data-icts-faq-items]');
+            var searchInput = accordion.querySelector('[data-icts-faq-search]');
+            var categorySelect = accordion.querySelector('[data-icts-faq-category]');
+            var emptyMessage = accordion.querySelector('[data-icts-faq-empty]');
+            var searchDebounceTimer = null;
             var items = itemList
                 ? Array.prototype.slice.call(
                       itemList.querySelectorAll('.icts-faq-accordion__item')
                   )
                 : [];
+
+            function normalizeText(value) {
+                return String(value || '').trim().toLowerCase();
+            }
 
             function setExpanded(item, expanded) {
                 var toggle = item.querySelector('[data-icts-faq-toggle]');
@@ -108,6 +116,47 @@
                 });
             }
 
+            function applyFilters() {
+                var searchTerm = searchInput ? normalizeText(searchInput.value) : '';
+                var selectedCategory = categorySelect
+                    ? String(categorySelect.value || '0')
+                    : '0';
+                var visibleCount = 0;
+
+                items.forEach(function (item) {
+                    var searchIndex = normalizeText(
+                        item.getAttribute('data-icts-faq-search-index')
+                    );
+                    var categoriesCsv = String(
+                        item.getAttribute('data-icts-faq-categories') || ''
+                    );
+                    var categoryIds = categoriesCsv
+                        ? categoriesCsv.split(',').map(function (value) {
+                              return String(value).trim();
+                          })
+                        : [];
+
+                    var matchesSearch = !searchTerm || searchIndex.indexOf(searchTerm) !== -1;
+                    var matchesCategory =
+                        selectedCategory === '0' ||
+                        categoryIds.indexOf(selectedCategory) !== -1;
+                    var isVisible = matchesSearch && matchesCategory;
+
+                    item.hidden = !isVisible;
+                    if (!isVisible && item.classList.contains('is-open')) {
+                        setExpanded(item, false);
+                    }
+
+                    if (isVisible) {
+                        visibleCount += 1;
+                    }
+                });
+
+                if (emptyMessage) {
+                    emptyMessage.hidden = visibleCount !== 0;
+                }
+            }
+
             items.forEach(function (item) {
                 var toggle = item.querySelector('[data-icts-faq-toggle]');
                 var panel = item.querySelector('[data-icts-faq-panel]');
@@ -134,6 +183,21 @@
                     setExpanded(item, true);
                 });
             });
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    if (searchDebounceTimer) {
+                        window.clearTimeout(searchDebounceTimer);
+                    }
+                    searchDebounceTimer = window.setTimeout(applyFilters, 180);
+                });
+            }
+
+            if (categorySelect) {
+                categorySelect.addEventListener('change', applyFilters);
+            }
+
+            applyFilters();
         });
     }
 

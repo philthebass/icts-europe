@@ -70,6 +70,7 @@
     --icts-solutions-indicator-fill-color: var(--wp--preset--color--brand-primary);
     --icts-solutions-arrow-stroke: var(--wp--preset--color--brand-primary);
     --icts-solutions-arrow-fill: transparent;
+    --icts-solutions-arrow-stroke-width: 3px;
     --icts-solutions-heading-color: var(--wp--preset--color--brand-primary);
     --icts-solutions-indicator-gap: clamp(1rem, 2.2vw, 1.5rem);
 
@@ -179,13 +180,14 @@
 
 .icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon .icts-solutions-arrow-fill-shape {
     fill: var(--icts-solutions-arrow-fill, transparent);
+    stroke: var(--icts-solutions-arrow-stroke);
+    stroke-width: var(--icts-solutions-arrow-stroke-width);
+    stroke-linejoin: round;
     fill-rule: nonzero;
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon .icts-solutions-arrow-stroke-shape {
-    fill: var(--icts-solutions-arrow-stroke);
-    fill-rule: evenodd;
-    clip-rule: evenodd;
+    display: none;
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button:hover,

@@ -173,6 +173,192 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_67b4a8f159109",
+            "label": "Enable Search",
+            "name": "enable_search",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Show a keyword search input above the accordion items.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "Enabled",
+            "ui_off_text": "Disabled",
+            "ui": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_67b4a8f15910a",
+            "label": "Search Field Label",
+            "name": "search_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Screen reader label for the FAQ search field.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_67b4a8f159109",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Search FAQs",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "Search FAQs",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": "Search FAQs"
+        },
+        {
+            "key": "field_67b4a8f15910b",
+            "label": "Search Placeholder",
+            "name": "search_placeholder",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Placeholder text inside the search field.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_67b4a8f159109",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Search",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "Search",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": "Search"
+        },
+        {
+            "key": "field_67b4a8f15910c",
+            "label": "Enable Category Filter",
+            "name": "enable_category_filter",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Show a category dropdown above the accordion items.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "Enabled",
+            "ui_off_text": "Disabled",
+            "ui": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_67b4a8f15910d",
+            "label": "Category Filter Label",
+            "name": "category_filter_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Screen reader label for the category select.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_67b4a8f15910c",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Filter FAQs by category",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "Filter FAQs by category",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": "Filter FAQs by category"
+        },
+        {
+            "key": "field_67b4a8f15910e",
+            "label": "All Categories Label",
+            "name": "all_categories_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Default option label in the category select.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_67b4a8f15910c",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "All categories",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "All categories",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": "All categories"
+        },
+        {
+            "key": "field_67b4a8f15910f",
+            "label": "No Results Label",
+            "name": "no_results_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Shown when no FAQs match active filters.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "No FAQs found for the selected filters.",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "No FAQs found for the selected filters.",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": "No FAQs found for the selected filters."
+        },
+        {
             "key": "field_67b4a8f159108",
             "label": "Output FAQ Schema",
             "name": "output_schema",
@@ -215,5 +401,5 @@
     "show_in_rest": 0,
     "display_title": "",
     "pll_display_field_instructions": 1,
-    "modified": 1771702740
+    "modified": 1773850086
 }

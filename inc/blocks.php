@@ -196,6 +196,10 @@ namespace ICTS_Europe;
                     $theme_uri = \get_template_directory_uri();
                     $theme_ver = \wp_get_theme()->get( 'Version' );
 
+                    $archive_style_path = '/assets/styles/blocks/post-archive-filters.css';
+                    $archive_style_abs  = $theme_dir . $archive_style_path;
+                    $archive_style_ver  = \file_exists( $archive_style_abs ) ? (string) \filemtime( $archive_style_abs ) : $theme_ver;
+
                     $style_path = '/assets/styles/blocks/faq-accordion.css';
                     $style_abs  = $theme_dir . $style_path;
                     $style_ver  = \file_exists( $style_abs ) ? (string) \filemtime( $style_abs ) : $theme_ver;
@@ -205,9 +209,16 @@ namespace ICTS_Europe;
                     $script_ver  = \file_exists( $script_abs ) ? (string) \filemtime( $script_abs ) : $theme_ver;
 
                     \wp_enqueue_style(
+                        'icts-post-archive-filters',
+                        $theme_uri . $archive_style_path,
+                        [],
+                        $archive_style_ver
+                    );
+
+                    \wp_enqueue_style(
                         'icts-faq-accordion',
                         $theme_uri . $style_path,
-                        [],
+                        [ 'icts-post-archive-filters' ],
                         $style_ver
                     );
 
