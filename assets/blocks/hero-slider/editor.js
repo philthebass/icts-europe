@@ -38,14 +38,16 @@
       logoAlt: { type: 'string', default: '' },
       logoLinkUrl: { type: 'string', default: '' },
       logoLinkTarget: { type: 'string', default: '' },
+      showLogo: { type: 'boolean', default: true },
       mediaId: { type: 'number' },
       mediaUrl: { type: 'string' },
       focalPoint: { type: 'object', default: { x: 0.5, y: 0.5 } }
     },
     edit: function (props) {
       const { attributes, setAttributes, className } = props;
-      const { title, text, ctaLabel, ctaUrl, ctaTarget, logoId, logoUrl, logoAlt, logoLinkUrl, logoLinkTarget, mediaId, mediaUrl, focalPoint } = attributes;
+      const { title, text, ctaLabel, ctaUrl, ctaTarget, logoId, logoUrl, logoAlt, logoLinkUrl, logoLinkTarget, showLogo, mediaId, mediaUrl, focalPoint } = attributes;
       const { useState } = wp.element;
+      const hasLogo = !!(showLogo && logoUrl && logoUrl.trim());
 
       // CTA modal state
       const [isCtaOpen, setIsCtaOpen] = useState(false);
@@ -126,6 +128,12 @@
             )
           ),
           el(PanelBody, { title: __('Logo', 'icts-europe'), initialOpen: false },
+            el(ToggleControl, {
+              label: __('Show logo', 'icts-europe'),
+              checked: !!showLogo,
+              __nextHasNoMarginBottom: true,
+              onChange: function (nextValue) { setAttributes({ showLogo: !!nextValue }); }
+            }),
             el(MediaUploadCheck, {},
               el(MediaUpload, {
                 onSelect: onSelectLogo,
@@ -247,7 +255,7 @@
           // Overlay must not capture pointer events in editor
           el('div', { className: 'icts-hero-slider__overlay', style: { pointerEvents: 'none' } }),
           el('div', { className: 'icts-hero-slider__content' },
-            logoUrl && el('div', { className: 'icts-hero-slider__logo' },
+            hasLogo && el('div', { className: 'icts-hero-slider__logo' },
               logoLinkUrl
                 ? el('a', {
                   className: 'icts-hero-slider__logo-link',
@@ -284,6 +292,7 @@
     },
     save: function (props) {
       const a = props.attributes;
+      const hasLogo = !!(a.showLogo && a.logoUrl && a.logoUrl.trim());
       const objPos = ((a.focalPoint?.x || 0.5) * 100).toFixed(2) + '% ' + ((a.focalPoint?.y || 0.5) * 100).toFixed(2) + '%';
       return el('article', { className: 'icts-hero-slider__slide' },
         a.mediaUrl && el('div', { className: 'icts-hero-slider__media' },
@@ -291,7 +300,7 @@
         ),
         el('div', { className: 'icts-hero-slider__overlay' }),
         el('div', { className: 'icts-hero-slider__content' },
-          a.logoUrl && el('div', { className: 'icts-hero-slider__logo' },
+          hasLogo && el('div', { className: 'icts-hero-slider__logo' },
             a.logoLinkUrl
               ? el('a', {
                 className: 'icts-hero-slider__logo-link',

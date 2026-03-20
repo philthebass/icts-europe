@@ -1,8 +1,6 @@
 ( function () {
 	'use strict';
 
-	var resizeTimer = null;
-
 	function parseIntSafe( value, fallback ) {
 		var parsed = parseInt( value, 10 );
 		return Number.isFinite( parsed ) ? parsed : fallback;
@@ -61,119 +59,6 @@
 		window.requestAnimationFrame( tick );
 	}
 
-	function getCounterGroupKey( block ) {
-		if ( ! block ) {
-			return null;
-		}
-
-		var layoutGroup = block.closest( '.is-layout-grid, .is-layout-flex, .wp-block-columns' );
-		return layoutGroup || block.parentElement;
-	}
-
-	function equalizeCounterHeights() {
-		var blocks = Array.prototype.slice.call(
-			document.querySelectorAll( '.icts-counter-block' )
-		);
-
-		if ( ! blocks.length ) {
-			return;
-		}
-
-		var groups = new Map();
-
-		blocks.forEach( function ( block ) {
-			var key = getCounterGroupKey( block );
-			if ( ! key ) {
-				return;
-			}
-
-			if ( ! groups.has( key ) ) {
-				groups.set( key, [] );
-			}
-
-			groups.get( key ).push( block );
-		} );
-
-		groups.forEach( function ( groupBlocks ) {
-			var cards = groupBlocks
-				.map( function ( block ) {
-					return block.querySelector( '.icts-counter-block__inner' );
-				} )
-				.filter( Boolean );
-
-			if ( cards.length < 2 ) {
-				return;
-			}
-
-			cards.forEach( function ( card ) {
-				card.style.minBlockSize = '';
-				card.style.blockSize = '';
-			} );
-
-			var group = getCounterGroupKey( groupBlocks[ 0 ] );
-			var isSingleNoWrapRow = group && group.classList.contains( 'is-nowrap' );
-
-			if ( isSingleNoWrapRow ) {
-				var maxRowHeight = 0;
-
-				cards.forEach( function ( card ) {
-					maxRowHeight = Math.max( maxRowHeight, card.offsetHeight );
-				} );
-
-				if ( maxRowHeight > 0 ) {
-					cards.forEach( function ( card ) {
-						card.style.minBlockSize = String( maxRowHeight ) + 'px';
-						card.style.blockSize = String( maxRowHeight ) + 'px';
-					} );
-				}
-
-				return;
-			}
-
-			var rows = [];
-
-			cards.forEach( function ( card ) {
-				var top = card.getBoundingClientRect().top;
-				var center = top + card.offsetHeight / 2;
-				var row = rows.find( function ( currentRow ) {
-					return Math.abs( currentRow.center - center ) < 6;
-				} );
-
-				if ( ! row ) {
-					row = { center: center, cards: [] };
-					rows.push( row );
-				}
-
-				row.cards.push( card );
-			} );
-
-			rows.forEach( function ( row ) {
-				var maxHeight = 0;
-
-				row.cards.forEach( function ( card ) {
-					maxHeight = Math.max( maxHeight, card.offsetHeight );
-				} );
-
-				if ( maxHeight <= 0 ) {
-					return;
-				}
-
-				row.cards.forEach( function ( card ) {
-					card.style.minBlockSize = String( maxHeight ) + 'px';
-					card.style.blockSize = String( maxHeight ) + 'px';
-				} );
-			} );
-		} );
-	}
-
-	function scheduleEqualizeCounterHeights() {
-		if ( resizeTimer ) {
-			window.clearTimeout( resizeTimer );
-		}
-
-		resizeTimer = window.setTimeout( equalizeCounterHeights, 80 );
-	}
-
 	function initCounters() {
 		var counters = Array.prototype.slice.call(
 			document.querySelectorAll( '.icts-counter-block__number[data-from][data-to]' )
@@ -191,12 +76,6 @@
 		);
 
 		var prefersReducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
-
-		equalizeCounterHeights();
-
-		if ( document.fonts && document.fonts.ready ) {
-			document.fonts.ready.then( scheduleEqualizeCounterHeights );
-		}
 
 		if ( 'IntersectionObserver' in window ) {
 			var observer = new IntersectionObserver(
@@ -238,7 +117,4 @@
 	} else {
 		initCounters();
 	}
-
-	window.addEventListener( 'resize', scheduleEqualizeCounterHeights );
-	window.addEventListener( 'load', equalizeCounterHeights );
 }() );

@@ -53,6 +53,12 @@ require_once __DIR__ . '/inc/blocks.php';
         $asset_ver( '/assets/styles/blocks/solutions-slider.css' )
     );
     \wp_register_style(
+        'icts-hero-slider-editor',
+        get_template_directory_uri() . '/assets/styles/blocks/hero-slider-editor.css',
+        [],
+        $asset_ver( '/assets/styles/blocks/hero-slider-editor.css' )
+    );
+    \wp_register_style(
         'flickity',
         get_template_directory_uri() . '/assets/vendor/flickity/flickity.min.css',
         [],
@@ -258,6 +264,7 @@ require_once __DIR__ . '/inc/blocks.php';
 
     \register_block_type( 'icts-europe/hero-slider', [
         'editor_script' => $hero_editor_handle,
+        'editor_style'  => 'icts-hero-slider-editor',
         'style'         => [ 'icts-hero-slider-style', 'flickity' ],
         'view_script'   => [ 'flickity', 'icts-hero-slider-frontend' ],
     ] );
@@ -311,23 +318,23 @@ require_once __DIR__ . '/inc/blocks.php';
     );
 } );
 
-// Editor-only CSS for better hero slider preview
+// Editor-only assets.
 \add_action( 'enqueue_block_editor_assets', function () {
-	$hero_editor_style_path = get_template_directory() . '/assets/styles/blocks/hero-slider-editor.css';
-    \wp_enqueue_style(
-        'icts-hero-slider-editor',
-        get_template_directory_uri() . '/assets/styles/blocks/hero-slider-editor.css',
-        [],
-        \file_exists( $hero_editor_style_path ) ? (string) \filemtime( $hero_editor_style_path ) : \wp_get_theme()->get( 'Version' )
-    );
+	$counter_band_limit_script_path = get_template_directory() . '/assets/js/counter-band-editor-limit.js';
+	\wp_enqueue_script(
+		'icts-counter-band-editor-limit',
+		get_template_directory_uri() . '/assets/js/counter-band-editor-limit.js',
+		[ 'wp-data', 'wp-dom-ready', 'wp-notices' ],
+		\file_exists( $counter_band_limit_script_path ) ? (string) \filemtime( $counter_band_limit_script_path ) : \wp_get_theme()->get( 'Version' ),
+		true
+	);
 
-    $team_profile_style_path = get_template_directory() . '/assets/styles/blocks/team-member-profile.css';
-    \wp_enqueue_style(
-        'icts-team-member-profile-editor',
-        get_template_directory_uri() . '/assets/styles/blocks/team-member-profile.css',
-        [],
-        \file_exists( $team_profile_style_path ) ? (string) \filemtime( $team_profile_style_path ) : \wp_get_theme()->get( 'Version' )
-    );
+	// Guard third-party editor scripts that expect this Polylang global.
+	\wp_add_inline_script(
+		'wp-blocks',
+		'window.pllEditorCurrentLanguageSlug = window.pllEditorCurrentLanguageSlug || "";',
+		'before'
+	);
 } );
 
 /**
@@ -1976,7 +1983,7 @@ function register_counter_band_pattern() {
 		$slug,
 		[
 			'title'       => __( 'Counter Band', 'icts-europe' ),
-			'description' => __( 'Full-width counter section with background image and responsive grid.', 'icts-europe' ),
+			'description' => __( 'Full-width counter section with stable, responsive card spans.', 'icts-europe' ),
 			'categories'  => [ 'icts-europe/features' ],
 			'keywords'    => [ 'counter', 'stats', 'metrics', 'numbers' ],
 			'inserter'    => true,

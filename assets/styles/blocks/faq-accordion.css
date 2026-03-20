@@ -114,7 +114,7 @@
 
 .icts-faq-accordion__question {
 	margin-inline-end: auto;
-	font-size: var(--wp--preset--font-size--small);
+	font-size: var(--wp--preset--font-size--x-large);
 	font-weight: 500;
 	line-height: 1.35;
 }
@@ -165,6 +165,7 @@
 	padding-inline: var(--icts-faq-item-padding-inline);
 	padding-block: 0 var(--icts-faq-panel-padding-block-end);
 	border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+	font-size: var(--wp--preset--font-size--large);
 }
 
 .icts-faq-accordion__answer > :first-child {

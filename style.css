@@ -248,13 +248,76 @@ body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
 }
 
 .icts-counter-band__grid {
-	--wp--style--block-gap: var(--wp--preset--spacing--medium);
+	--wp--style--block-gap: clamp(0.75rem, 1.5vw, 1.25rem);
+	display: grid;
+	grid-template-columns: 1fr;
 	align-items: stretch;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.icts-counter-band__grid .icts-counter-block__inner {
+	padding-block: clamp(0.9rem, 2vw, 1.5rem);
+	padding-inline: clamp(0.75rem, 1.8vw, 1.25rem);
+}
+
+.icts-counter-band__grid .icts-counter-block__label {
+	max-inline-size: 22ch;
+	margin-inline: auto;
 }
 
 .icts-counter-band__grid > * {
 	min-inline-size: 0;
+}
+
+.icts-counter-band__grid > :nth-child(n + 5) {
+	display: none;
+}
+
+@media (min-width: 700px) {
+	.icts-counter-band__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.icts-counter-band__grid {
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+	}
+
+	/* Exactly 2 cards */
+	.icts-counter-band__grid > :first-child:nth-last-child(2),
+	.icts-counter-band__grid > :first-child:nth-last-child(2) ~ * {
+		grid-column: span 6;
+	}
+
+	/* Exactly 3 cards */
+	.icts-counter-band__grid > :first-child:nth-last-child(3) {
+		grid-column: span 5;
+	}
+
+	.icts-counter-band__grid > :first-child:nth-last-child(3) + * {
+		grid-column: span 4;
+	}
+
+	.icts-counter-band__grid > :first-child:nth-last-child(3) + * + * {
+		grid-column: span 3;
+	}
+
+	/* Exactly 4 cards */
+	.icts-counter-band__grid > :first-child:nth-last-child(4) {
+		grid-column: span 4;
+	}
+
+	.icts-counter-band__grid > :first-child:nth-last-child(4) + * {
+		grid-column: span 3;
+	}
+
+	.icts-counter-band__grid > :first-child:nth-last-child(4) + * + * {
+		grid-column: span 2;
+	}
+
+	.icts-counter-band__grid > :first-child:nth-last-child(4) + * + * + * {
+		grid-column: span 3;
+	}
 }
 
 .icts-counter-band__grid .icts-counter-block,
@@ -278,6 +341,12 @@ body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
 	min-inline-size: 0 !important;
 	margin: 0 !important;
 	align-self: stretch !important;
+}
+
+@media (min-width: 1100px) {
+	.editor-styles-wrapper .icts-counter-band__grid .block-editor-block-list__block {
+		inline-size: 100% !important;
+	}
 }
 
 .editor-styles-wrapper .icts-counter-band__grid .block-editor-block-list__block > .wp-block-acf-counter,

@@ -2,7 +2,7 @@
 /**
  * Title: Counter Band
  * Slug: icts-europe/counter-band
- * Description: Full-width counter section with background image and responsive grid.
+ * Description: Full-width counter section with stable, responsive card spans.
  * Categories: icts-europe/features
  * Keywords: counter, stats, metrics, numbers
  * Viewport Width: 1500
