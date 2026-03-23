@@ -791,20 +791,55 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 
 /* Horizontal Strands Background */
 .section-strands-bg-horizontal::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 160px;
-  transform: translateY(-50%) rotate(90deg);
-  transform-origin: center;
-  z-index: -2;
-  pointer-events: none;
-  background-image: url('/wp-content/uploads/2026/03/strands-bg-vertical.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% auto;
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: clamp(88px, 7.5vw, 132px);
+	height: clamp(720px, 72vw, 1280px);
+	transform: translate(-46%, -50%) rotate(90deg);
+	transform-origin: center;
+	z-index: 0;
+	pointer-events: none;
+	background-image: url('/wp-content/uploads/2026/03/strands-bg-vertical.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100% 100%;
+}
+
+.section-strands-bg-horizontal::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 0;
+	width: clamp(88px, 7.5vw, 132px);
+	height: clamp(720px, 72vw, 1280px);
+	transform: translate(46%, -50%) rotate(-90deg);
+	transform-origin: center;
+	z-index: 0;
+	pointer-events: none;
+	background-image: url('/wp-content/uploads/2026/03/strands-bg-vertical.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100% 100%;
+}
+
+@media (max-width: 781px) {
+	.section-strands-bg-horizontal::before,
+	.section-strands-bg-horizontal::after {
+		top: 50%;
+		width: clamp(76px, 14vw, 112px);
+		height: clamp(460px, 92vw, 840px);
+	}
+}
+
+.section-strands-bg-horizontal {
+	overflow: visible;
+}
+
+.section-strands-bg-horizontal > * {
+	position: relative;
+	z-index: 1;
 }
 
 /* Bubbles Background */
@@ -875,6 +910,7 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	justify-content: center;
 	margin: 0;
 	padding-top: var(--wp--preset--spacing--small);
+	padding-bottom: var(--wp--preset--spacing--small);
 }
 
 .feature-card__icon svg,

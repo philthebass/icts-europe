@@ -215,7 +215,10 @@
         supports: {
             align: ['wide', 'full'],
             html: false,
-            anchor: true
+            anchor: true,
+            spacing: {
+                margin: true
+            }
         },
         attributes: {
             heading: {
@@ -233,7 +236,6 @@
             preview: { type: 'boolean', default: false },
             autoplay: { type: 'number', default: 7000 },
             containerBgColor: { type: 'string', default: '' },
-            showStrands: { type: 'boolean', default: true },
             arrowLineColor: { type: 'string', default: '' },
             arrowColor: { type: 'string', default: '' },
             indicatorBorderColor: { type: 'string', default: '' },
@@ -248,7 +250,6 @@
                 preview,
                 autoplay,
                 containerBgColor,
-                showStrands,
                 arrowLineColor,
                 arrowColor,
                 indicatorBorderColor,
@@ -272,8 +273,7 @@
             const sectionStyle = {};
             const computedClassName =
                 'icts-solutions-slider-block' +
-                (preview ? ' is-previewing' : '') +
-                (showStrands === false ? ' is-strands-hidden' : '');
+                (preview ? ' is-previewing' : '');
 
             if (containerBgColor) {
                 sectionStyle.backgroundColor = containerBgColor;
@@ -404,14 +404,6 @@
                                 value: autoplay,
                                 onChange: function (value) {
                                     setAttributes({ autoplay: value || 7000 });
-                                }
-                            }),
-                            el(ToggleControl, {
-                                label: __('Show background strands', 'icts-europe'),
-                                checked: showStrands !== false,
-                                __nextHasNoMarginBottom: true,
-                                onChange: function (value) {
-                                    setAttributes({ showStrands: !!value });
                                 }
                             }),
                             el(BaseControl, {
@@ -579,7 +571,6 @@
                 subheading,
                 autoplay,
                 containerBgColor,
-                showStrands,
                 arrowLineColor,
                 arrowColor,
                 indicatorBorderColor,
@@ -589,8 +580,7 @@
             const className = props.className || '';
             const arrowFill = arrowColor || '';
             const sectionStyle = {};
-            const computedClassName =
-                'icts-solutions-slider-block' + (showStrands === false ? ' is-strands-hidden' : '');
+            const computedClassName = 'icts-solutions-slider-block';
 
             if (containerBgColor) {
                 sectionStyle.backgroundColor = containerBgColor;
@@ -664,6 +654,130 @@
                     )
                 ]
             );
-        }
+        },
+        deprecated: [
+            {
+                attributes: {
+                    heading: {
+                        type: 'string',
+                        source: 'html',
+                        selector: '.icts-solutions-slider__heading',
+                        default: ''
+                    },
+                    subheading: {
+                        type: 'string',
+                        source: 'html',
+                        selector: '.icts-solutions-slider__subheading',
+                        default: ''
+                    },
+                    preview: { type: 'boolean', default: false },
+                    autoplay: { type: 'number', default: 7000 },
+                    containerBgColor: { type: 'string', default: '' },
+                    showStrands: { type: 'boolean', default: true },
+                    arrowLineColor: { type: 'string', default: '' },
+                    arrowColor: { type: 'string', default: '' },
+                    indicatorBorderColor: { type: 'string', default: '' },
+                    indicatorFillColor: { type: 'string', default: '' },
+                    headingColor: { type: 'string', default: '' }
+                },
+                migrate: function (attributes) {
+                    const migratedAttributes = Object.assign({}, attributes);
+                    delete migratedAttributes.showStrands;
+                    return migratedAttributes;
+                },
+                save: function (props) {
+                    const {
+                        heading,
+                        subheading,
+                        autoplay,
+                        containerBgColor,
+                        showStrands,
+                        arrowLineColor,
+                        arrowColor,
+                        indicatorBorderColor,
+                        indicatorFillColor,
+                        headingColor
+                    } = props.attributes;
+                    const className = props.className || '';
+                    const arrowFill = arrowColor || '';
+                    const sectionStyle = {};
+                    const computedClassName =
+                        'icts-solutions-slider-block' +
+                        (showStrands === false ? ' is-strands-hidden' : '');
+
+                    if (containerBgColor) {
+                        sectionStyle.backgroundColor = containerBgColor;
+                    }
+                    if (arrowFill) {
+                        sectionStyle['--icts-solutions-arrow-fill'] = arrowFill;
+                    }
+                    if (arrowLineColor) {
+                        sectionStyle['--icts-solutions-arrow-stroke'] = arrowLineColor;
+                    }
+                    if (indicatorBorderColor) {
+                        sectionStyle['--icts-solutions-indicator-border-color'] = indicatorBorderColor;
+                    }
+                    if (indicatorFillColor) {
+                        sectionStyle['--icts-solutions-indicator-fill-color'] = indicatorFillColor;
+                    }
+                    if (headingColor) {
+                        sectionStyle['--icts-solutions-heading-color'] = headingColor;
+                    }
+
+                    return el(
+                        'div',
+                        {
+                            className: (className ? className + ' ' : '') + computedClassName
+                        },
+                        [
+                            el(
+                                'section',
+                                {
+                                    key: 'slider',
+                                    className: 'icts-solutions-slider',
+                                    'data-autoplay': String(autoplay || 7000),
+                                    style: sectionStyle
+                                },
+                                [
+                                    el('div', { className: 'icts-solutions-slider__intro', key: 'intro' }, [
+                                        heading
+                                            ? el(RichText.Content, {
+                                                  key: 'heading',
+                                                  tagName: 'h2',
+                                                  className: 'icts-solutions-slider__heading',
+                                                  value: heading
+                                              })
+                                            : null,
+                                        subheading
+                                            ? el(RichText.Content, {
+                                                  key: 'subheading',
+                                                  tagName: 'p',
+                                                  className: 'icts-solutions-slider__subheading',
+                                                  value: subheading
+                                              })
+                                            : null
+                                    ]),
+                                    el(
+                                        'div',
+                                        {
+                                            className: 'icts-solutions-slider__track js-icts-solutions-slider',
+                                            key: 'track'
+                                        },
+                                        el(InnerBlocks.Content)
+                                    ),
+                                    el('div', {
+                                        key: 'indicators',
+                                        className:
+                                            'icts-solutions-slider__indicators js-icts-solutions-slider-indicators',
+                                        role: 'tablist',
+                                        'aria-label': 'Solutions slider pagination'
+                                    })
+                                ]
+                            )
+                        ]
+                    );
+                }
+            }
+        ]
     });
 })(window.wp);
