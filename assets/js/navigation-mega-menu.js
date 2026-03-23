@@ -3,8 +3,8 @@
     // Update when debugging version/caching issues.
     window.__ICTS_NAV_MEGA_MENU_VERSION = '2026-02-12-back-debug-1';
 
-    var desktopQuery = window.matchMedia('(min-width: 860px)');
-    var mobileQuery = window.matchMedia('(max-width: 859px)');
+    var desktopQuery = window.matchMedia('(min-width: 1094px)');
+    var mobileQuery = window.matchMedia('(max-width: 1093px)');
     var DESKTOP_CLOSE_MS = 1000;
     var DESKTOP_FLYOUT_MS = 320;
     var MOBILE_SLIDE_MS = 280;
@@ -38,6 +38,85 @@
 
     function getPanel(item) {
         return item.querySelector(':scope > .wp-block-navigation__submenu-container');
+    }
+
+    function isCompanySelectedContext() {
+        var body = document.body;
+        if (!body) {
+            return false;
+        }
+
+        var configuredContexts = Array.isArray(window.ictsNavSelectedContexts)
+            ? window.ictsNavSelectedContexts
+            : ['single-post', 'post-type-archive-team-member', 'single-team-member'];
+
+        return configuredContexts.some(function (className) {
+            return typeof className === 'string' && className && body.classList.contains(className);
+        });
+    }
+
+    function applyCompanySelectedState(nav) {
+        var topLevelItems = nav.querySelectorAll(
+            '.wp-block-navigation__container > .wp-block-navigation-item'
+        );
+
+        topLevelItems.forEach(function (item) {
+            item.classList.remove('is-icts-company-selected');
+        });
+
+        if (!isCompanySelectedContext()) {
+            return;
+        }
+
+        topLevelItems.forEach(function (item) {
+            if (item.classList.contains('icts-nav-section-company')) {
+                item.classList.add('is-icts-company-selected');
+            }
+        });
+    }
+
+    function syncMobileDrawerLanguage(nav) {
+        if (!nav) {
+            return;
+        }
+
+        var headerRow = nav.closest('.icts-site-header__row');
+        if (!headerRow) {
+            return;
+        }
+
+        var language = headerRow.querySelector('.icts-site-header__language');
+        if (!language) {
+            return;
+        }
+
+        if (!language._ictsOriginalParent) {
+            language._ictsOriginalParent = language.parentNode;
+            language._ictsOriginalNextSibling = language.nextSibling;
+        }
+
+        var isSmallViewport = window.matchMedia('(max-width: 480px)').matches;
+        if (!isSmallViewport) {
+            if (
+                language._ictsOriginalParent &&
+                language.parentNode !== language._ictsOriginalParent
+            ) {
+                language._ictsOriginalParent.insertBefore(
+                    language,
+                    language._ictsOriginalNextSibling
+                );
+            }
+            return;
+        }
+
+        var drawerContent = nav.querySelector(
+            '.wp-block-navigation__responsive-container .wp-block-navigation__responsive-container-content'
+        );
+        if (!drawerContent || language.parentNode === drawerContent) {
+            return;
+        }
+
+        drawerContent.appendChild(language);
     }
 
     function setMegaTop(nav) {
@@ -128,9 +207,10 @@
             return;
         }
 
+        var firstParentItem = parentPanel.querySelector(':scope > .wp-block-navigation-item');
         var itemRect = item.getBoundingClientRect();
-        var parentRect = parentPanel.getBoundingClientRect();
-        var offset = parentRect.top - itemRect.top;
+        var anchorRect = firstParentItem ? firstParentItem.getBoundingClientRect() : parentPanel.getBoundingClientRect();
+        var offset = anchorRect.top - itemRect.top;
         panel.style.setProperty('--icts-flyout-top-offset', Math.round(offset) + 'px');
     }
 
@@ -692,6 +772,8 @@
                             item.classList.remove('is-icts-mobile-open');
                         });
                 }
+
+                syncMobileDrawerLanguage(nav);
             });
 
             observer.observe(container, {
@@ -715,6 +797,8 @@
         nav.dataset.ictsMegaInit = 'true';
         var items = getTopLevelItems(nav);
         nav.classList.add('icts-nav-enhanced');
+        applyCompanySelectedState(nav);
+        syncMobileDrawerLanguage(nav);
         setMegaTop(nav);
         prepareMobilePanels(nav);
         watchResponsiveContainers(nav);
@@ -981,6 +1065,8 @@
 
         var setPositions = function () {
             navBlocks.forEach(function (nav) {
+                applyCompanySelectedState(nav);
+                syncMobileDrawerLanguage(nav);
                 setMegaTop(nav);
                 refreshDesktopFlyoutOffsets(nav);
                 if (!desktopQuery.matches) {

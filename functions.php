@@ -357,6 +357,11 @@ function setup() {
  */
 function enqueue_style_sheet() {
 	$handle = 'icts-europe';
+	$company_selected_contexts = [
+		'single-post',
+		'post-type-archive-team-member',
+		'single-team-member',
+	];
 	wp_enqueue_style( $handle, get_stylesheet_uri(), array(), wp_get_theme()->get( 'Version' ) );
 	wp_enqueue_style(
 		'icts-reveal-utility',
@@ -377,6 +382,11 @@ function enqueue_style_sheet() {
 		array(),
 		wp_get_theme()->get( 'Version' ),
 		true
+	);
+	wp_add_inline_script(
+		'icts-navigation-mega-menu',
+		'window.ictsNavSelectedContexts = ' . wp_json_encode( $company_selected_contexts ) . ';',
+		'before'
 	);
 	wp_enqueue_script(
 		'icts-header-search-modal',
@@ -1219,7 +1229,10 @@ add_action( 'rest_api_init', __NAMESPACE__ . '\register_post_archive_filters_res
  * Enqueue post archive filters/search assets and pass runtime config.
  */
 function enqueue_post_archive_filters_assets() {
-	if ( ! is_post_archive_filters_context() ) {
+	$is_archive_context = is_post_archive_filters_context();
+	$is_search_context  = \is_search();
+
+	if ( ! $is_archive_context && ! $is_search_context ) {
 		return;
 	}
 
@@ -1238,6 +1251,10 @@ function enqueue_post_archive_filters_assets() {
 		[],
 		\file_exists( $style_abs ) ? (string) \filemtime( $style_abs ) : $theme_ver
 	);
+
+	if ( ! $is_archive_context ) {
+		return;
+	}
 
 	\wp_enqueue_script(
 		'icts-post-archive-filters',
@@ -2831,6 +2848,87 @@ add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_
 
     return $args;
 }, 10, 2 );
+
+/**
+ * Exclude FAQ CPT entries from front-end search results.
+ *
+ * Keep all other searchable types intact so pages/posts matching FAQ terms
+ * can still rank in search.
+ *
+ * @param \WP_Query $query Query instance.
+ * @return void
+ */
+function exclude_faq_cpt_from_search_results( $query ) {
+	if ( ! ( $query instanceof \WP_Query ) ) {
+		return;
+	}
+
+	if ( \is_admin() || ! $query->is_main_query() || ! $query->is_search() ) {
+		return;
+	}
+
+	$post_types = $query->get( 'post_type' );
+
+	if ( empty( $post_types ) || 'any' === $post_types ) {
+		$post_types = \get_post_types(
+			[
+				'exclude_from_search' => false,
+			]
+		);
+	}
+
+	if ( \is_string( $post_types ) ) {
+		$post_types = [ $post_types ];
+	}
+
+	if ( ! \is_array( $post_types ) ) {
+		return;
+	}
+
+	$post_types = \array_map( 'sanitize_key', $post_types );
+	$post_types = \array_values(
+		\array_filter(
+			$post_types,
+			static function ( $post_type ) {
+				return 'faq' !== $post_type;
+			}
+		)
+	);
+
+	if ( empty( $post_types ) ) {
+		$post_types = [ 'post', 'page' ];
+	}
+
+	$query->set( 'post_type', $post_types );
+}
+\add_action( 'pre_get_posts', __NAMESPACE__ . '\exclude_faq_cpt_from_search_results' );
+
+/**
+ * Apply category filter to front-end search results via icts_cat query var.
+ *
+ * This keeps archive layouts untouched while allowing category-filtered search
+ * results to stay on the search results template.
+ *
+ * @param \WP_Query $query Query instance.
+ * @return void
+ */
+function apply_search_category_filter( $query ) {
+	if ( ! ( $query instanceof \WP_Query ) ) {
+		return;
+	}
+
+	if ( \is_admin() || ! $query->is_main_query() || ! $query->is_search() ) {
+		return;
+	}
+
+	$category_id = isset( $_GET['icts_cat'] ) ? \absint( (int) \wp_unslash( $_GET['icts_cat'] ) ) : 0;
+	if ( $category_id <= 0 ) {
+		return;
+	}
+
+	$query->set( 'cat', $category_id );
+}
+\add_action( 'pre_get_posts', __NAMESPACE__ . '\apply_search_category_filter', 11 );
 
 /**
  * Admin: Team Member list – show a small portrait next to the title.

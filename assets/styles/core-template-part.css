@@ -311,7 +311,7 @@ body.rtl .icts-site-header__language .wp-block-polylang-language-switcher select
 	color: var(--wp--preset--color--brand-primary);
 }
 
-@media (min-width: 860px) {
+@media (min-width: 1094px) {
 	.icts-site-header__nav {
 		--icts-header-nav-gap: clamp(1.25rem, 2.6vw, 3rem);
 	}
@@ -324,9 +324,50 @@ body.rtl .icts-site-header__language .wp-block-polylang-language-switcher select
 		margin: 0;
 	}
 
-	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-submenu__toggle {
 		padding-block: 6px;
 		font-size: var(--wp--preset--font-size--button);
+		background-image: linear-gradient(currentColor, currentColor);
+		background-repeat: no-repeat;
+		background-position: 0 100%;
+		background-size: 0 2px;
+	}
+
+	@keyframes icts-nav-selected-underline-in {
+		from {
+			background-size: 0 2px;
+		}
+
+		to {
+			background-size: 100% 2px;
+		}
+	}
+
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-menu-item > .wp-block-navigation-submenu__toggle,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-menu-ancestor > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-menu-ancestor > .wp-block-navigation-submenu__toggle,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-menu-parent > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-menu-parent > .wp-block-navigation-submenu__toggle,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-page-parent > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-page-parent > .wp-block-navigation-submenu__toggle,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-page-ancestor > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current-page-ancestor > .wp-block-navigation-submenu__toggle,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current_page_parent > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current_page_parent > .wp-block-navigation-submenu__toggle,
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current_page_ancestor > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.current_page_ancestor > .wp-block-navigation-submenu__toggle {
+		color: var(--wp--preset--color--brand-primary-hover);
+		background-size: 100% 2px;
+		animation: icts-nav-selected-underline-in .75s ease forwards;
+	}
+
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.is-icts-company-selected > .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav .wp-block-navigation__container > .wp-block-navigation-item.is-icts-company-selected > .wp-block-navigation-submenu__toggle {
+		color: var(--wp--preset--color--brand-primary-hover);
+		background-size: 100% 2px;
+		animation: icts-nav-selected-underline-in .75s ease forwards;
 	}
 
 	.icts-site-header .wp-block-navigation + .wp-block-buttons {
@@ -383,7 +424,59 @@ body.rtl .icts-site-header__language .wp-block-polylang-language-switcher select
 
 }
 
-@media (max-width: 859px) {
+@media (max-width: 1093px) {
+	.icts-site-header__row {
+		display: flex !important;
+		flex-wrap: nowrap !important;
+		align-items: center;
+		justify-content: flex-start !important;
+		gap: 12px;
+	}
+
+	.icts-site-header__row > .wp-block-site-logo {
+		order: 1;
+		margin-inline-end: auto;
+		flex: 0 0 auto;
+	}
+
+	.icts-site-header__tools {
+		order: 2;
+		display: inline-flex !important;
+		align-items: center;
+		gap: 12px;
+		margin: 0;
+		flex: 0 0 auto;
+	}
+
+	.icts-site-header__language {
+		order: 1;
+		margin-inline-start: 0;
+		padding-inline-start: 0;
+		border-inline-start: 0;
+	}
+
+	.icts-site-header__search-wrap {
+		order: 2;
+		padding-inline-start: 12px;
+		border-inline-start: 0;
+	}
+
+	.icts-site-header__nav {
+		order: 3;
+		flex: 0 0 auto !important;
+		min-inline-size: auto;
+		inline-size: auto !important;
+		width: auto !important;
+		max-inline-size: max-content;
+		margin: 0 !important;
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.icts-site-header__nav .wp-block-navigation__responsive-container-open:not(.always-shown) {
+		margin: 0;
+	}
+
 	.icts-site-header__search-wrap,
 	.icts-site-header__search-wrap .wp-block-button {
 		display: flex;
@@ -397,6 +490,38 @@ body.rtl .icts-site-header__language .wp-block-polylang-language-switcher select
 		line-height: 1.2;
 		padding: 0;
 		padding-inline-end: 18px;
+	}
+}
+
+@media (max-width: 430px) {
+	.icts-site-header .wp-block-site-logo img,
+	.icts-site-header .wp-block-site-logo .custom-logo {
+		inline-size: 112px;
+	}
+
+	.icts-site-header__tools {
+		gap: 8px;
+	}
+
+	.icts-site-header__search-wrap {
+		padding-inline-start: 8px;
+	}
+
+	.icts-site-header__search-toggle .wp-block-button__link {
+		padding-inline-end: 10px;
+	}
+}
+
+@media (max-width: 480px) {
+	.icts-site-header__search-wrap,
+	.icts-site-header__search-wrap .wp-block-button,
+	.icts-site-header__search-toggle,
+	.icts-site-header__search-toggle .wp-block-button__link {
+		display: none !important;
+	}
+
+	.icts-site-header__language {
+		display: none !important;
 	}
 }
 
