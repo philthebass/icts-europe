@@ -321,6 +321,7 @@ require_once __DIR__ . '/inc/blocks.php';
 // Editor-only assets.
 \add_action( 'enqueue_block_editor_assets', function () {
 	$counter_band_limit_script_path = get_template_directory() . '/assets/js/counter-band-editor-limit.js';
+	$page_wires_script_path         = get_template_directory() . '/assets/js/page-wires.js';
 	\wp_enqueue_script(
 		'icts-counter-band-editor-limit',
 		get_template_directory_uri() . '/assets/js/counter-band-editor-limit.js',
@@ -334,6 +335,30 @@ require_once __DIR__ . '/inc/blocks.php';
 		'wp-blocks',
 		'window.pllEditorCurrentLanguageSlug = window.pllEditorCurrentLanguageSlug || "";',
 		'before'
+	);
+
+	\wp_enqueue_script(
+		'icts-page-wires',
+		get_template_directory_uri() . '/assets/js/page-wires.js',
+		[],
+		\file_exists( $page_wires_script_path ) ? (string) \filemtime( $page_wires_script_path ) : \wp_get_theme()->get( 'Version' ),
+		true
+	);
+} );
+
+\add_action( 'enqueue_block_assets', function () {
+	if ( ! \is_admin() ) {
+		return;
+	}
+
+	$page_wires_script_path = get_template_directory() . '/assets/js/page-wires.js';
+
+	\wp_enqueue_script(
+		'icts-page-wires',
+		get_template_directory_uri() . '/assets/js/page-wires.js',
+		[],
+		\file_exists( $page_wires_script_path ) ? (string) \filemtime( $page_wires_script_path ) : \wp_get_theme()->get( 'Version' ),
+		true
 	);
 } );
 
@@ -398,6 +423,13 @@ function enqueue_style_sheet() {
 	wp_enqueue_script(
 		'icts-header-language-switcher',
 		get_template_directory_uri() . '/assets/js/header-language-switcher.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
+	wp_enqueue_script(
+		'icts-page-wires',
+		get_template_directory_uri() . '/assets/js/page-wires.js',
 		array(),
 		wp_get_theme()->get( 'Version' ),
 		true
