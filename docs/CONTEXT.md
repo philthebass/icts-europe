@@ -79,6 +79,20 @@ Editor usage (reveal utility)
   - Attribute (parent): `data-icts-reveal-item-selector=".wp-block-group > .wp-block-column"`
   - Attribute (child): `data-icts-reveal-skip`
 
+Editor usage (feature card grid)
+- For reusable feature card sections built with the core Grid block, add a variant class to the parent Grid block under Advanced → Additional CSS class(es).
+- Use `feature-card-grid--industries` for the wider industry card layout: `3` columns from `960px` to `1759px`, `2` columns from `617px` to `959px`, and `1` column at `616px` and below.
+- Use `feature-card-grid--usp` for 4-up USP/benefit card layouts: `4` columns from `960px` to `1759px`, `2` columns from `617px` to `959px`, and `1` column at `616px` and below.
+- Keep the Grid block for editor authoring, but treat these variant classes as required when feature-card sections need predictable wrapping behavior.
+- Expected inner classes:
+  - Shared card wrapper: `feature-card`
+  - Shared image figure: `feature-card__image`
+  - Shared content wrapper: `feature-card__content`
+  - Heading text: `feature-card__title`
+  - Body copy: `feature-card__body`
+  - USP icon block only: `feature-card__icon`
+- Current USP SVG icon set is normalized to shared `180x80` artboards in `assets/images/feature-icon-*-normalized.svg`; re-upload those files to WordPress media if the icon sources are replaced.
+
 Performance
 - No bundler required. Vendor JS: Flickity v2.x.
 - Image optimisation planned with ShortPixel Image Optimizer (WebP) when staging is available.

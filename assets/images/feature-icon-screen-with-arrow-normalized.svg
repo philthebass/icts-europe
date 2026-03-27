@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 80" fill="none">
+  <g transform="translate(30 10.5) scale(0.557)"
+>
+    <line x1="28.27" y1="103.09" x2="95.25" y2="103.09" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M117.24 38.86V8.29c0-2.95-2.39-5.34-5.34-5.34H8.29c-2.95 0-5.34 2.39-5.34 5.34v71.01c0 2.95 2.39 5.34 5.34 5.34h103.61c2.95 0 5.34-2.39 5.34-5.34V49.55c0-1.12.91-2.02 2.02-2.02h13.09" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M104.03 50.88v16.75c0 1.63-1.32 2.96-2.96 2.96H20.47c-1.63 0-2.96-1.32-2.96-2.96V19.96c0-1.63 1.32-2.96 2.96-2.96h80.6c1.63 0 2.96 1.32 2.96 2.96v14.57" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M17.5 27.77h83.55c1.63 0 2.96 1.32 2.96 2.96v7.92c0 1.63-1.32 2.96-2.96 2.96H89.27" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="81.41" y1="41.38" x2="47.59" y2="41.6" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="81.41" y1="52.58" x2="47.59" y2="52.8" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="28.71" y1="51.48" x2="36.83" y2="51.48" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="28.71" y1="41.16" x2="36.83" y2="41.16" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M164.36 58.04l14.63-.09c.73 0 1.33.6 1.33 1.33v11.97c0 1.05 1.16 1.69 2.05 1.12l29.48-21.13c.81-.52.82-1.7.01-2.23l-30.02-19.72c-.89-.59-2.08.07-2.06 1.14l.33 15.71c.02.74-.58 1.36-1.33 1.36l-20.3.03" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="126.16" y1="58.04" x2="140.37" y2="58.04" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <circle cx="148.97" cy="51.45" r="9.14" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M72.22 85.14c.72 2.41 2.04 5.78 4.53 9.33 3.02 4.31 6.49 7.05 8.84 8.62" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M50.23 85.14c-.72 2.41-2.04 5.78-4.53 9.33-3.02 4.31-6.49 7.05-8.84 8.62" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 80" fill="none">
+  <g transform="translate(35 16.3) scale(0.45194)">
+    <path d="M155.902 81.72c-10.211 0-7.466 7.576-11.529 11.529-40.34 2.896-80.68 5.792-121.02 8.689-4.204.302-7.935-2.676-8.572-6.843L12.584 80.73c-.492-3.217 1.018-6.378 3.772-8.112 4.508-2.839 7.049-8.137 6.141-13.295-.958-5.447-5.572-9.662-11.086-10.533-3.513-.555-6.138-3.544-6.527-7.08L3.001 24.594c-.504-4.586 2.925-8.664 7.529-8.954L120.922 8.686c3.313-.209 6.509 1.575 7.853 4.61 2.482 5.606 8.348 9.033 13.951 8.146 4.531-.717 8.441-4.184 10.067-8.84 1.061-3.038 3.695-5.249 6.9-5.531l46.488-4.087c4.17-.367 7.93 2.509 8.668 6.63l6.602 36.862" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="25.791" y1="36.263" x2="67.953" y2="32.969" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="31.391" y1="50.757" x2="119.339" y2="45.157" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="36.002" y1="65.909" x2="112.421" y2="60.309" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="42.59" y1="79.743" x2="84.752" y2="76.449" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="162.16" y1="28.687" x2="204.322" y2="25.393" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="164.795" y1="41.863" x2="179.277" y2="40.731" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <line x1="77.506" y1="32.31" x2="119.668" y2="29.017" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M193.885 43.8l-31.18 45.624c-3.306 4.837.158 11.4 6.017 11.4h64.424c5.959 0 9.4-6.763 5.89-11.58L205.792 43.62c-2.965-4.07-9.066-3.978-11.907.18Z" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M203.239 58.25l-1.634 21.081c-.136 1.603-2.502 1.602-2.635 0l-1.634-21.081c-.126-1.63 1.093-3.054 2.723-3.18 1.792-.155 3.333 1.391 3.18 3.18Z" fill="#003565"/>
+    <circle cx="200.205" cy="86.743" r="3.381" fill="none" stroke="#003565" stroke-width="5.903" stroke-miterlimit="10"/>
+    <line x1="143.604" y1="32.53" x2="148.435" y2="71.618" stroke="#003565" stroke-width="5.903" stroke-linecap="round" stroke-miterlimit="10"/>
+  </g>
+</svg>
