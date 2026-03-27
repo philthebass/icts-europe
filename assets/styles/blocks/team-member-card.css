@@ -34,9 +34,37 @@
 	z-index: 1;
 }
 
+.team-member-card__image-button.wp-element-button {
+	position: absolute;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	left: 50%;
+	bottom: clamp(1rem, 3vw, 1.5rem);
+	transform: translate(-50%, 0.75rem);
+	inline-size: calc(100% - (2 * clamp(1rem, 4vw, 1.35rem)));
+	max-inline-size: 16.5rem;
+	text-align: center;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity 0.25s ease,
+		transform 0.25s ease,
+		visibility 0.25s ease;
+	pointer-events: none;
+	z-index: 2;
+}
+
 .team-member-card__image-link:hover::after,
 .team-member-card__image-link:focus-visible::after {
 	opacity: 0.18;
+}
+
+.team-member-card__image-link:hover .team-member-card__image-button,
+.team-member-card__image-link:focus-visible .team-member-card__image-button {
+	opacity: 1;
+	visibility: visible;
+	transform: translate(-50%, 0);
 }
 
 .team-member-card__image,
@@ -120,7 +148,11 @@
 .team-member-card__button.wp-element-button {
 	margin-top: auto;
 	inline-size: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	text-align: center;
+	display: none;
 }
 
 .editor-styles-wrapper .team-member-card__name a,
@@ -215,7 +247,11 @@
 .block-editor-page .team-member-card__button.wp-element-button {
 	margin-top: auto;
 	inline-size: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	text-align: center;
+	display: none;
 }
 
 .editor-styles-wrapper .team-member-card__name a:visited,
@@ -242,6 +278,18 @@
 }
 
 @media (max-width: 1024px) {
+	.team-member-card__image-button.wp-element-button,
+	.editor-styles-wrapper .team-member-card__image-button.wp-element-button,
+	.block-editor-page .team-member-card__image-button.wp-element-button {
+		display: none;
+	}
+
+	.team-member-card__button.wp-element-button,
+	.editor-styles-wrapper .team-member-card__button.wp-element-button,
+	.block-editor-page .team-member-card__button.wp-element-button {
+		display: inline-flex;
+	}
+
 	.post-type-archive-team-member .wp-block-post-template.is-layout-grid {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
@@ -249,7 +297,8 @@
 
 @media (prefers-reduced-motion: reduce) {
 	.team-member-card__image,
-	.team-member-card__image-link img {
+	.team-member-card__image-link img,
+	.team-member-card__image-button.wp-element-button {
 		transition: none;
 	}
 }

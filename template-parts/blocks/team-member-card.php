@@ -72,6 +72,9 @@ $portrait = get_the_post_thumbnail(
     <?php if ( $portrait ) : ?>
         <a href="<?php echo esc_url( $permalink ); ?>" class="team-member-card__image-link">
             <?php echo $portrait; ?>
+            <span class="team-member-card__image-button wp-element-button" aria-hidden="true">
+                <?php echo esc_html( \ICTS_Europe\get_team_member_card_view_profile_label() ); ?>
+            </span>
         </a>
     <?php endif; ?>
 

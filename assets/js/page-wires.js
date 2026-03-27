@@ -1,12 +1,13 @@
 ( function () {
 	const SVG_NS = 'http://www.w3.org/2000/svg';
-	const BASE_WIDTH = 100.63;
-	const BASE_HEIGHT = 537.06;
 	const DISPLAY_WIDTH = 210;
 	const STROKE_WIDTH = 5;
-	const TOP_SHIFT = 42;
 	const initializedDocuments = new WeakSet();
 	const observedContainers = new WeakSet();
+	const allowEditorFallback = !! (
+		window.ictsPageWiresConfig &&
+		window.ictsPageWiresConfig.allowEditorFallback
+	);
 
 	const PATHS = [
 		{
@@ -68,6 +69,59 @@
 		},
 	];
 
+	const PATH_BOUNDS = PATHS.reduce(
+		( bounds, pathConfig ) => pathConfig.points.reduce(
+			( currentBounds, segment ) => {
+				const coords = segment.slice( 1 );
+
+				for ( let index = 0; index < coords.length; index += 2 ) {
+					const x = coords[ index ];
+					const y = coords[ index + 1 ];
+
+					currentBounds.minX = Math.min( currentBounds.minX, x );
+					currentBounds.maxX = Math.max( currentBounds.maxX, x );
+					currentBounds.minY = Math.min( currentBounds.minY, y );
+					currentBounds.maxY = Math.max( currentBounds.maxY, y );
+				}
+
+				return currentBounds;
+			},
+			bounds
+		),
+		{
+			minX: Infinity,
+			maxX: -Infinity,
+			minY: Infinity,
+			maxY: -Infinity,
+		}
+	);
+
+	function getBounds( points ) {
+		return points.reduce(
+			( bounds, segment ) => {
+				const coords = segment.slice( 1 );
+
+				for ( let index = 0; index < coords.length; index += 2 ) {
+					const x = coords[ index ];
+					const y = coords[ index + 1 ];
+
+					bounds.minX = Math.min( bounds.minX, x );
+					bounds.maxX = Math.max( bounds.maxX, x );
+					bounds.minY = Math.min( bounds.minY, y );
+					bounds.maxY = Math.max( bounds.maxY, y );
+				}
+
+				return bounds;
+			},
+			{
+				minX: Infinity,
+				maxX: -Infinity,
+				minY: Infinity,
+				maxY: -Infinity,
+			}
+		);
+	}
+
 	function getEditorFallbackContainers( doc ) {
 		const selectors = [
 			'.editor-styles-wrapper .is-root-container',
@@ -94,10 +148,10 @@
 
 				const scaled = coords.map( ( value, index ) => {
 					if ( index % 2 === 0 ) {
-						return ( value * xScale ).toFixed( 3 ).replace( /\.?0+$/, '' );
+						return ( ( value - PATH_BOUNDS.minX ) * xScale ).toFixed( 3 ).replace( /\.?0+$/, '' );
 					}
 
-					return ( ( value - TOP_SHIFT ) * yScale ).toFixed( 3 ).replace( /\.?0+$/, '' );
+					return ( ( value - yScale.minY ) * yScale.scale ).toFixed( 3 ).replace( /\.?0+$/, '' );
 				} );
 
 				return command + scaled.join( ',' );
@@ -139,12 +193,19 @@
 		const svg = doc.createElementNS( SVG_NS, 'svg' );
 		svg.setAttribute( 'viewBox', `0 0 ${ DISPLAY_WIDTH } ${ height }` );
 		svg.setAttribute( 'preserveAspectRatio', 'none' );
+		svg.setAttribute( 'width', '100%' );
+		svg.setAttribute( 'height', '100%' );
 		svg.setAttribute( 'aria-hidden', 'true' );
+		svg.style.display = 'block';
 
-		const xScale = DISPLAY_WIDTH / BASE_WIDTH;
-		const yScale = height / BASE_HEIGHT;
+		const xScale = DISPLAY_WIDTH / ( PATH_BOUNDS.maxX - PATH_BOUNDS.minX );
 
 		PATHS.forEach( ( pathConfig ) => {
+			const pathBounds = getBounds( pathConfig.points );
+			const yScale = {
+				minY: pathBounds.minY,
+				scale: height / ( pathBounds.maxY - pathBounds.minY ),
+			};
 			const path = doc.createElementNS( SVG_NS, 'path' );
 			path.setAttribute( 'd', scalePath( pathConfig.points, xScale, yScale ) );
 			path.setAttribute( 'stroke', pathConfig.color );
@@ -183,6 +244,10 @@
 
 			if ( explicitContainers.length ) {
 				return explicitContainers;
+			}
+
+			if ( ! allowEditorFallback ) {
+				return [];
 			}
 
 			return getEditorFallbackContainers( doc );
