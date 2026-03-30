@@ -2872,6 +2872,330 @@ function filter_team_member_archive_intro_paragraph( $block_content, $block ) {
 add_filter( 'render_block_core/paragraph', __NAMESPACE__ . '\filter_team_member_archive_intro_paragraph', 10, 2 );
 
 /**
+ * Replace static hero-slide images with responsive attachment markup.
+ *
+ * The native hero slider block stores the attachment ID in block attributes,
+ * but its saved HTML only outputs a raw <img>. Swapping that image here keeps
+ * the existing block structure while restoring srcset/sizes support and lets
+ * the first visible slide opt into high-priority loading.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Full block data.
+ * @return string
+ */
+function filter_hero_slide_image_markup( $block_content, $block ) {
+	static $hero_slide_index = 0;
+
+	if ( empty( $block['blockName'] ) || 'icts-europe/hero-slide' !== $block['blockName'] ) {
+		return $block_content;
+	}
+
+	$attrs    = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : [];
+	$media_id = isset( $attrs['mediaId'] ) ? (int) $attrs['mediaId'] : 0;
+
+	if ( ! $media_id ) {
+		++$hero_slide_index;
+		return $block_content;
+	}
+
+	$focal_point = isset( $attrs['focalPoint'] ) && is_array( $attrs['focalPoint'] ) ? $attrs['focalPoint'] : [];
+	$x           = isset( $focal_point['x'] ) ? (float) $focal_point['x'] : 0.5;
+	$y           = isset( $focal_point['y'] ) ? (float) $focal_point['y'] : 0.5;
+	$object_pos  = sprintf( '%.2f%% %.2f%%', $x * 100, $y * 100 );
+	$is_first    = 0 === $hero_slide_index;
+
+	$image_html = \wp_get_attachment_image(
+		$media_id,
+		'full',
+		false,
+		[
+			'alt'           => '',
+			'class'         => 'icts-hero-slider__image',
+			'decoding'      => $is_first ? 'sync' : 'async',
+			'fetchpriority' => $is_first ? 'high' : 'auto',
+			'loading'       => $is_first ? 'eager' : 'lazy',
+			'sizes'         => '100vw',
+			'style'         => 'object-position:' . $object_pos . ';',
+		]
+	);
+
+	++$hero_slide_index;
+
+	if ( ! is_string( $image_html ) || '' === $image_html ) {
+		return $block_content;
+	}
+
+	$updated_content = preg_replace(
+		'/(<div class="icts-hero-slider__media">\s*)(<img\b[^>]*>)(\s*<\/div>)/i',
+		'$1' . $image_html . '$3',
+		$block_content,
+		1
+	);
+
+	return is_string( $updated_content ) ? $updated_content : $block_content;
+}
+add_filter( 'render_block', __NAMESPACE__ . '\filter_hero_slide_image_markup', 20, 2 );
+
+/**
+ * Downscale newly uploaded oversized images using WordPress core's big-image handling.
+ *
+ * Lower the default threshold from 2560px so editors do not introduce very large
+ * originals that hurt front-end performance.
+ *
+ * @param int    $threshold     Current threshold in pixels.
+ * @param array  $imagesize     Uploaded image dimensions.
+ * @param string $file          Uploaded file path.
+ * @param int    $attachment_id Attachment post ID.
+ * @return int
+ */
+function set_big_image_size_threshold( $threshold, $imagesize, $file, $attachment_id ) {
+	return 1920;
+}
+add_filter( 'big_image_size_threshold', __NAMESPACE__ . '\set_big_image_size_threshold', 10, 4 );
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	/**
+	 * Bulk-resize oversized uploaded images and refresh attachment metadata.
+	 */
+	class Resize_Oversized_Images_Command {
+		/**
+		 * Resize image attachments whose original file width exceeds the limit.
+		 *
+		 * ## OPTIONS
+		 *
+		 * [--max-width=<pixels>]
+		 * : Maximum allowed original width. Defaults to 1920.
+		 *
+		 * [--mime-types=<types>]
+		 * : Comma-separated MIME types to process. Defaults to image/jpeg,image/png,image/webp.
+		 *
+		 * [--dry-run]
+		 * : Report matches without writing files.
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp icts media-resize --dry-run
+		 *     wp icts media-resize --max-width=1920
+		 *
+		 * @param array $args       Positional args.
+		 * @param array $assoc_args Associative args.
+		 */
+		public function __invoke( $args, $assoc_args ) {
+			$max_width  = (int) \WP_CLI\Utils\get_flag_value( $assoc_args, 'max-width', 1920 );
+			$dry_run    = (bool) \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run', false );
+			$mime_types = array_filter(
+				array_map(
+					'trim',
+					explode(
+						',',
+						(string) \WP_CLI\Utils\get_flag_value(
+							$assoc_args,
+							'mime-types',
+							'image/jpeg,image/png,image/webp'
+						)
+					)
+				)
+			);
+
+			if ( $max_width < 1 ) {
+				\WP_CLI::error( 'The --max-width value must be greater than 0.' );
+			}
+
+			$upload_dir = \wp_get_upload_dir();
+
+			if ( empty( $upload_dir['basedir'] ) || ! is_dir( $upload_dir['basedir'] ) ) {
+				\WP_CLI::error( 'Unable to determine the uploads directory.' );
+			}
+
+			$attachments = \get_posts(
+				[
+					'post_type'              => 'attachment',
+					'post_status'            => 'inherit',
+					'posts_per_page'         => -1,
+					'fields'                 => 'ids',
+					'orderby'                => 'ID',
+					'order'                  => 'ASC',
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				]
+			);
+
+			if ( empty( $attachments ) ) {
+				\WP_CLI::success( 'No attachments found.' );
+				return;
+			}
+
+			$files = [];
+
+			foreach ( $attachments as $attachment_id ) {
+				$mime_type = (string) \get_post_mime_type( $attachment_id );
+
+				if ( $mime_types && ! in_array( $mime_type, $mime_types, true ) ) {
+					continue;
+				}
+
+				$relative_path = (string) \get_post_meta( $attachment_id, '_wp_attached_file', true );
+
+				if ( '' === $relative_path ) {
+					continue;
+				}
+
+				$absolute_path = \path_join( $upload_dir['basedir'], $relative_path );
+
+				if ( ! isset( $files[ $absolute_path ] ) ) {
+					$files[ $absolute_path ] = [
+						'ids'           => [],
+						'relative_path' => $relative_path,
+						'mime_type'     => $mime_type,
+					];
+				}
+
+				$files[ $absolute_path ]['ids'][] = (int) $attachment_id;
+			}
+
+			$scanned       = 0;
+			$resized       = 0;
+			$skipped       = 0;
+			$missing       = 0;
+			$errors        = 0;
+			$metadata_runs = 0;
+
+			foreach ( $files as $absolute_path => $file_data ) {
+				++$scanned;
+
+				if ( ! file_exists( $absolute_path ) ) {
+					++$missing;
+					\WP_CLI::warning( sprintf( 'Missing file: %s', $file_data['relative_path'] ) );
+					continue;
+				}
+
+				$image_size = @getimagesize( $absolute_path );
+
+				if ( ! is_array( $image_size ) || empty( $image_size[0] ) || empty( $image_size[1] ) ) {
+					++$errors;
+					\WP_CLI::warning( sprintf( 'Unable to inspect image: %s', $file_data['relative_path'] ) );
+					continue;
+				}
+
+				$current_width  = (int) $image_size[0];
+				$current_height = (int) $image_size[1];
+
+				if ( $current_width <= $max_width ) {
+					++$skipped;
+					continue;
+				}
+
+				if ( $dry_run ) {
+					\WP_CLI::log(
+						sprintf(
+							'Would resize %s from %dx%d to max width %d (%d attachment record%s)',
+							$file_data['relative_path'],
+							$current_width,
+							$current_height,
+							$max_width,
+							count( $file_data['ids'] ),
+							1 === count( $file_data['ids'] ) ? '' : 's'
+						)
+					);
+					++$resized;
+					continue;
+				}
+
+				$editor = \wp_get_image_editor( $absolute_path );
+
+				if ( \is_wp_error( $editor ) ) {
+					++$errors;
+					\WP_CLI::warning(
+						sprintf(
+							'Unable to load editor for %s: %s',
+							$file_data['relative_path'],
+							$editor->get_error_message()
+						)
+					);
+					continue;
+				}
+
+				$resize_result = $editor->resize( $max_width, null, false );
+
+				if ( \is_wp_error( $resize_result ) ) {
+					++$errors;
+					\WP_CLI::warning(
+						sprintf(
+							'Unable to resize %s: %s',
+							$file_data['relative_path'],
+							$resize_result->get_error_message()
+						)
+					);
+					continue;
+				}
+
+				$save_result = $editor->save( $absolute_path );
+
+				if ( \is_wp_error( $save_result ) ) {
+					++$errors;
+					\WP_CLI::warning(
+						sprintf(
+							'Unable to save %s: %s',
+							$file_data['relative_path'],
+							$save_result->get_error_message()
+						)
+					);
+					continue;
+				}
+
+				++$resized;
+				\WP_CLI::log(
+					sprintf(
+						'Resized %s from %dx%d to %dx%d',
+						$file_data['relative_path'],
+						$current_width,
+						$current_height,
+						(int) $save_result['width'],
+						(int) $save_result['height']
+					)
+				);
+
+				foreach ( $file_data['ids'] as $attachment_id ) {
+					$metadata = \wp_generate_attachment_metadata( $attachment_id, $absolute_path );
+
+					if ( \is_wp_error( $metadata ) ) {
+						++$errors;
+						\WP_CLI::warning(
+							sprintf(
+								'Unable to regenerate metadata for attachment %d: %s',
+								$attachment_id,
+								$metadata->get_error_message()
+							)
+						);
+						continue;
+					}
+
+					if ( ! empty( $metadata ) ) {
+						\wp_update_attachment_metadata( $attachment_id, $metadata );
+						++$metadata_runs;
+					}
+				}
+			}
+
+			\WP_CLI::success(
+				sprintf(
+					'Scanned %d unique files. Resized %d. Skipped %d. Missing %d. Metadata refreshed %d time%s. Errors %d.',
+					$scanned,
+					$resized,
+					$skipped,
+					$missing,
+					$metadata_runs,
+					1 === $metadata_runs ? '' : 's',
+					$errors
+				)
+			);
+		}
+	}
+
+	\WP_CLI::add_command( 'icts media-resize', __NAMESPACE__ . '\Resize_Oversized_Images_Command' );
+}
+
+/**
  * Translate Yoast breadcrumb item labels through Polylang string translations.
  *
  * @param array $links Breadcrumb link items.

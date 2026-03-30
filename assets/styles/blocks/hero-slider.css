@@ -127,13 +127,12 @@ body.rtl .icts-hero-slider__overlay,
     margin-inline: auto;
     /* Extra gutter to match XD spacing */
     padding-inline: var(--icts-hero-content-padding-inline);
-    padding-block:
-        var(--icts-hero-content-padding-top)
-        calc(
-            var(--icts-hero-indicators-offset) +
-            var(--icts-hero-indicator-height) +
-            var(--icts-hero-content-gap)
-        );
+    padding-top: var(--icts-hero-content-padding-top);
+    padding-bottom: calc(
+        var(--icts-hero-indicators-offset) +
+        var(--icts-hero-indicator-height) +
+        var(--icts-hero-content-gap)
+    );
 
     display: flex;
     flex-direction: column;

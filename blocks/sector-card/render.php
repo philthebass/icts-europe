@@ -5,6 +5,7 @@
  * @package icts-europe
  */
 
+$image_id     = isset( $attributes['imageId'] ) ? (int) $attributes['imageId'] : 0;
 $image_url    = isset( $attributes['imageUrl'] ) ? (string) $attributes['imageUrl'] : '';
 $image_alt    = isset( $attributes['imageAlt'] ) ? (string) $attributes['imageAlt'] : '';
 $heading      = isset( $attributes['heading'] ) ? (string) $attributes['heading'] : '';
@@ -89,12 +90,37 @@ if ( '' !== $modal_bg_slug ) {
 		$modal_panel_style = 'background:' . $sanitized_modal_bg . ';';
 	}
 }
+
+$image_html = '';
+
+if ( $image_id ) {
+	$image_html = wp_get_attachment_image(
+		$image_id,
+		'large',
+		false,
+		[
+			'class'    => 'icts-sector-card__image',
+			'alt'      => $image_alt,
+			'loading'  => 'lazy',
+			'decoding' => 'async',
+			'sizes'    => '(max-width: 781px) 100vw, (max-width: 1200px) 50vw, 33vw',
+		]
+	);
+}
+
+if ( '' === $image_html && $image_url ) {
+	$image_html = sprintf(
+		'<img src="%1$s" class="icts-sector-card__image" alt="%2$s" loading="lazy" decoding="async" />',
+		esc_url( $image_url ),
+		esc_attr( $image_alt )
+	);
+}
 ?>
 <article <?php echo get_block_wrapper_attributes( [ 'class' => 'icts-sector-card' ] ); ?>>
 	<div class="icts-sector-card__card">
-		<?php if ( $image_url ) : ?>
+		<?php if ( '' !== $image_html ) : ?>
 			<figure class="icts-sector-card__media">
-				<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $image_alt ); ?>" loading="lazy" decoding="async" />
+				<?php echo $image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</figure>
 		<?php endif; ?>
 
