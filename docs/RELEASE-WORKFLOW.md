@@ -25,9 +25,26 @@
 9. Deploy that exact tagged theme version to the test server.
 10. Smoke-test the affected pages, templates, and editor views on the test server.
 
+## Local helper commands
+
+- Easiest option for the next release:
+  - `sh scripts/release-theme.sh 1.0.2 2026-04-01`
+- This updates `style.css` and inserts the next release template into `CHANGELOG.md`.
+- After filling in the changelog and committing, build the deployable zip:
+  - `sh scripts/build-theme-package.sh`
+  - `sh scripts/build-theme-package.sh v1.0.2`
+- If you want the lower-level command, you can still run:
+  - `php scripts/prepare-release.php 1.0.2 2026-04-01`
+- Output package location:
+  - `dist/icts-europe-v1.0.2.zip`
+
+The release helper updates `style.css` and inserts a new changelog template near the top of `CHANGELOG.md`. Fill in the blank bullets before committing.
+Build the zip after committing, and preferably after tagging, so the package matches the release exactly.
+
 ## Deployment guidance
 
 - Preferred: deploy the theme from the tagged Git commit or a zip built from that tag.
+- The generated zip excludes repo-only files such as `docs/`, `scripts/`, `AGENTS.md`, and other local development metadata via `.gitattributes`.
 - Replace theme files only. Do not overwrite the database as part of a normal theme deploy.
 - Clear caches after deployment if the platform or plugins cache assets/templates.
 
