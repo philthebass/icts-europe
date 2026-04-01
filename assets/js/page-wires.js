@@ -138,6 +138,64 @@
 			) );
 	}
 
+	function hasDisabledMarker( doc ) {
+		return !! doc.querySelector( '.page-wires-bg--disabled' );
+	}
+
+	function getEditedTemplateSlug( doc ) {
+		try {
+			const view = doc.defaultView || window;
+			const wpData = view.wp && view.wp.data ? view.wp.data : window.wp && window.wp.data ? window.wp.data : null;
+
+			if ( ! wpData || typeof wpData.select !== 'function' ) {
+				return '';
+			}
+
+			const editorStore = wpData.select( 'core/editor' );
+
+			if ( ! editorStore || typeof editorStore.getEditedPostAttribute !== 'function' ) {
+				return '';
+			}
+
+			return editorStore.getEditedPostAttribute( 'template' ) || '';
+		} catch ( error ) {
+			return '';
+		}
+	}
+
+	function getEditorStore( doc ) {
+		try {
+			const view = doc.defaultView || window;
+			const wpData = view.wp && view.wp.data ? view.wp.data : window.wp && window.wp.data ? window.wp.data : null;
+
+			if ( ! wpData || typeof wpData.select !== 'function' ) {
+				return null;
+			}
+
+			return wpData.select( 'core/editor' );
+		} catch ( error ) {
+			return null;
+		}
+	}
+
+	function getEditedPostType( doc ) {
+		const editorStore = getEditorStore( doc );
+
+		if ( ! editorStore || typeof editorStore.getCurrentPostType !== 'function' ) {
+			return '';
+		}
+
+		return editorStore.getCurrentPostType() || '';
+	}
+
+	function templateDisablesWires( doc ) {
+		return getEditedTemplateSlug( doc ) === 'page-no-wires';
+	}
+
+	function shouldUseEditorFallback( doc ) {
+		return getEditedPostType( doc ) === 'page';
+	}
+
 	function scalePath( path, xScale, yScale ) {
 		return path
 			.map( ( segment ) => {
@@ -247,6 +305,18 @@
 			}
 
 			if ( ! allowEditorFallback ) {
+				return [];
+			}
+
+			if ( hasDisabledMarker( doc ) ) {
+				return [];
+			}
+
+			if ( templateDisablesWires( doc ) ) {
+				return [];
+			}
+
+			if ( ! shouldUseEditorFallback( doc ) ) {
 				return [];
 			}
 

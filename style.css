@@ -813,8 +813,8 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 
 /* Horizontal Strands Background */
 .section-strands-bg-horizontal {
-	--section-strands-height: clamp(88px, 7.5vw, 132px);
-	--section-strands-width: clamp(720px, 72vw, 1280px);
+	--section-strands-height: clamp(96px, 8vw, 141.2px);
+	--section-strands-width: clamp(1200px, 120vw, 2160px);
 	--section-strands-offset-y: clamp(28px, 2vw, 34px);
 	overflow: visible;
 }
@@ -854,7 +854,7 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 @media (max-width: 781px) {
 	.section-strands-bg-horizontal {
 		--section-strands-height: clamp(76px, 14vw, 112px);
-		--section-strands-width: clamp(460px, 92vw, 840px);
+		--section-strands-width: clamp(760px, 140vw, 1280px);
 		--section-strands-offset-y: clamp(20px, 2.5vw, 24px);
 	}
 }
@@ -862,6 +862,17 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 .section-strands-bg-horizontal > * {
 	position: relative;
 	z-index: 1;
+}
+
+.section-strands-bg-horizontal.wp-block-image > img,
+.section-strands-bg-horizontal.wp-block-image > a,
+.section-strands-bg-horizontal.wp-block-image > a > img {
+	border-radius: inherit;
+}
+
+.section-strands-bg-horizontal.wp-block-image > a {
+	display: block;
+	overflow: hidden;
 }
 
 /* Bubbles Background */

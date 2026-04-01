@@ -18,6 +18,13 @@
 				"page"
 			],
 			"title": "Page (With Sidebar)"
+		},
+		{
+			"name": "page-no-wires",
+			"postTypes": [
+				"page"
+			],
+			"title": "Page No Wires"
 		}
 	],
 	"settings": {
