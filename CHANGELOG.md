@@ -1,11 +1,16 @@
-# Changelog — ICTS Europe Theme
+# Changelog
 
-## 1.0.1 — 2026-02-04
-- Fix: Heading size presets use `h-1..h-6`; update element mappings to match WP variable naming.
-- Add: Font-size presets `x-small` and `large` to satisfy CSS references.
-- Add: Color tokens `base`, `main`, `secondary`, `tertiary`, `border-light`.
-- Fix: Rename brand color slug to `brand-tertiary` (correct spelling).
-- Tidy: Load theme textdomain; standardize main stylesheet handle to `icts-europe`.
-- Tidy: Replace inline `<style>` echo with `wp_add_inline_style`.
-- Docs: Add `AGENTS.md`, `docs/CONTEXT.md`, `docs/DECISIONS.md`, and `TODO.md`.
+All notable theme changes should be recorded in this file.
 
+This project uses a simple release format:
+- Patch release: fixes and small safe updates, for example `1.0.1` -> `1.0.2`
+- Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
+- Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
+
+## 1.0.1 - 2026-04-01
+### Added
+- Introduced a documented release workflow for versioning and test-server deployments.
+
+### Notes
+- GitHub is the source of truth for theme code.
+- The test server is the source of truth for content, translations, and QA.

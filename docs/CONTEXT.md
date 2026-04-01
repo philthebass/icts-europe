@@ -99,6 +99,8 @@ Performance
 
 Deployment
 - Commit to GitHub; Create Block Theme used to sync editor styles to theme.json.
+- Theme releases should be versioned in `style.css`, logged in `CHANGELOG.md`, and deployed to the test server from a tagged Git commit.
+- Test server content is authoritative for editorial work; pull content down to local as needed, but avoid pushing local DBs over active test content.
 
 Open Questions
 - Final brand palette/contrast targets.
