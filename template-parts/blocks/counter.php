@@ -69,9 +69,10 @@ $from_value = ( 'down' === $count_direction ) ? $number : 0;
 $to_value   = ( 'down' === $count_direction ) ? 0 : $number;
 $display_from = number_format( $from_value, 0, '.', ',' );
 
-$aria_value = trim( $prefix . (string) $number . $suffix );
+$aria_value_number = number_format( $to_value, 0, '.', ',' );
+$aria_value        = trim( $prefix . $aria_value_number . $suffix );
 if ( '' === $aria_value ) {
-	$aria_value = (string) $number;
+	$aria_value = $aria_value_number;
 }
 ?>
 

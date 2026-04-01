@@ -340,13 +340,15 @@ function should_enable_page_wires_editor_fallback() {
 \add_action( 'enqueue_block_editor_assets', function () {
 	$counter_band_limit_script_path = get_template_directory() . '/assets/js/counter-band-editor-limit.js';
 	$page_wires_script_path         = get_template_directory() . '/assets/js/page-wires.js';
-	\wp_enqueue_script(
-		'icts-counter-band-editor-limit',
-		get_template_directory_uri() . '/assets/js/counter-band-editor-limit.js',
-		[ 'wp-data', 'wp-dom-ready', 'wp-notices' ],
-		\file_exists( $counter_band_limit_script_path ) ? (string) \filemtime( $counter_band_limit_script_path ) : \wp_get_theme()->get( 'Version' ),
-		true
-	);
+	if ( should_enable_page_wires_editor_fallback() ) {
+		\wp_enqueue_script(
+			'icts-counter-band-editor-limit',
+			get_template_directory_uri() . '/assets/js/counter-band-editor-limit.js',
+			[ 'wp-data', 'wp-dom-ready', 'wp-notices' ],
+			\file_exists( $counter_band_limit_script_path ) ? (string) \filemtime( $counter_band_limit_script_path ) : \wp_get_theme()->get( 'Version' ),
+			true
+		);
+	}
 
 	// Guard third-party editor scripts that expect this Polylang global.
 	\wp_add_inline_script(

@@ -1,0 +1,102 @@
+{
+    "key": "group_62f776f4d4895",
+    "title": "Client Logos Repeater",
+    "fields": [
+        {
+            "key": "field_62f77713e8f87",
+            "label": "Client Logos and Links",
+            "name": "client-logos-and-links",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_62f77748e8f88",
+                    "label": "Client Logo",
+                    "name": "client-logo",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Please upload a transparent PNG of 300px wide or wider",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "return_format": "url",
+                    "library": "all",
+                    "translations": "copy_once",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "png",
+                    "preview_size": "image-480",
+                    "parent_repeater": "field_62f77713e8f87"
+                },
+                {
+                    "key": "field_62f77760e8f89",
+                    "label": "Client Link",
+                    "name": "client-link",
+                    "aria-label": "",
+                    "type": "url",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "66",
+                        "class": "",
+                        "id": ""
+                    },
+                    "relevanssi_exclude": 0,
+                    "default_value": "",
+                    "translations": "copy_once",
+                    "placeholder": "",
+                    "pll_default_value": "",
+                    "parent_repeater": "field_62f77713e8f87"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "client-logos"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "pll_display_field_instructions": 1,
+    "modified": 1775050894
+}

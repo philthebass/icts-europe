@@ -1,0 +1,213 @@
+{
+    "key": "group_65dc833337f2d",
+    "title": "Event fields",
+    "fields": [
+        {
+            "key": "field_65dc8333f24c0",
+            "label": "Event Description",
+            "name": "event_description",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "translations": "translate",
+            "maxlength": "",
+            "rows": "",
+            "placeholder": "",
+            "new_lines": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_65e2019e4ced2",
+            "label": "Allow book meetings",
+            "name": "allow_book_meetings",
+            "aria-label": "",
+            "type": "button_group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 1,
+            "choices": {
+                "Yes": "Yes",
+                "No": "No"
+            },
+            "default_value": "No",
+            "return_format": "value",
+            "allow_null": 0,
+            "layout": "horizontal",
+            "pll_default_value": "No"
+        },
+        {
+            "key": "field_665604b71f06f",
+            "label": "Book a meeting button label",
+            "name": "book_a_meeting_button_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_65e2019e4ced2",
+                        "operator": "==",
+                        "value": "Yes"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_65dc8350f24c1",
+            "label": "Start Date",
+            "name": "start_date",
+            "aria-label": "",
+            "type": "date_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "display_format": "d\/m\/Y",
+            "return_format": "F j, Y",
+            "first_day": 1,
+            "translations": "sync",
+            "default_to_current_date": 0
+        },
+        {
+            "key": "field_65dc838ff24c2",
+            "label": "End Date",
+            "name": "end_date",
+            "aria-label": "",
+            "type": "date_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "display_format": "d\/m\/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "translations": "sync",
+            "allow_in_bindings": 1,
+            "default_to_current_date": 0
+        },
+        {
+            "key": "field_65dc84fd2b3d7",
+            "label": "Event Website",
+            "name": "event_website",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "placeholder": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_6656048c26c72",
+            "label": "Website button label",
+            "name": "website_button_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_65dc85cb69bf4",
+            "label": "Location",
+            "name": "location",
+            "aria-label": "",
+            "type": "google_map",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "center_lat": "51.526455523702275",
+            "center_lng": "-0.1283992660156728",
+            "zoom": "",
+            "height": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "event"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "pll_display_field_instructions": 1,
+    "modified": 1775050886
+}

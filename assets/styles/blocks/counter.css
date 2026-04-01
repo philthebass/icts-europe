@@ -2,21 +2,8 @@
 	--icts-counter-radius: 6px;
 	--icts-counter-bg: rgb(0 53 101 / 0.7);
 	--icts-counter-text: var(--wp--preset--color--brand-primary-light);
-	--icts-counter-value-row-height: clamp(4.35rem, 9vw, 6.375rem);
+	--icts-counter-value-row-height: clamp(3.5rem, 7vw, 5rem);
 	margin: 0;
-}
-
-/* Always neutralize auto flow margins on this block */
-.wp-block-cover.icts-counter-band {
-	margin-block-start: 0 !important;
-	margin-block-end: 0 !important;
-}
-
-/* Prevent inherited layout flow spacing around the band wrapper */
-:where(.is-layout-flow, .is-layout-constrained) > .wp-block-cover.icts-counter-band,
-:where(.is-layout-flow, .is-layout-constrained) > .wp-block-cover.icts-counter-band.alignfull {
-	margin-block-start: 0 !important;
-	margin-block-end: 0 !important;
 }
 
 .icts-counter-block__inner {
@@ -29,6 +16,7 @@
 	grid-template-rows: var(--icts-counter-value-row-height) minmax(0, 1fr);
 	justify-items: center;
 	align-items: start;
+	align-content: center;
 	text-align: center;
 	gap: clamp(0.35rem, 1vw, 0.65rem);
 	min-block-size: clamp(8.75rem, 13vw, 11rem);
@@ -51,6 +39,7 @@
 	min-block-size: var(--icts-counter-value-row-height);
 	inline-size: 100%;
 	align-self: stretch;
+	align-items: center;
 }
 
 /* Counter band cards should share one font-size scale regardless of card width. */

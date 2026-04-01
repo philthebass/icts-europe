@@ -1,12 +1,12 @@
 <!-- wp:template-part {"slug":"header","tagName":"header","className":"site-header"} /-->
 
-<!-- wp:group {"tagName":"main","metadata":{"name":"Content Area"},"align":"wide","style":{"spacing":{"margin":{"top":"0","bottom":"0"},"padding":{"top":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small","right":"var:preset|spacing|small"},"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group alignwide" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"align":"wide","layout":{"type":"default"}} -->
-<div class="wp-block-group alignwide"><!-- wp:yoast-seo/breadcrumbs /--></div>
+<!-- wp:group {"tagName":"main","metadata":{"name":"Content Area"},"align":"wide","layout":{"type":"constrained"}} -->
+<main class="wp-block-group alignwide"><!-- wp:group {"style":{"spacing":{"padding":{"right":"0","left":"0"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group" style="padding-right:0;padding-left:0"><!-- wp:yoast-seo/breadcrumbs /--></div>
 <!-- /wp:group -->
 
-<!-- wp:columns {"align":"wide"} -->
-<div class="wp-block-columns alignwide"><!-- wp:column {"width":"30%"} -->
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"30%"} -->
 <div class="wp-block-column" style="flex-basis:30%"><!-- wp:post-featured-image {"aspectRatio":"1","align":"wide","style":{"spacing":{"margin":{"top":"0","right":"0","bottom":"0","left":"0"}},"border":{"radius":{"topLeft":"6px","topRight":"6px","bottomLeft":"6px","bottomRight":"6px"}}}} /--></div>
 <!-- /wp:column -->
 
@@ -15,8 +15,8 @@
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 
-<!-- wp:columns {"align":"wide","className":"icts-single-post__layout","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|x-large"}}}} -->
-<div class="wp-block-columns alignwide icts-single-post__layout"><!-- wp:column {"width":"72%"} -->
+<!-- wp:columns {"className":"icts-single-post__layout","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|x-large"}}}} -->
+<div class="wp-block-columns icts-single-post__layout"><!-- wp:column {"width":"72%"} -->
 <div class="wp-block-column" style="flex-basis:72%"><!-- wp:post-content {"align":"wide","layout":{"type":"constrained"}} /--></div>
 <!-- /wp:column -->
 
@@ -26,6 +26,6 @@
 <!-- /wp:columns --></main>
 <!-- /wp:group -->
 
-<!-- wp:icts/latest-news-slider {"align":"full","heading":"Related articles","relatedByCurrentPost":true} /-->
+<!-- wp:icts/latest-news-slider {"heading":"Related articles","relatedByCurrentPost":true,"align":"full"} /-->
 
 <!-- wp:template-part {"slug":"footer","tagName":"footer","className":"site-footer"} /-->

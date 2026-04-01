@@ -6,6 +6,7 @@
 	}
 
 	var isApplyingLimit = false;
+	var lastGridSignature = '';
 	var NOTICE_ID = 'icts-counter-band-limit';
 	var MAX_COUNTERS = 4;
 
@@ -45,6 +46,27 @@
 		return grids;
 	}
 
+	function getGridSignature( grids ) {
+		return grids
+			.map( function ( grid ) {
+				var layout = ( grid.attributes && grid.attributes.layout ) || {};
+				var childSignature = ( grid.innerBlocks || [] )
+					.map( function ( innerBlock ) {
+						return innerBlock ? innerBlock.clientId + ':' + innerBlock.name : '';
+					} )
+					.join( '|' );
+
+				return [
+					grid.clientId,
+					layout.type || '',
+					layout.minimumColumnWidth || '',
+					childSignature,
+				].join( '::' );
+			} )
+			.sort()
+			.join( '||' );
+	}
+
 	function enforceCounterBandLimit() {
 		if ( isApplyingLimit ) {
 			return;
@@ -55,9 +77,21 @@
 		var noticesDispatch = wp.data.dispatch( 'core/notices' );
 		var rootBlocks = editorSelect.getBlocks();
 		var grids = getCounterBandGrids( rootBlocks );
+		var gridSignature = getGridSignature( grids );
 		var hasTrimmedBlocks = false;
 		var hasNormalizedLayout = false;
 		var hasRemovedUnsupported = false;
+
+		if ( ! grids.length ) {
+			lastGridSignature = '';
+			return;
+		}
+
+		if ( gridSignature === lastGridSignature ) {
+			return;
+		}
+
+		lastGridSignature = gridSignature;
 
 		grids.forEach( function ( grid ) {
 			var layout = ( grid.attributes && grid.attributes.layout ) || {};
@@ -72,6 +106,7 @@
 					},
 				} );
 				isApplyingLimit = false;
+				lastGridSignature = '';
 				hasNormalizedLayout = true;
 			}
 
@@ -87,6 +122,7 @@
 				isApplyingLimit = true;
 				editorDispatch.removeBlocks( unsupportedIds, false );
 				isApplyingLimit = false;
+				lastGridSignature = '';
 				hasRemovedUnsupported = true;
 			}
 
@@ -109,6 +145,7 @@
 			isApplyingLimit = true;
 			editorDispatch.removeBlocks( overflowIds, false );
 			isApplyingLimit = false;
+			lastGridSignature = '';
 			hasTrimmedBlocks = true;
 		} );
 

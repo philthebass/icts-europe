@@ -1,0 +1,147 @@
+{
+    "key": "group_65e87ca856045",
+    "title": "Customers",
+    "fields": [
+        {
+            "key": "field_65e87d075ab78",
+            "label": "Customer Logo",
+            "name": "customer_logo",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_65e87ca8cb5db",
+            "label": "Map Location",
+            "name": "map_location",
+            "aria-label": "",
+            "type": "google_map",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "center_lat": "51.52672194244852",
+            "center_lng": "-0.12845456211105336",
+            "zoom": "",
+            "height": "",
+            "translations": "sync"
+        },
+        {
+            "key": "field_65eb09aa47b40",
+            "label": "Customer Description",
+            "name": "customer_description",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "translations": "translate",
+            "maxlength": "",
+            "rows": "",
+            "placeholder": "",
+            "new_lines": "",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_65eb1234844d2",
+            "label": "Customer Link",
+            "name": "link",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Add a link for example to a case study, press release or external or customer website",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 0,
+            "default_value": "",
+            "translations": "copy_once",
+            "placeholder": "Add a link for example to a case study, press release or external or customer website",
+            "pll_default_value": ""
+        },
+        {
+            "key": "field_65f41dff7d919",
+            "label": "Is the link internal or external?",
+            "name": "is_the_link_internal_or_external",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "relevanssi_exclude": 1,
+            "choices": {
+                "Internal": "Internal",
+                "External": "External"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "customers"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "pll_display_field_instructions": 1,
+    "modified": 1775050878
+}
