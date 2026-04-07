@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-04-07 — Yoast breadcrumbs omit empty hierarchical ancestor pages — Some parent pages exist only to preserve clean nested URLs and should not appear in visible breadcrumbs when they have no editor content — Theme now filters Yoast breadcrumb links for hierarchical singular content so empty ancestor pages are hidden while the URL structure remains unchanged.
+
 2026-04-01 — GitHub is authoritative for theme releases while the test server is authoritative for content — The project needs a safe workflow for continuing local theme development while editors and stakeholders work on a live test environment — Theme changes are made locally, versioned in `style.css`, logged in `CHANGELOG.md`, tagged in Git, and then deployed to test without overwriting editorial content.
 
 2026-02-04 — Heading size slugs use h-1..h-6 — WP generates hyphenated CSS variables; aligning slugs and references prevents 16px fallback — Theme JSON and styles now consistent.

@@ -3198,6 +3198,70 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 }
 
 /**
+ * Remove empty ancestor pages from Yoast breadcrumbs while preserving URL structure.
+ *
+ * Some section pages exist only to provide clean hierarchical URLs. If those
+ * ancestor pages have no editor content, omit them from the visible breadcrumb trail.
+ *
+ * @param array $links Breadcrumb link items.
+ * @return array
+ */
+function filter_yoast_breadcrumb_links_hide_empty_page_ancestors( $links ) {
+	if ( ! \is_array( $links ) || ! \is_singular() ) {
+		return $links;
+	}
+
+	$post = \get_queried_object();
+	if ( ! ( $post instanceof \WP_Post ) || ! \is_post_type_hierarchical( $post->post_type ) ) {
+		return $links;
+	}
+
+	$ancestor_ids = \get_post_ancestors( $post );
+	if ( empty( $ancestor_ids ) ) {
+		return $links;
+	}
+
+	$ancestor_urls_to_hide = [];
+
+	foreach ( $ancestor_ids as $ancestor_id ) {
+		$ancestor = \get_post( $ancestor_id );
+		if ( ! ( $ancestor instanceof \WP_Post ) ) {
+			continue;
+		}
+
+		$ancestor_content = \trim( \wp_strip_all_tags( (string) $ancestor->post_content ) );
+		if ( '' !== $ancestor_content ) {
+			continue;
+		}
+
+		$ancestor_url = \get_permalink( $ancestor );
+		if ( \is_string( $ancestor_url ) && '' !== $ancestor_url ) {
+			$ancestor_urls_to_hide[] = \untrailingslashit( $ancestor_url );
+		}
+	}
+
+	if ( empty( $ancestor_urls_to_hide ) ) {
+		return $links;
+	}
+
+	$links = \array_values(
+		\array_filter(
+			$links,
+			static function ( $link ) use ( $ancestor_urls_to_hide ) {
+				if ( ! \is_array( $link ) || empty( $link['url'] ) || ! \is_string( $link['url'] ) ) {
+					return true;
+				}
+
+				return ! \in_array( \untrailingslashit( $link['url'] ), $ancestor_urls_to_hide, true );
+			}
+		)
+	);
+
+	return $links;
+}
+add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_links_hide_empty_page_ancestors', 15, 1 );
+
+/**
  * Translate Yoast breadcrumb item labels through Polylang string translations.
  *
  * @param array $links Breadcrumb link items.
