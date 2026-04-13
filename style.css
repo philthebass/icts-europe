@@ -7,7 +7,7 @@ Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.0.3
+Version: 1.0.4
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
@@ -970,6 +970,27 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	max-height: 6.875rem;
 	width: auto;
 	max-width: 100%;
+}
+
+.feature-card-grid--industries > .feature-card .feature-card__title,
+.feature-card-grid--industries > .wp-block-group.feature-card .feature-card__title {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	min-height: 5rem;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	text-wrap: balance;
+	width: 100%;
+}
+
+.feature-card-grid--industries > .feature-card .feature-card__body,
+.feature-card-grid--industries > .wp-block-group.feature-card .feature-card__body {
+	margin: 0;
+	padding: 0;
+	align-self: start;
+	width: 100%;
 }
 
 .feature-card-grid--usp > .feature-card .feature-card__content,

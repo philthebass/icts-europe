@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.4 - 2026-04-13
+### Added
+- Added a clear-search control to the FAQ accordion filters so visitors can reset search terms with one click.
+
+### Changed
+- Refined industry feature-card title and body alignment so cards present more consistently across varying content lengths.
+
+### Fixed
+- Fixed the Hero Slider full-width breakout so slide images stretch edge-to-edge more reliably in constrained layouts, including the reported Windows 10 / Edge case.
+
+### Notes
+- Validate the Hero Slider and FAQ search controls after deployment, then clear any front-end cache if the previous layout persists.
+
 ## 1.0.3 - 2026-04-13
 ### Added
 - Theme-level Yoast breadcrumb separator override to keep the front-end breadcrumb glyph consistent across translated pages and templates.

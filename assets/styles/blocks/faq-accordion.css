@@ -69,6 +69,47 @@
 	margin: clamp(1rem, 2.3vw, 1.65rem) auto 0;
 }
 
+.icts-faq-accordion__search .icts-archive-controls__search-input::-webkit-search-cancel-button,
+.icts-faq-accordion__search .icts-archive-controls__search-input::-webkit-search-decoration {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.icts-faq-accordion__search .icts-archive-controls__search-input {
+	padding-right: 2.7rem;
+}
+
+.icts-faq-accordion__search-clear {
+	position: absolute;
+	right: 0.75rem;
+	top: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--wp--preset--color--brand-primary);
+	font: inherit;
+	line-height: 1;
+	cursor: pointer;
+	transform: translateY(-50%);
+	z-index: 1;
+}
+
+.icts-faq-accordion__search-clear:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+	border-radius: 3px;
+}
+
+.icts-faq-accordion__search.has-value::after,
+.icts-faq-accordion__search:focus-within.has-value::after {
+	opacity: 0;
+}
+
 .icts-faq-accordion__item {
 	background: var(--wp--preset--color--light-grey-blue);
 	border-radius: var(--icts-faq-radius);

@@ -24,6 +24,8 @@
 
             var itemList = accordion.querySelector('[data-icts-faq-items]');
             var searchInput = accordion.querySelector('[data-icts-faq-search]');
+            var searchControl = accordion.querySelector('[data-icts-faq-search-control]');
+            var searchClearButton = accordion.querySelector('[data-icts-faq-search-clear]');
             var categorySelect = accordion.querySelector('[data-icts-faq-category]');
             var emptyMessage = accordion.querySelector('[data-icts-faq-empty]');
             var searchDebounceTimer = null;
@@ -116,6 +118,20 @@
                 });
             }
 
+            function updateSearchClearButton() {
+                if (!searchInput || !searchClearButton) {
+                    return;
+                }
+
+                var hasValue = searchInput.value !== '';
+
+                searchClearButton.hidden = !hasValue;
+
+                if (searchControl) {
+                    searchControl.classList.toggle('has-value', hasValue);
+                }
+            }
+
             function applyFilters() {
                 var searchTerm = searchInput ? normalizeText(searchInput.value) : '';
                 var selectedCategory = categorySelect
@@ -186,6 +202,8 @@
 
             if (searchInput) {
                 searchInput.addEventListener('input', function () {
+                    updateSearchClearButton();
+
                     if (searchDebounceTimer) {
                         window.clearTimeout(searchDebounceTimer);
                     }
@@ -193,10 +211,24 @@
                 });
             }
 
+            if (searchClearButton && searchInput) {
+                searchClearButton.addEventListener('click', function () {
+                    if (searchDebounceTimer) {
+                        window.clearTimeout(searchDebounceTimer);
+                    }
+
+                    searchInput.value = '';
+                    updateSearchClearButton();
+                    applyFilters();
+                    searchInput.focus();
+                });
+            }
+
             if (categorySelect) {
                 categorySelect.addEventListener('change', applyFilters);
             }
 
+            updateSearchClearButton();
             applyFilters();
         });
     }

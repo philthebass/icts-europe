@@ -282,7 +282,7 @@ if ( $output_schema && ! $is_editor_preview && ! empty( $faq_rows ) ) {
 			<?php if ( $show_filters ) : ?>
 				<div class="icts-archive-controls icts-faq-accordion__controls">
 					<?php if ( $show_search ) : ?>
-						<div class="icts-archive-controls__search">
+						<div class="icts-archive-controls__search icts-faq-accordion__search" data-icts-faq-search-control>
 							<label class="screen-reader-text" for="<?php echo esc_attr( $search_input_id ); ?>">
 								<?php echo esc_html( $search_label ); ?>
 							</label>
@@ -294,6 +294,15 @@ if ( $output_schema && ! $is_editor_preview && ! empty( $faq_rows ) ) {
 								autocomplete="off"
 								data-icts-faq-search
 							/>
+							<button
+								type="button"
+								class="icts-faq-accordion__search-clear"
+								aria-label="<?php echo esc_attr( $translate( __( 'Clear FAQ search', 'icts-europe' ) ) ); ?>"
+								data-icts-faq-search-clear
+								hidden
+							>
+								<span aria-hidden="true">&times;</span>
+							</button>
 						</div>
 					<?php endif; ?>
 
