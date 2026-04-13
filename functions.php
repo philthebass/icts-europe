@@ -3262,6 +3262,20 @@ function filter_yoast_breadcrumb_links_hide_empty_page_ancestors( $links ) {
 add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_links_hide_empty_page_ancestors', 15, 1 );
 
 /**
+ * Force a stable Yoast breadcrumb separator across translated contexts.
+ *
+ * Polylang/translation tooling can localize Yoast option values per language.
+ * Returning the separator via filter keeps the breadcrumb glyph consistent.
+ *
+ * @param string $separator Breadcrumb separator markup/text.
+ * @return string
+ */
+function filter_yoast_breadcrumb_separator( $separator ) {
+	return '»';
+}
+add_filter( 'wpseo_breadcrumb_separator', __NAMESPACE__ . '\filter_yoast_breadcrumb_separator', 10, 1 );
+
+/**
  * Translate Yoast breadcrumb item labels through Polylang string translations.
  *
  * @param array $links Breadcrumb link items.

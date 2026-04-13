@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-04-13 — Yoast breadcrumb separator is forced in theme code — Translated Yoast/Polylang contexts can localize the breadcrumb separator option inconsistently between languages — Theme now returns a fixed `»` separator through `wpseo_breadcrumb_separator`, so all languages render the same glyph regardless of translated plugin settings.
+
 2026-04-07 — Yoast breadcrumbs omit empty hierarchical ancestor pages — Some parent pages exist only to preserve clean nested URLs and should not appear in visible breadcrumbs when they have no editor content — Theme now filters Yoast breadcrumb links for hierarchical singular content so empty ancestor pages are hidden while the URL structure remains unchanged.
 
 2026-04-01 — GitHub is authoritative for theme releases while the test server is authoritative for content — The project needs a safe workflow for continuing local theme development while editors and stakeholders work on a live test environment — Theme changes are made locally, versioned in `style.css`, logged in `CHANGELOG.md`, tagged in Git, and then deployed to test without overwriting editorial content.
