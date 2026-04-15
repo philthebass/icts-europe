@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.5 - 2026-04-15
+### Added
+- 
+
+### Changed
+- 
+
+### Fixed
+- 
+
+### Notes
+- 
+
 ## 1.0.4 - 2026-04-13
 ### Added
 - Added a clear-search control to the FAQ accordion filters so visitors can reset search terms with one click.

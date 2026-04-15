@@ -74,9 +74,9 @@
 
 .icts-counter-block__affix {
 	display: inline-block;
-	font-size: 1.4em;
+	font-size: var(--wp--preset--font-size--x-large);
 	font-weight: var(--wp--custom--font-weight--black);
-	line-height: inherit;
+	line-height: var(--wp--custom--line-height--snug);
 }
 
 .icts-counter-block__label {
