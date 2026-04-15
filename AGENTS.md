@@ -11,6 +11,9 @@ How We Work
 - One chat per repo; use the plan tool for multi-step tasks.
 - Capture background in `docs/CONTEXT.md` and log rationale in `docs/DECISIONS.md`.
 - Keep patches small and focused. Update docs when behavior or conventions change.
+- Source repo for code changes and releases: `/Users/philipevans/Code/icts-europe`.
+- Installed LocalWP theme copy for testing only: `/Users/philipevans/Local Sites/iesaero/app/public/wp-content/themes/icts-europe`.
+- Do not edit theme files directly in the LocalWP theme folder; build release zips from this repo and install them there.
  - Editor style changes: use Create Block Theme → “Save Changes To Theme”, then commit via VS Code.
  - Branching/deploy: default branch `main`; staging target will be `dev.ies.aero` when provisioned; legacy site remains separate.
 
@@ -33,6 +36,7 @@ Reviews & Testing
 - Sanity-check front end and Site Editor after theme.json changes (hard reload).
 - Verify global styles load (devtools: `--wp--preset--*` variables present).
 - Keep admin UX polish where we modify CPT columns.
+- If ACF field groups are changed in WordPress admin, sync the resulting `acf-json/` updates back into this repo before the next release.
 
 Skills (available in this session)
 - `skill-installer`: install Codex skills from curated list or repos.

@@ -2,30 +2,36 @@
 
 Use this checklist when releasing a new version of the ICTS Europe theme to the test or production server.
 
+Source repo: `/Users/philipevans/Code/icts-europe`
+Installed LocalWP theme copy: `/Users/philipevans/Local Sites/iesaero/app/public/wp-content/themes/icts-europe`
+
 ## Release steps
 
-1. Finish the theme changes locally and check the site in Local.
-2. Open Terminal in the theme folder.
-3. Run `sh scripts/release-theme.sh 1.0.2 2026-04-01`.
-4. Open `CHANGELOG.md`.
-5. Fill in the blank bullets for what changed.
-6. In VS Code Source Control, review the changed files.
-7. Enter a commit message such as `Release 1.0.2`.
-8. Commit and push to GitHub.
-9. Optional but recommended: create a Git tag such as `v1.0.2`.
-10. Build the server zip:
+1. Finish the theme changes in `/Users/philipevans/Code/icts-europe` and check the site in Local.
+2. If any ACF field groups were changed in WordPress admin, copy the updated `acf-json/` files back into the source repo.
+3. Open Terminal in the source repo folder.
+4. Run `sh scripts/release-theme.sh 1.0.2 2026-04-01`.
+5. Open `CHANGELOG.md`.
+6. Fill in the blank bullets for what changed.
+7. In VS Code Source Control, review the changed files.
+8. Enter a commit message such as `Release 1.0.2`.
+9. Commit and push to GitHub.
+10. Optional but recommended: create a Git tag such as `v1.0.2`.
+11. Build the server zip:
    - If tagged: `sh scripts/build-theme-package.sh v1.0.2`
    - If not tagging yet: `sh scripts/build-theme-package.sh`
-11. Open the local `dist/` folder.
-12. Find the new zip, for example `icts-europe-v1.0.2.zip`.
-13. Upload that zip to the test or production server.
-14. Replace the existing `icts-europe` theme with the uploaded version.
-15. Clear any cache if needed.
-16. Check the key pages on the server.
+12. Open the local `dist/` folder in the source repo.
+13. Find the new zip, for example `icts-europe-v1.0.2.zip`.
+14. Upload that zip to LocalWP or the test or production server.
+15. Replace the existing `icts-europe` theme with the uploaded version.
+16. Clear any cache if needed.
+17. Check the key pages on the server.
 
 ## Important rules
 
 - Always make theme changes locally first.
+- Use `/Users/philipevans/Code/icts-europe` as the source of truth for code and releases.
+- Treat the LocalWP theme folder as the installed/test copy only.
 - Do not make design, template, or theme edits directly on the test server.
 - The test server is for content edits, translations, and testing.
 - Upload the zip built from the local `dist/` folder, not a default GitHub “Download ZIP”.
