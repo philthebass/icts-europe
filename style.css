@@ -973,7 +973,7 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 }
 
 .feature-card-grid--industries > .feature-card .feature-card__title,
-.feaindustriesture-card-grid-- > .wp-block-group.feature-card .feature-card__title {
+.feature-card-grid--industries > .wp-block-group.feature-card .feature-card__title {
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
