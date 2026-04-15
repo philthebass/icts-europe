@@ -9,16 +9,16 @@ This project uses a simple release format:
 
 ## 1.0.5 - 2026-04-15
 ### Added
-- 
+- No new features in this release.
 
 ### Changed
-- 
+- Updated the counter band affix text so prefixes and suffixes use the same size and line-height as the counter label.
 
 ### Fixed
-- 
+- Corrected an accidental industry feature-card selector typo in the theme stylesheet.
 
 ### Notes
-- 
+- Validate the counter band on Local and the test server after deployment, especially counters using prefix or suffix text.
 
 ## 1.0.4 - 2026-04-13
 ### Added
