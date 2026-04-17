@@ -142,6 +142,19 @@
 		return !! doc.querySelector( '.page-wires-bg--disabled' );
 	}
 
+	function isInsideStylePreview( element ) {
+		if ( ! element || typeof element.closest !== 'function' ) {
+			return false;
+		}
+
+		return !! element.closest(
+			'.block-editor-block-styles__item-preview, ' +
+			'.block-editor-block-styles__preview, ' +
+			'.block-editor-block-styles__preview-content, ' +
+			'.components-popover'
+		);
+	}
+
 	function getEditedTemplateSlug( doc ) {
 		try {
 			const view = doc.defaultView || window;
@@ -218,6 +231,10 @@
 	}
 
 	function renderWires( container, doc ) {
+		if ( isInsideStylePreview( container ) ) {
+			return;
+		}
+
 		const height = container.offsetHeight;
 
 		if ( ! height ) {
@@ -276,6 +293,10 @@
 
 	function observeContainer( container, doc, observer ) {
 		if ( observedContainers.has( container ) ) {
+			return;
+		}
+
+		if ( isInsideStylePreview( container ) ) {
 			return;
 		}
 

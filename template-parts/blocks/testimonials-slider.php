@@ -21,12 +21,21 @@ if ( ! empty( $block['align'] ) ) {
     $class_name .= ' align' . $block['align'];
 }
 
+$customer_type_filter = get_field( 'customer_type_filter' );
+if ( ! in_array( $customer_type_filter, [ 'all', 'specific' ], true ) ) {
+    $customer_type_filter = 'all';
+}
+
+$customer_type_term = get_field( 'customer_type_term' );
+
 // Query Testimonials.
 $args = [
     'post_type'      => 'testimonial',
+    'post_status'    => 'publish',
     'posts_per_page' => -1,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
+    'no_found_rows'  => true,
     'meta_query'     => [
         [
             'key'     => 'testimonial_text',
@@ -35,6 +44,16 @@ $args = [
         ],
     ],
 ];
+
+if ( 'specific' === $customer_type_filter && $customer_type_term instanceof \WP_Term ) {
+    $args['tax_query'] = [
+        [
+            'taxonomy' => 'customer-type',
+            'field'    => 'term_id',
+            'terms'    => [ (int) $customer_type_term->term_id ],
+        ],
+    ];
+}
 
 // Polylang filter
 if ( function_exists( '\pll_current_language' ) ) {

@@ -1,0 +1,90 @@
+{
+    "key": "group_680109b4d7e21",
+    "title": "Testimonials Slider (Block Controls)",
+    "fields": [
+        {
+            "key": "field_680109d7d7e22",
+            "label": "Customer Type Filter",
+            "name": "customer_type_filter",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Limit this slider to one customer type or show all customer types.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "all": "Show all customer types",
+                "specific": "Filter by customer type"
+            },
+            "default_value": "all",
+            "return_format": "value",
+            "translations": "copy_once",
+            "allow_null": 0,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "save_other_choice": 0,
+            "pll_default_value": "all"
+        },
+        {
+            "key": "field_68010a05d7e23",
+            "label": "Customer Type",
+            "name": "customer_type_term",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_680109d7d7e22",
+                        "operator": "==",
+                        "value": "specific"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "customer-type",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "field_type": "select",
+            "allow_null": 1,
+            "translations": "copy_once",
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/testimonials-slider"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Adds customer-type filtering controls to the Testimonials Slider block.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "pll_display_field_instructions": 1,
+    "modified": 1776430736
+}

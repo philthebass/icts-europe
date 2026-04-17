@@ -27,13 +27,22 @@
             var searchControl = accordion.querySelector('[data-icts-faq-search-control]');
             var searchClearButton = accordion.querySelector('[data-icts-faq-search-clear]');
             var categorySelect = accordion.querySelector('[data-icts-faq-category]');
+            var showAllButton = accordion.querySelector('[data-icts-faq-show-all]');
             var emptyMessage = accordion.querySelector('[data-icts-faq-empty]');
             var searchDebounceTimer = null;
+            var initialLimit = itemList
+                ? parseInt(itemList.getAttribute('data-icts-faq-limit') || '0', 10)
+                : 0;
+            var hasExpandedAll = false;
             var items = itemList
                 ? Array.prototype.slice.call(
                       itemList.querySelectorAll('.icts-faq-accordion__item')
                   )
                 : [];
+
+            if (isNaN(initialLimit) || initialLimit < 1) {
+                initialLimit = 0;
+            }
 
             function normalizeText(value) {
                 return String(value || '').trim().toLowerCase();
@@ -137,7 +146,8 @@
                 var selectedCategory = categorySelect
                     ? String(categorySelect.value || '0')
                     : '0';
-                var visibleCount = 0;
+                var matchingCount = 0;
+                var renderedVisibleCount = 0;
 
                 items.forEach(function (item) {
                     var searchIndex = normalizeText(
@@ -156,20 +166,34 @@
                     var matchesCategory =
                         selectedCategory === '0' ||
                         categoryIds.indexOf(selectedCategory) !== -1;
-                    var isVisible = matchesSearch && matchesCategory;
+                    var isMatching = matchesSearch && matchesCategory;
+                    var isVisible = false;
+
+                    if (isMatching) {
+                        matchingCount += 1;
+                        isVisible =
+                            hasExpandedAll ||
+                            initialLimit < 1 ||
+                            renderedVisibleCount < initialLimit;
+
+                        if (isVisible) {
+                            renderedVisibleCount += 1;
+                        }
+                    }
 
                     item.hidden = !isVisible;
                     if (!isVisible && item.classList.contains('is-open')) {
                         setExpanded(item, false);
                     }
-
-                    if (isVisible) {
-                        visibleCount += 1;
-                    }
                 });
 
+                if (showAllButton) {
+                    showAllButton.hidden =
+                        hasExpandedAll || initialLimit < 1 || matchingCount <= initialLimit;
+                }
+
                 if (emptyMessage) {
-                    emptyMessage.hidden = visibleCount !== 0;
+                    emptyMessage.hidden = matchingCount !== 0;
                 }
             }
 
@@ -228,6 +252,13 @@
                 categorySelect.addEventListener('change', applyFilters);
             }
 
+            if (showAllButton) {
+                showAllButton.addEventListener('click', function () {
+                    hasExpandedAll = true;
+                    applyFilters();
+                });
+            }
+
             updateSearchClearButton();
             applyFilters();
         });
@@ -236,6 +267,17 @@
     document.addEventListener('DOMContentLoaded', function () {
         initFaqAccordions(document);
     });
+
+    if (window.acf && typeof window.acf.addAction === 'function') {
+        window.acf.addAction(
+            'render_block_preview/type=faq-accordion',
+            function ($block) {
+                if ($block && $block[0]) {
+                    initFaqAccordions($block[0]);
+                }
+            }
+        );
+    }
 
     if (typeof window !== 'undefined') {
         window.ICTS = window.ICTS || {};

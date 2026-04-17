@@ -47,6 +47,59 @@
             "pll_default_value": ""
         },
         {
+            "key": "field_68010eb3159103",
+            "label": "FAQs to Display Initially",
+            "name": "faq_limit",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Leave blank to show all FAQs immediately. When set, the block shows this many FAQs first and adds a Show all button on the front end.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "translations": "copy_once",
+            "min": 1,
+            "max": "",
+            "allow_in_bindings": 0,
+            "step": 1,
+            "prepend": "",
+            "append": "",
+            "placeholder": ""
+        },
+        {
+            "key": "field_68010ef1591103",
+            "label": "Show All Button Label",
+            "name": "show_all_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Used for the front-end button that reveals the rest of the FAQs when an initial limit is set.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_68010eb3159103",
+                        "operator": "!=empty"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Show all FAQs",
+            "translations": "translate",
+            "maxlength": "",
+            "placeholder": "Show all FAQs",
+            "prepend": "",
+            "append": "",
+            "pll_default_value": "Show all FAQs"
+        },
+        {
             "key": "field_67b4a8f159104",
             "label": "Product Filter Mode",
             "name": "product_filter_mode",
@@ -401,5 +454,5 @@
     "show_in_rest": 0,
     "display_title": "",
     "pll_display_field_instructions": 1,
-    "modified": 1773850086
+    "modified": 1776431974
 }

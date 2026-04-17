@@ -42,6 +42,18 @@ if ( ! is_string( $heading ) || '' === trim( $heading ) ) {
 $intro = get_field( 'intro' );
 $intro = is_string( $intro ) ? trim( $intro ) : '';
 
+$faq_limit = get_field( 'faq_limit' );
+$faq_limit = is_numeric( $faq_limit ) ? (int) $faq_limit : 0;
+if ( $faq_limit < 1 ) {
+	$faq_limit = 0;
+}
+
+$show_all_label = get_field( 'show_all_label' );
+$show_all_label = is_string( $show_all_label ) ? trim( $show_all_label ) : '';
+if ( '' === $show_all_label ) {
+	$show_all_label = $translate( __( 'Show all FAQs', 'icts-europe' ) );
+}
+
 $product_filter_mode = get_field( 'product_filter_mode' );
 if ( ! in_array( $product_filter_mode, [ 'all', 'specific' ], true ) ) {
 	$product_filter_mode = 'all';
@@ -232,6 +244,7 @@ $editor_empty_label = $translate( __( 'No FAQs found. Add FAQ posts to populate 
 $show_search        = $enable_search;
 $show_category      = $enable_category_filter && ! empty( $faq_category_options );
 $show_filters       = ! empty( $faq_rows ) && ( $show_search || $show_category );
+$show_show_all      = $faq_limit > 0 && count( $faq_rows ) > $faq_limit;
 
 $search_input_id   = $id . '-search';
 $category_input_id = $id . '-category';
@@ -328,7 +341,11 @@ if ( $output_schema && ! $is_editor_preview && ! empty( $faq_rows ) ) {
 				</div>
 			<?php endif; ?>
 
-			<div class="icts-faq-accordion__items" data-icts-faq-items>
+			<div
+				class="icts-faq-accordion__items"
+				data-icts-faq-items
+				data-icts-faq-limit="<?php echo esc_attr( (string) $faq_limit ); ?>"
+			>
 				<?php foreach ( $faq_rows as $index => $faq_row ) : ?>
 					<?php
 					$item_dom_id = $id . '-item-' . ( $index + 1 );
@@ -375,6 +392,30 @@ if ( $output_schema && ! $is_editor_preview && ! empty( $faq_rows ) ) {
 					</article>
 				<?php endforeach; ?>
 			</div>
+			<?php if ( $is_editor_preview && $faq_limit > 0 ) : ?>
+				<p class="icts-faq-accordion__preview-note">
+					<?php
+					echo esc_html(
+						sprintf(
+							/* translators: %d number of FAQs shown initially in preview */
+							__( 'Preview limited to the first %d FAQs. Clear "FAQs to Display Initially" to preview the full set.', 'icts-europe' ),
+							$faq_limit
+						)
+					);
+					?>
+				</p>
+			<?php endif; ?>
+			<?php if ( $show_show_all ) : ?>
+				<div class="icts-faq-accordion__actions">
+					<button
+						type="button"
+						class="icts-faq-accordion__show-all wp-element-button"
+						data-icts-faq-show-all
+					>
+						<?php echo esc_html( $show_all_label ); ?>
+					</button>
+				</div>
+			<?php endif; ?>
 			<p class="icts-faq-accordion__empty" data-icts-faq-empty hidden>
 				<?php echo esc_html( $no_results_label ); ?>
 			</p>

@@ -93,3 +93,96 @@ ul.is-style-list-boxed li:last-child,
 ol.is-style-list-boxed li:last-child {
 	margin-bottom: 0;
 }
+
+/* ICTS bullets utility class */
+ul.icts-bullets,
+ul.icts-bullets ul,
+ul.wp-block-list.icts-bullets,
+ul.wp-block-list.icts-bullets ul,
+ul.is-style-icts-bullets,
+ul.is-style-icts-bullets ul,
+ul.wp-block-list.is-style-icts-bullets,
+ul.wp-block-list.is-style-icts-bullets ul {
+	padding-inline-start: 0;
+	list-style: none;
+}
+
+ul.icts-bullets li,
+ul.wp-block-list.icts-bullets li,
+ul.is-style-icts-bullets li,
+ul.wp-block-list.is-style-icts-bullets li {
+	display: grid;
+	grid-template-columns: 1rem minmax(0, 1fr);
+	column-gap: 0.75rem;
+	align-items: start;
+	padding-left: 0;
+}
+
+ul.icts-bullets li::before,
+ul.wp-block-list.icts-bullets li::before,
+ul.is-style-icts-bullets li::before,
+ul.wp-block-list.is-style-icts-bullets li::before {
+	content: "";
+	display: block;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	background: radial-gradient(
+		circle,
+		var(--wp--preset--color--brand-primary) 0 28%,
+		var(--wp--preset--color--brand-primary-10) 29% 100%
+	);
+	margin-top: calc((1lh - 1rem) / 2);
+}
+
+ul.icts-bullets-light,
+ul.icts-bullets-light ul,
+ul.wp-block-list.icts-bullets-light,
+ul.wp-block-list.icts-bullets-light ul,
+ul.is-style-icts-bullets-light,
+ul.is-style-icts-bullets-light ul,
+ul.wp-block-list.is-style-icts-bullets-light,
+ul.wp-block-list.is-style-icts-bullets-light ul {
+	padding-inline-start: 0;
+	list-style: none;
+}
+
+ul.icts-bullets-light li,
+ul.wp-block-list.icts-bullets-light li,
+ul.is-style-icts-bullets-light li,
+ul.wp-block-list.is-style-icts-bullets-light li {
+	display: grid;
+	grid-template-columns: 1rem minmax(0, 1fr);
+	column-gap: 0.75rem;
+	align-items: start;
+	padding-left: 0;
+}
+
+ul.icts-bullets-light li::before,
+ul.wp-block-list.icts-bullets-light li::before,
+ul.is-style-icts-bullets-light li::before,
+ul.wp-block-list.is-style-icts-bullets-light li::before {
+	content: "";
+	display: block;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	background: radial-gradient(
+		circle,
+		var(--wp--preset--color--warm-grey) 0 28%,
+		var(--wp--preset--color--light-grey-blue) 29% 100%
+	);
+	margin-top: calc((1lh - 1rem) / 2);
+}
+
+ul.icts-bullets li > *,
+ul.wp-block-list.icts-bullets li > *,
+ul.is-style-icts-bullets li > *,
+ul.wp-block-list.is-style-icts-bullets li > *,
+ul.icts-bullets-light li > *,
+ul.wp-block-list.icts-bullets-light li > *,
+ul.is-style-icts-bullets-light li > *,
+ul.wp-block-list.is-style-icts-bullets-light li > * {
+	margin-top: 0;
+	margin-bottom: 0;
+}

@@ -320,26 +320,36 @@ require_once __DIR__ . '/inc/blocks.php';
 
 // Editor-only assets.
 function should_enable_page_wires_editor_fallback() {
-	if ( ! \function_exists( 'get_current_screen' ) ) {
-		return false;
-	}
-
-	$screen = \get_current_screen();
-
-	if ( ! $screen ) {
-		return false;
-	}
-
-	if ( 'page' === $screen->post_type ) {
-		return true;
-	}
-
-	return false !== strpos( (string) $screen->base, 'site-editor' );
+	return false;
 }
 
 \add_action( 'enqueue_block_editor_assets', function () {
 	$counter_band_limit_script_path = get_template_directory() . '/assets/js/counter-band-editor-limit.js';
 	$page_wires_script_path         = get_template_directory() . '/assets/js/page-wires.js';
+	$editor_preview_css             = '
+		.components-popover .block-editor-block-styles__preview,
+		.components-popover .block-editor-block-styles__preview-content,
+		.components-popover .block-editor-block-styles__item-preview {
+			background: #fff !important;
+			isolation: isolate;
+		}
+
+		.components-popover .block-editor-block-styles__preview .page-wires-bg__art,
+		.components-popover .block-editor-block-styles__preview-content .page-wires-bg__art,
+		.components-popover .block-editor-block-styles__item-preview .page-wires-bg__art {
+			display: none !important;
+		}
+
+		.components-popover .block-editor-block-styles__preview .section-strands-bg-horizontal::before,
+		.components-popover .block-editor-block-styles__preview .section-strands-bg-horizontal::after,
+		.components-popover .block-editor-block-styles__preview-content .section-strands-bg-horizontal::before,
+		.components-popover .block-editor-block-styles__preview-content .section-strands-bg-horizontal::after,
+		.components-popover .block-editor-block-styles__item-preview .section-strands-bg-horizontal::before,
+		.components-popover .block-editor-block-styles__item-preview .section-strands-bg-horizontal::after {
+			content: none !important;
+			background-image: none !important;
+		}
+	';
 	if ( should_enable_page_wires_editor_fallback() ) {
 		\wp_enqueue_script(
 			'icts-counter-band-editor-limit',
@@ -374,6 +384,8 @@ function should_enable_page_wires_editor_fallback() {
 		) . ';',
 		'before'
 	);
+
+	\wp_add_inline_style( 'wp-edit-blocks', $editor_preview_css );
 } );
 
 \add_action( 'enqueue_block_assets', function () {
@@ -1826,6 +1838,8 @@ function register_block_styles() {
 			'list-check'        => __( 'Check', 'icts-europe' ),
 			'list-check-circle' => __( 'Check Circle', 'icts-europe' ),
 			'list-boxed'        => __( 'Boxed', 'icts-europe' ),
+			'icts-bullets'      => __( 'ICTS Bullets', 'icts-europe' ),
+			'icts-bullets-light'=> __( 'ICTS Bullets Light', 'icts-europe' ),
 		),
 		'core/code'         => array(
 			'dark-code' => __( 'Dark', 'icts-europe' ),
@@ -3403,6 +3417,878 @@ function apply_search_category_filter( $query ) {
 	$query->set( 'cat', $category_id );
 }
 \add_action( 'pre_get_posts', __NAMESPACE__ . '\apply_search_category_filter', 11 );
+
+/**
+ * Admin: add FAQ taxonomy filters to the FAQ posts list screen.
+ *
+ * @param string $post_type Current post type.
+ * @return void
+ */
+function render_faq_admin_taxonomy_filters( $post_type ) {
+	if ( 'faq' !== $post_type ) {
+		return;
+	}
+
+	$taxonomies = [ 'product', 'customer-type' ];
+
+	foreach ( $taxonomies as $taxonomy ) {
+		$taxonomy_object = \get_taxonomy( $taxonomy );
+		if ( ! $taxonomy_object ) {
+			continue;
+		}
+
+		$selected = isset( $_GET[ $taxonomy ] ) ? \absint( (int) \wp_unslash( $_GET[ $taxonomy ] ) ) : 0;
+
+		\wp_dropdown_categories(
+			[
+				'show_option_all' => sprintf(
+					/* translators: %s taxonomy plural label */
+					__( 'All %s', 'icts-europe' ),
+					$taxonomy_object->labels->name
+				),
+				'taxonomy'        => $taxonomy,
+				'name'            => $taxonomy,
+				'orderby'         => 'name',
+				'selected'        => $selected,
+				'hierarchical'    => true,
+				'depth'           => 3,
+				'show_count'      => false,
+				'hide_empty'      => false,
+				'value_field'     => 'term_id',
+			]
+		);
+	}
+}
+\add_action( 'restrict_manage_posts', __NAMESPACE__ . '\render_faq_admin_taxonomy_filters' );
+
+/**
+ * Admin: normalize FAQ taxonomy filter request values to term slugs.
+ *
+ * The list-table dropdowns submit term IDs, but the edit screen query vars for
+ * hierarchical taxonomies are interpreted more reliably when populated with the
+ * selected term slug.
+ *
+ * @param \WP_Query $query Query instance.
+ * @return void
+ */
+function normalize_faq_admin_taxonomy_filter_request( $query ) {
+	global $pagenow;
+
+	if ( ! ( $query instanceof \WP_Query ) || ! \is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	if ( 'edit.php' !== $pagenow ) {
+		return;
+	}
+
+	$post_type = $query->get( 'post_type' );
+	if ( ! $post_type && isset( $_GET['post_type'] ) ) {
+		$post_type = \sanitize_key( (string) \wp_unslash( $_GET['post_type'] ) );
+	}
+
+	if ( 'faq' !== $post_type ) {
+		return;
+	}
+
+	$taxonomies = [ 'product', 'customer-type' ];
+
+	foreach ( $taxonomies as $taxonomy ) {
+		$term_id = isset( $_GET[ $taxonomy ] ) ? \absint( (int) \wp_unslash( $_GET[ $taxonomy ] ) ) : 0;
+		if ( $term_id <= 0 ) {
+			continue;
+		}
+
+		$term = \get_term_by( 'id', $term_id, $taxonomy );
+		if ( ! ( $term instanceof \WP_Term ) ) {
+			continue;
+		}
+
+		$query->set( $taxonomy, $term->slug );
+	}
+}
+\add_action( 'pre_get_posts', __NAMESPACE__ . '\normalize_faq_admin_taxonomy_filter_request', 20 );
+
+/**
+ * Add a custom filtered FAQ reorder screen.
+ *
+ * @return void
+ */
+function register_faq_reorder_admin_page() {
+	return;
+}
+\add_action( 'admin_menu', __NAMESPACE__ . '\register_faq_reorder_admin_page' );
+
+/**
+ * Remove the legacy FAQ reorder submenu if present.
+ *
+ * @return void
+ */
+function remove_faq_reorder_admin_submenu() {
+	\remove_submenu_page( 'edit.php?post_type=faq', 'icts-faq-reorder' );
+	\remove_submenu_page( 'edit.php?post_type=faq', 'order-post-types-faq' );
+}
+\add_action( 'admin_menu', __NAMESPACE__ . '\remove_faq_reorder_admin_submenu', 99 );
+
+/**
+ * Build FAQ taxonomy filters from request data.
+ *
+ * @param array $request Request-like array.
+ * @return array<string,int>
+ */
+function get_faq_reorder_filter_values( $request ) {
+	$filters = [
+		'product'       => 0,
+		'customer-type' => 0,
+	];
+
+	foreach ( array_keys( $filters ) as $taxonomy ) {
+		if ( isset( $request[ $taxonomy ] ) ) {
+			$raw_value = (string) \wp_unslash( $request[ $taxonomy ] );
+			$term_id   = \absint( (int) $raw_value );
+
+			if ( $term_id > 0 ) {
+				$filters[ $taxonomy ] = $term_id;
+				continue;
+			}
+
+			$term_slug = \sanitize_title( $raw_value );
+			if ( '' === $term_slug ) {
+				continue;
+			}
+
+			$term = \get_term_by( 'slug', $term_slug, $taxonomy );
+			if ( $term instanceof \WP_Term ) {
+				$filters[ $taxonomy ] = (int) $term->term_id;
+			}
+		}
+	}
+
+	return $filters;
+}
+
+/**
+ * Determine whether the default FAQ list screen should allow drag-and-drop ordering.
+ *
+ * @param array $request Request-like array.
+ * @return bool
+ */
+function is_faq_list_reorderable_request( $request ) {
+	$post_status = isset( $request['post_status'] ) ? \sanitize_key( (string) \wp_unslash( $request['post_status'] ) ) : '';
+	$orderby     = isset( $request['orderby'] ) ? \sanitize_key( (string) \wp_unslash( $request['orderby'] ) ) : '';
+	$search      = isset( $request['s'] ) ? \trim( (string) \wp_unslash( $request['s'] ) ) : '';
+	$date_filter = isset( $request['m'] ) ? \preg_replace( '/[^0-9]/', '', (string) \wp_unslash( $request['m'] ) ) : '';
+	$date_filter = ( '0' === $date_filter ) ? '' : $date_filter;
+
+	if ( '' !== $search || '' !== $date_filter ) {
+		return false;
+	}
+
+	if ( '' !== $orderby && 'menu_order' !== $orderby ) {
+		return false;
+	}
+
+	if ( '' !== $post_status && ! \in_array( $post_status, [ 'publish', 'all' ], true ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Check whether the current admin screen is the filtered FAQ list.
+ *
+ * @return bool
+ */
+function is_current_faq_reorderable_list_screen() {
+	global $pagenow;
+
+	if ( ! \is_admin() || 'edit.php' !== $pagenow ) {
+		return false;
+	}
+
+	$post_type = isset( $_GET['post_type'] ) ? \sanitize_key( (string) \wp_unslash( $_GET['post_type'] ) ) : '';
+	if ( 'faq' !== $post_type && \function_exists( 'get_current_screen' ) ) {
+		$screen = \get_current_screen();
+		if ( $screen && isset( $screen->post_type ) ) {
+			$post_type = (string) $screen->post_type;
+		}
+	}
+
+	if ( 'faq' !== $post_type ) {
+		return false;
+	}
+
+	return is_faq_list_reorderable_request( $_GET );
+}
+
+/**
+ * Convert FAQ filter values into a tax query.
+ *
+ * @param array<string,int> $filters Selected term IDs keyed by taxonomy.
+ * @return array<int|string,mixed>
+ */
+function build_faq_reorder_tax_query( $filters ) {
+	$tax_query = [];
+
+	foreach ( $filters as $taxonomy => $term_id ) {
+		$term_id = (int) $term_id;
+		if ( $term_id <= 0 ) {
+			continue;
+		}
+
+		$tax_query[] = [
+			'taxonomy' => $taxonomy,
+			'field'    => 'term_id',
+			'terms'    => [ $term_id ],
+		];
+	}
+
+	if ( count( $tax_query ) > 1 ) {
+		$tax_query['relation'] = 'AND';
+	}
+
+	return $tax_query;
+}
+
+/**
+ * Ensure the FAQ admin list follows menu_order by default when inline reordering is allowed.
+ *
+ * @param \WP_Query $query Query instance.
+ * @return void
+ */
+function order_faq_admin_list_by_menu_order( $query ) {
+	global $pagenow;
+
+	if ( ! ( $query instanceof \WP_Query ) || ! \is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	if ( 'edit.php' !== $pagenow ) {
+		return;
+	}
+
+	$post_type = $query->get( 'post_type' );
+	if ( ! $post_type && isset( $_GET['post_type'] ) ) {
+		$post_type = \sanitize_key( (string) \wp_unslash( $_GET['post_type'] ) );
+	}
+
+	if ( 'faq' !== $post_type || ! is_faq_list_reorderable_request( $_GET ) ) {
+		return;
+	}
+
+	if ( $query->get( 'orderby' ) ) {
+		return;
+	}
+
+	$query->set(
+		'orderby',
+		[
+			'menu_order' => 'ASC',
+			'title'      => 'ASC',
+		]
+	);
+	$query->set( 'order', 'ASC' );
+}
+\add_action( 'pre_get_posts', __NAMESPACE__ . '\order_faq_admin_list_by_menu_order', 30 );
+
+/**
+ * Render a taxonomy dropdown for the FAQ reorder screen.
+ *
+ * @param string $taxonomy Selected taxonomy key.
+ * @param int    $selected Selected term ID.
+ * @return void
+ */
+function render_faq_reorder_taxonomy_dropdown( $taxonomy, $selected ) {
+	$taxonomy_object = \get_taxonomy( $taxonomy );
+	if ( ! $taxonomy_object ) {
+		return;
+	}
+
+	\wp_dropdown_categories(
+		[
+			'show_option_all' => sprintf(
+				/* translators: %s taxonomy plural label */
+				__( 'All %s', 'icts-europe' ),
+				$taxonomy_object->labels->name
+			),
+			'taxonomy'        => $taxonomy,
+			'name'            => $taxonomy,
+			'orderby'         => 'name',
+			'selected'        => (int) $selected,
+			'hierarchical'    => true,
+			'depth'           => 3,
+			'show_count'      => false,
+			'hide_empty'      => false,
+			'value_field'     => 'term_id',
+		]
+	);
+}
+
+/**
+ * Render the custom FAQ reorder admin page.
+ *
+ * @return void
+ */
+function render_faq_reorder_admin_page() {
+	$post_type_object = \get_post_type_object( 'faq' );
+	$capability       = $post_type_object && isset( $post_type_object->cap->edit_posts ) ? $post_type_object->cap->edit_posts : 'edit_posts';
+
+	if ( ! \current_user_can( $capability ) ) {
+		\wp_die( \esc_html__( 'You do not have permission to reorder FAQs.', 'icts-europe' ) );
+	}
+
+	$filters   = get_faq_reorder_filter_values( $_GET );
+	$tax_query = build_faq_reorder_tax_query( $filters );
+	$lang      = isset( $_GET['lang'] ) ? \sanitize_key( (string) \wp_unslash( $_GET['lang'] ) ) : '';
+
+	$query_args = [
+		'post_type'              => 'faq',
+		'post_status'            => 'publish',
+		'posts_per_page'         => -1,
+		'orderby'                => [
+			'menu_order' => 'ASC',
+			'title'      => 'ASC',
+		],
+		'order'                  => 'ASC',
+		'ignore_sticky_posts'    => true,
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+	];
+
+	if ( ! empty( $tax_query ) ) {
+		$query_args['tax_query'] = $tax_query;
+	}
+
+	if ( $lang ) {
+		$query_args['lang'] = $lang;
+	}
+
+	$faq_query = new \WP_Query( $query_args );
+	$faq_rows  = [];
+
+	if ( $faq_query->have_posts() ) {
+		while ( $faq_query->have_posts() ) {
+			$faq_query->the_post();
+
+			$post_id = (int) \get_the_ID();
+
+			$faq_rows[] = [
+				'id'             => $post_id,
+				'title'          => \get_the_title( $post_id ),
+				'edit_link'      => \get_edit_post_link( $post_id ),
+				'product_terms'  => \wp_get_post_terms( $post_id, 'product', [ 'fields' => 'names' ] ),
+				'customer_terms' => \wp_get_post_terms( $post_id, 'customer-type', [ 'fields' => 'names' ] ),
+			];
+		}
+	}
+
+	\wp_reset_postdata();
+	?>
+	<div class="wrap icts-faq-reorder-admin">
+		<h1><?php echo \esc_html__( 'Re-Order FAQs', 'icts-europe' ); ?></h1>
+		<p><?php echo \esc_html__( 'Filter the FAQ set, drag items into the new order, then save. The filtered FAQs keep their relative slots within the full FAQ order.', 'icts-europe' ); ?></p>
+
+		<form method="get" class="icts-faq-reorder-admin__filters">
+			<input type="hidden" name="post_type" value="faq" />
+			<input type="hidden" name="page" value="icts-faq-reorder" />
+			<?php if ( '' !== $lang ) : ?>
+				<input type="hidden" name="lang" value="<?php echo \esc_attr( $lang ); ?>" />
+			<?php endif; ?>
+
+			<div class="icts-faq-reorder-admin__filter-row">
+				<?php render_faq_reorder_taxonomy_dropdown( 'product', (int) $filters['product'] ); ?>
+				<?php render_faq_reorder_taxonomy_dropdown( 'customer-type', (int) $filters['customer-type'] ); ?>
+				<button type="submit" class="button"><?php echo \esc_html__( 'Filter FAQs', 'icts-europe' ); ?></button>
+			</div>
+		</form>
+
+		<div class="icts-faq-reorder-admin__status" data-icts-faq-reorder-status aria-live="polite"></div>
+
+		<?php if ( empty( $faq_rows ) ) : ?>
+			<p><?php echo \esc_html__( 'No FAQs matched the current filters.', 'icts-europe' ); ?></p>
+		<?php else : ?>
+			<div class="icts-faq-reorder-admin__actions">
+				<button type="button" class="button button-primary" data-icts-faq-reorder-save>
+					<?php echo \esc_html__( 'Save order', 'icts-europe' ); ?>
+				</button>
+				<span class="description"><?php echo \esc_html__( 'Drag rows by the handle to change the order.', 'icts-europe' ); ?></span>
+			</div>
+
+			<ul class="icts-faq-reorder-list" data-icts-faq-reorder-list>
+				<?php foreach ( $faq_rows as $faq_row ) : ?>
+					<?php
+					$product_terms  = isset( $faq_row['product_terms'] ) && \is_array( $faq_row['product_terms'] ) ? \array_filter( $faq_row['product_terms'] ) : [];
+					$customer_terms = isset( $faq_row['customer_terms'] ) && \is_array( $faq_row['customer_terms'] ) ? \array_filter( $faq_row['customer_terms'] ) : [];
+					?>
+					<li class="icts-faq-reorder-list__item" data-id="<?php echo \esc_attr( (string) $faq_row['id'] ); ?>">
+						<span class="icts-faq-reorder-list__handle" aria-hidden="true">::</span>
+						<div class="icts-faq-reorder-list__content">
+							<div class="icts-faq-reorder-list__title-row">
+								<strong><?php echo \esc_html( (string) $faq_row['title'] ); ?></strong>
+								<?php if ( ! empty( $faq_row['edit_link'] ) ) : ?>
+									<a href="<?php echo \esc_url( (string) $faq_row['edit_link'] ); ?>">
+										<?php echo \esc_html__( 'Edit', 'icts-europe' ); ?>
+									</a>
+								<?php endif; ?>
+							</div>
+							<div class="icts-faq-reorder-list__meta">
+								<span>
+									<?php echo \esc_html__( 'Products:', 'icts-europe' ); ?>
+									<?php echo \esc_html( ! empty( $product_terms ) ? \implode( ', ', $product_terms ) : __( 'None', 'icts-europe' ) ); ?>
+								</span>
+								<span>
+									<?php echo \esc_html__( 'Customer Types:', 'icts-europe' ); ?>
+									<?php echo \esc_html( ! empty( $customer_terms ) ? \implode( ', ', $customer_terms ) : __( 'None', 'icts-europe' ) ); ?>
+								</span>
+							</div>
+						</div>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+	</div>
+	<?php
+}
+
+/**
+ * Enqueue assets for the FAQ reorder admin page.
+ *
+ * @param string $hook_suffix Current admin page hook.
+ * @return void
+ */
+function enqueue_faq_reorder_admin_assets( $hook_suffix ) {
+	if ( 'faq_page_icts-faq-reorder' !== $hook_suffix ) {
+		return;
+	}
+
+	$script_relative = '/assets/js/admin-faq-reorder.js';
+	$style_relative  = '/assets/styles/admin-faq-reorder.css';
+	$script_path     = \get_template_directory() . $script_relative;
+	$style_path      = \get_template_directory() . $style_relative;
+	$theme_ver       = (string) \wp_get_theme()->get( 'Version' );
+
+	\wp_enqueue_style(
+		'icts-faq-reorder-admin',
+		\get_template_directory_uri() . $style_relative,
+		[],
+		\file_exists( $style_path ) ? (string) \filemtime( $style_path ) : $theme_ver
+	);
+
+	\wp_enqueue_script( 'jquery-ui-sortable' );
+	\wp_enqueue_script(
+		'icts-faq-reorder-admin',
+		\get_template_directory_uri() . $script_relative,
+		[ 'jquery', 'jquery-ui-sortable' ],
+		\file_exists( $script_path ) ? (string) \filemtime( $script_path ) : $theme_ver,
+		true
+	);
+
+	\wp_localize_script(
+		'icts-faq-reorder-admin',
+		'ictsFaqReorderAdmin',
+		[
+			'ajaxUrl'      => \admin_url( 'admin-ajax.php' ),
+			'nonce'        => \wp_create_nonce( 'icts_faq_reorder' ),
+			'savingLabel'  => __( 'Saving order…', 'icts-europe' ),
+			'savedLabel'   => __( 'FAQ order updated.', 'icts-europe' ),
+			'errorLabel'   => __( 'Unable to save the FAQ order.', 'icts-europe' ),
+			'emptyLabel'   => __( 'No FAQ items were provided to save.', 'icts-europe' ),
+		]
+	);
+}
+\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_faq_reorder_admin_assets' );
+
+/**
+ * Enqueue drag-and-drop ordering assets on the default FAQ list screen.
+ *
+ * @param string $hook_suffix Current admin page hook.
+ * @return void
+ */
+function enqueue_faq_list_reorder_assets( $hook_suffix ) {
+	if ( ! is_current_faq_reorderable_list_screen() ) {
+		return;
+	}
+
+	\wp_enqueue_script( 'jquery-ui-sortable' );
+}
+\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_faq_list_reorder_assets' );
+
+/**
+ * Output inline styles for filtered FAQ list drag-and-drop ordering.
+ *
+ * @return void
+ */
+function output_faq_list_reorder_inline_styles() {
+	if ( ! is_current_faq_reorderable_list_screen() ) {
+		return;
+	}
+	?>
+	<style id="icts-faq-list-reorder-inline-css">
+		.wp-admin.post-type-faq .wp-list-table .check-column,
+		.wp-admin.post-type-faq .wp-list-table .column-cb,
+		#the-list tr.type-faq > th.check-column {
+			cursor: move;
+			min-width: 110px;
+			position: relative;
+			vertical-align: top;
+			width: 110px !important;
+		}
+
+		#the-list tr.type-faq > th.check-column input[type="checkbox"] {
+			position: absolute;
+			left: 8px;
+			top: 8px;
+		}
+
+		#the-list tr.type-faq > th.check-column::after {
+			color: #b2b2b2;
+			content: "\f475";
+			display: inline-block;
+			font-family: dashicons;
+			font-size: 20px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 1;
+			position: absolute;
+			left: 34px;
+			margin-top: 4px;
+			text-align: center;
+			text-rendering: auto;
+			text-transform: none;
+			top: 8px;
+			transform: rotate(-90deg);
+		}
+
+		#the-list tr.type-faq.ui-sortable-helper {
+			background: #fff;
+			box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+		}
+
+		#the-list tr.icts-faq-list-reorder-placeholder td {
+			height: 46px;
+			border: 2px dashed #cbd5e1;
+			background: #f8fafc;
+		}
+
+		#the-list tr.type-faq.is-reorder-saving {
+			opacity: 0.7;
+		}
+	</style>
+	<?php
+}
+\add_action( 'admin_head', __NAMESPACE__ . '\output_faq_list_reorder_inline_styles' );
+
+/**
+ * Show a visible notice when FAQ list reorder mode is active.
+ *
+ * @return void
+ */
+function output_faq_list_reorder_notice() {
+	if ( ! is_current_faq_reorderable_list_screen() ) {
+		return;
+	}
+	?>
+	<div class="notice notice-info icts-faq-list-reorder-notice">
+		<p><?php echo \esc_html__( 'FAQ reorder mode is active. Drag rows using the Move handle in the first column. Changes save automatically.', 'icts-europe' ); ?></p>
+	</div>
+	<?php
+}
+\add_action( 'admin_notices', __NAMESPACE__ . '\output_faq_list_reorder_notice' );
+
+/**
+ * Output inline script for filtered FAQ list drag-and-drop ordering.
+ *
+ * @return void
+ */
+function output_faq_list_reorder_inline_script() {
+	if ( ! is_current_faq_reorderable_list_screen() ) {
+		return;
+	}
+
+	$filters = get_faq_reorder_filter_values( $_GET );
+	$per_page = (int) \get_user_option( 'edit_faq_per_page' );
+	if ( $per_page < 1 ) {
+		$per_page = (int) \apply_filters( 'edit_faq_per_page', 20 );
+	}
+
+	$config = [
+		'ajaxUrl'      => \admin_url( 'admin-ajax.php' ),
+		'nonce'        => \wp_create_nonce( 'icts_faq_reorder' ),
+		'paged'        => isset( $_GET['paged'] ) ? \max( 1, \absint( (int) \wp_unslash( $_GET['paged'] ) ) ) : 1,
+		'perPage'      => $per_page,
+		'product'      => (int) $filters['product'],
+		'customerType' => (int) $filters['customer-type'],
+		'lang'         => isset( $_GET['lang'] ) ? \sanitize_key( (string) \wp_unslash( $_GET['lang'] ) ) : '',
+		'savingLabel'  => __( 'Saving order…', 'icts-europe' ),
+		'savedLabel'   => __( 'FAQ order updated.', 'icts-europe' ),
+		'errorLabel'   => __( 'Unable to save the FAQ order.', 'icts-europe' ),
+		'emptyLabel'   => __( 'No FAQ items were available to save.', 'icts-europe' ),
+	];
+	?>
+	<script id="icts-faq-list-reorder-inline-js">
+		window.ictsFaqListReorderAdmin = <?php echo \wp_json_encode( $config ); ?>;
+		jQuery(function ($) {
+			var config = window.ictsFaqListReorderAdmin || null;
+			var $tableBody = $('#the-list');
+			var $rows = $tableBody.children('tr.type-faq');
+			var $status = $('#icts-faq-list-reorder-status');
+			var isSaving = false;
+
+			if (!config || !$tableBody.length || !$rows.length || typeof $.fn.sortable !== 'function') {
+				return;
+			}
+
+			if (!$status.length) {
+				$status = $('<div id="icts-faq-list-reorder-status" class="notice inline hidden"><p></p></div>');
+				$('.wrap').first().find('.icts-faq-list-reorder-notice').last().after($status);
+			}
+
+			function setStatus(message, type) {
+				$status.removeClass('hidden notice-success notice-error notice-info');
+
+				if (type === 'success') {
+					$status.addClass('notice-success');
+				} else if (type === 'error') {
+					$status.addClass('notice-error');
+				} else {
+					$status.addClass('notice-info');
+				}
+
+				$status.find('p').text(message || '');
+			}
+
+			$tableBody.sortable({
+				items: '> tr.type-faq',
+				axis: 'y',
+				handle: 'th.check-column',
+				cancel: 'input[type="checkbox"], a, button',
+				helper: function (event, ui) {
+					ui.children().each(function () {
+						$(this).width($(this).width());
+					});
+					return ui;
+				},
+				placeholder: 'icts-faq-list-reorder-placeholder',
+				start: function (event, ui) {
+					ui.placeholder.height(ui.helper.outerHeight());
+					ui.placeholder.html('<td colspan="' + ui.helper.children().length + '"></td>');
+				},
+				update: function () {
+					var orderedIds;
+
+					if (isSaving) {
+						return;
+					}
+
+					orderedIds = $tableBody.children('tr.type-faq').map(function () {
+						var rowId = ($(this).attr('id') || '').replace('post-', '');
+						return parseInt(rowId, 10);
+					}).get().filter(function (value) {
+						return !isNaN(value) && value > 0;
+					});
+
+					if (!orderedIds.length) {
+						setStatus(config.emptyLabel, 'error');
+						return;
+					}
+
+					isSaving = true;
+					$tableBody.children('tr.type-faq').addClass('is-reorder-saving');
+					setStatus(config.savingLabel, 'info');
+
+					$.ajax({
+						url: config.ajaxUrl,
+						method: 'POST',
+						dataType: 'json',
+						data: {
+							action: 'icts_save_faq_reorder',
+							nonce: config.nonce,
+							orderedIds: orderedIds,
+							product: config.product,
+							'customer-type': config.customerType,
+							lang: config.lang,
+							paged: config.paged,
+							perPage: config.perPage
+						}
+					}).done(function (response) {
+						if (response && response.success) {
+							setStatus(response.data && response.data.message ? response.data.message : config.savedLabel, 'success');
+							return;
+						}
+
+						setStatus(response && response.data && response.data.message ? response.data.message : config.errorLabel, 'error');
+					}).fail(function (xhr) {
+						var message = xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message ? xhr.responseJSON.data.message : config.errorLabel;
+						setStatus(message, 'error');
+					}).always(function () {
+						isSaving = false;
+						$tableBody.children('tr.type-faq').removeClass('is-reorder-saving');
+					});
+				}
+			});
+		});
+	</script>
+	<?php
+}
+\add_action( 'admin_footer', __NAMESPACE__ . '\output_faq_list_reorder_inline_script' );
+
+/**
+ * Save the filtered FAQ order while preserving the rest of the FAQ list slots.
+ *
+ * @return void
+ */
+function ajax_save_faq_reorder() {
+	\check_ajax_referer( 'icts_faq_reorder', 'nonce' );
+
+	$post_type_object = \get_post_type_object( 'faq' );
+	$capability       = $post_type_object && isset( $post_type_object->cap->edit_posts ) ? $post_type_object->cap->edit_posts : 'edit_posts';
+
+	if ( ! \current_user_can( $capability ) ) {
+		\wp_send_json_error(
+			[
+				'message' => \esc_html__( 'You do not have permission to reorder FAQs.', 'icts-europe' ),
+			],
+			403
+		);
+	}
+
+	$ordered_ids = isset( $_POST['orderedIds'] ) ? (array) \wp_unslash( $_POST['orderedIds'] ) : [];
+	$ordered_ids = \array_values(
+		\array_filter(
+			\array_map( 'absint', $ordered_ids )
+		)
+	);
+
+	if ( empty( $ordered_ids ) ) {
+		\wp_send_json_error(
+			[
+				'message' => \esc_html__( 'No FAQ items were provided to save.', 'icts-europe' ),
+			],
+			400
+		);
+	}
+
+	$filters   = get_faq_reorder_filter_values( $_POST );
+	$tax_query = build_faq_reorder_tax_query( $filters );
+	$lang      = isset( $_POST['lang'] ) ? \sanitize_key( (string) \wp_unslash( $_POST['lang'] ) ) : '';
+	$paged     = isset( $_POST['paged'] ) ? \max( 1, \absint( (int) \wp_unslash( $_POST['paged'] ) ) ) : 1;
+	$per_page  = isset( $_POST['perPage'] ) ? \absint( (int) \wp_unslash( $_POST['perPage'] ) ) : 0;
+
+	$subset_query_args = [
+		'post_type'              => 'faq',
+		'post_status'            => 'publish',
+		'posts_per_page'         => -1,
+		'orderby'                => [
+			'menu_order' => 'ASC',
+			'title'      => 'ASC',
+		],
+		'order'                  => 'ASC',
+		'fields'                 => 'ids',
+		'ignore_sticky_posts'    => true,
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+	];
+
+	if ( ! empty( $tax_query ) ) {
+		$subset_query_args['tax_query'] = $tax_query;
+	}
+
+	if ( $lang ) {
+		$subset_query_args['lang'] = $lang;
+	}
+
+	$expected_subset_ids = \get_posts( $subset_query_args );
+	$expected_subset_ids = \array_map( 'absint', $expected_subset_ids );
+
+	$subset_ids_for_replacement = $expected_subset_ids;
+	$expected_lookup             = \array_fill_keys( $expected_subset_ids, true );
+	$current_subset_positions    = [];
+
+	foreach ( $ordered_ids as $ordered_id ) {
+		if ( ! isset( $expected_lookup[ $ordered_id ] ) ) {
+			\wp_send_json_error(
+				[
+					'message' => \esc_html__( 'The FAQ list changed before saving. Reload the page and try again.', 'icts-europe' ),
+				],
+				409
+			);
+		}
+	}
+
+	foreach ( $expected_subset_ids as $index => $expected_id ) {
+		if ( \in_array( $expected_id, $ordered_ids, true ) ) {
+			$current_subset_positions[] = (int) $index;
+		}
+	}
+
+	if ( \count( $ordered_ids ) !== \count( $current_subset_positions ) ) {
+		\wp_send_json_error(
+			[
+				'message' => \esc_html__( 'The FAQ list changed before saving. Reload the page and try again.', 'icts-europe' ),
+			],
+			409
+		);
+	}
+
+	foreach ( $current_subset_positions as $position_index => $subset_position ) {
+		$subset_ids_for_replacement[ $subset_position ] = $ordered_ids[ $position_index ];
+	}
+
+	$full_query_args = [
+		'post_type'              => 'faq',
+		'post_status'            => 'publish',
+		'posts_per_page'         => -1,
+		'orderby'                => [
+			'menu_order' => 'ASC',
+			'title'      => 'ASC',
+		],
+		'order'                  => 'ASC',
+		'fields'                 => 'ids',
+		'ignore_sticky_posts'    => true,
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+	];
+
+	if ( $lang ) {
+		$full_query_args['lang'] = $lang;
+	}
+
+	$full_ids      = \get_posts( $full_query_args );
+	$full_ids      = \array_map( 'absint', $full_ids );
+	$subset_lookup = \array_fill_keys( $expected_subset_ids, true );
+	$replacement_i = 0;
+	$new_full_ids  = [];
+
+	foreach ( $full_ids as $full_id ) {
+		if ( isset( $subset_lookup[ $full_id ] ) ) {
+			$new_full_ids[] = $subset_ids_for_replacement[ $replacement_i ];
+			$replacement_i += 1;
+			continue;
+		}
+
+		$new_full_ids[] = $full_id;
+	}
+
+	foreach ( $new_full_ids as $index => $post_id ) {
+		\wp_update_post(
+			[
+				'ID'         => (int) $post_id,
+				'menu_order' => ( $index + 1 ) * 10,
+			]
+		);
+	}
+
+	\wp_send_json_success(
+		[
+			'message' => \esc_html__( 'FAQ order updated.', 'icts-europe' ),
+		]
+	);
+}
+\add_action( 'wp_ajax_icts_save_faq_reorder', __NAMESPACE__ . '\ajax_save_faq_reorder' );
 
 /**
  * Admin: Team Member list – show a small portrait next to the title.

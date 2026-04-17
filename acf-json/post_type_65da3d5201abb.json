@@ -67,7 +67,9 @@
     "supports": [
         "title"
     ],
-    "taxonomies": "",
+    "taxonomies": [
+        "customer-type"
+    ],
     "has_archive": false,
     "has_archive_slug": "",
     "rewrite": {

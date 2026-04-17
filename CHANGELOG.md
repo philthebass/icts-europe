@@ -7,6 +7,24 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.6 - 2026-04-17
+### Added
+- Added Testimonials Slider block controls for filtering slides by `customer-type`.
+- Added FAQ Accordion controls for limiting the initial FAQ count and customizing the front-end `Show all FAQs` button label.
+- Added FAQ admin taxonomy filters and filtered list reordering support for managing FAQ order by `product` and `customer-type`.
+- Added `ICTS Bullets` and `ICTS Bullets Light` list styles.
+
+### Changed
+- Updated the FAQ Accordion front-end behavior so search and taxonomy filtering work against the full matching set before optionally collapsing the remainder behind a reveal button.
+- Updated the testimonials query and related ACF objects so testimonials can share the `customer-type` taxonomy used elsewhere in the theme.
+
+### Fixed
+- Prevented decorative page-wire and strand background art from leaking into block style preview tiles in the editor.
+- Improved FAQ block preview initialization so accordion behavior and preview messaging stay accurate inside ACF block previews.
+
+### Notes
+- Validate FAQ filtering, FAQ ordering, Testimonials Slider customer-type filtering, and list style previews after deploying the `1.0.6` package.
+
 ## 1.0.5 - 2026-04-15
 ### Added
 - No new features in this release.

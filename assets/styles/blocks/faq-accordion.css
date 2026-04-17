@@ -235,6 +235,24 @@
 	margin-top: clamp(1rem, 2vw, 1.4rem);
 }
 
+.icts-faq-accordion__actions {
+	max-width: var(--icts-faq-content-max-width);
+	margin: clamp(1rem, 2vw, 1.5rem) auto 0;
+	text-align: center;
+}
+
+.icts-faq-accordion__preview-note {
+	max-width: var(--icts-faq-content-max-width);
+	margin: clamp(1rem, 2vw, 1.5rem) auto 0;
+	color: var(--wp--preset--color--secondary, #5c6670);
+	font-size: 0.95rem;
+	text-align: center;
+}
+
+.icts-faq-accordion__show-all.wp-element-button {
+	min-width: min(100%, 16rem);
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.icts-faq-accordion__item,
 	.icts-faq-accordion__icon::before,
