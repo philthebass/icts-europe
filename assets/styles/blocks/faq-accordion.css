@@ -239,6 +239,7 @@
 	max-width: var(--icts-faq-content-max-width);
 	margin: clamp(1rem, 2vw, 1.5rem) auto 0;
 	text-align: center;
+	width: 100%;
 }
 
 .icts-faq-accordion__preview-note {
@@ -247,9 +248,12 @@
 	color: var(--wp--preset--color--secondary, #5c6670);
 	font-size: 0.95rem;
 	text-align: center;
+	width: 100%;
 }
 
 .icts-faq-accordion__show-all.wp-element-button {
+	display: inline-flex;
+	justify-content: center;
 	min-width: min(100%, 16rem);
 }
 
