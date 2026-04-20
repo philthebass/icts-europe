@@ -416,7 +416,7 @@ body.rtl .icts-site-header__language .wp-block-polylang-language-switcher select
 			.current_page_ancestor
 		)
 		> .wp-block-navigation-submenu__toggle {
-		color: inherit;
+		color: var(--wp--preset--color--brand-primary);
 		background-size: 0 2px;
 		animation: none;
 	}
