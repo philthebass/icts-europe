@@ -68,6 +68,7 @@ $label = is_string( $label ) ? trim( $label ) : '';
 $from_value = ( 'down' === $count_direction ) ? $number : 0;
 $to_value   = ( 'down' === $count_direction ) ? 0 : $number;
 $display_from = number_format( $from_value, 0, '.', ',' );
+$display_value = $is_editor_preview ? number_format( $number, 0, '.', ',' ) : $display_from;
 
 $aria_value_number = number_format( $to_value, 0, '.', ',' );
 $aria_value        = trim( $prefix . $aria_value_number . $suffix );
@@ -88,11 +89,13 @@ if ( '' === $aria_value ) {
 
 			<span
 				class="icts-counter-block__number"
-				data-from="<?php echo esc_attr( (string) $from_value ); ?>"
-				data-to="<?php echo esc_attr( (string) $to_value ); ?>"
-				data-duration="1600"
+				<?php if ( ! $is_editor_preview ) : ?>
+					data-from="<?php echo esc_attr( (string) $from_value ); ?>"
+					data-to="<?php echo esc_attr( (string) $to_value ); ?>"
+					data-duration="1600"
+				<?php endif; ?>
 			>
-				<?php echo esc_html( $display_from ); ?>
+				<?php echo esc_html( $display_value ); ?>
 			</span>
 
 			<?php if ( '' !== $suffix ) : ?>

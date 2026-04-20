@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.8 - 2026-04-20
+### Added
+- No new features in this release.
+
+### Changed
+- Updated the Counter Band editor preview so the block uses a stable equal-column layout while editing, including the initial unselected state.
+- Updated Counter block previews in the editor to show the stored formatted value immediately instead of the animated starting value.
+
+### Fixed
+- Prevented Counter Band cards from inheriting front-end asymmetric span rules that caused distorted layouts in the block editor.
+
+### Notes
+- Validate the Counter Band in the editor after deploying the `1.0.8` package, including the initial unselected state and the displayed counter values.
+
 ## 1.0.7 - 2026-04-20
 ### Added
 - No new features in this release.
