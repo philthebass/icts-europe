@@ -79,7 +79,6 @@
 }
 
 .icts-solutions-slider__intro {
-    max-width: 70ch;
     margin: 0 auto clamp(1.25rem, 3vw, 2rem);
     text-align: center;
 }

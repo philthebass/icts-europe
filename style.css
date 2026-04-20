@@ -7,7 +7,7 @@ Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.0.6
+Version: 1.0.7
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
@@ -1025,8 +1025,8 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	padding-left: var(--wp--preset--spacing--small) !important;
 }
 
-.feature-card-grid--usp > .feature-card .feature-card__content > :first-child,
-.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__content > :first-child {
+.feature-card-grid--usp > .feature-card .feature-card__icon,
+.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__icon {
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
@@ -1043,8 +1043,8 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	padding-bottom: 0;
 }
 
-.feature-card-grid--usp > .feature-card .feature-card__content > :first-child .icon-container,
-.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__content > :first-child .icon-container {
+.feature-card-grid--usp > .feature-card .feature-card__icon .icon-container,
+.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__icon .icon-container {
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
@@ -1052,10 +1052,10 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	height: 6.875rem;
 }
 
-.feature-card-grid--usp > .feature-card .feature-card__content > :first-child svg,
-.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__content > :first-child svg,
-.feature-card-grid--usp > .feature-card .feature-card__content > :first-child img,
-.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__content > :first-child img {
+.feature-card-grid--usp > .feature-card .feature-card__icon svg,
+.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__icon svg,
+.feature-card-grid--usp > .feature-card .feature-card__icon img,
+.feature-card-grid--usp > .wp-block-group.feature-card .feature-card__icon img {
 	display: block;
 	height: 6.875rem !important;
 	max-height: 6.875rem;
@@ -1068,7 +1068,8 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
-	min-height: 2.5rem;
+	line-height: 1.2;
+	min-height: calc(2.4em + 0.25rem);
 	margin: 0;
 	padding: 0;
 	text-align: center;
@@ -1096,8 +1097,8 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	justify-content: flex-start;
 }
 
-.feature-card-grid--icon-align > .feature-card.feature-card__content > :first-child,
-.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > :first-child {
+.feature-card-grid--icon-align > .feature-card.feature-card__content > .feature-card__icon,
+.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > .feature-card__icon {
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
@@ -1107,8 +1108,8 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	width: 100%;
 }
 
-.feature-card-grid--icon-align > .feature-card.feature-card__content > :first-child .icon-container,
-.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > :first-child .icon-container {
+.feature-card-grid--icon-align > .feature-card.feature-card__content > .feature-card__icon .icon-container,
+.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > .feature-card__icon .icon-container {
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
@@ -1117,10 +1118,10 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	min-height: 8.25rem;
 }
 
-.feature-card-grid--icon-align > .feature-card.feature-card__content > :first-child svg,
-.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > :first-child svg,
-.feature-card-grid--icon-align > .feature-card.feature-card__content > :first-child img,
-.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > :first-child img {
+.feature-card-grid--icon-align > .feature-card.feature-card__content > .feature-card__icon svg,
+.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > .feature-card__icon svg,
+.feature-card-grid--icon-align > .feature-card.feature-card__content > .feature-card__icon img,
+.feature-card-grid--icon-align > .wp-block-group.feature-card.feature-card__content > .feature-card__icon img {
 	display: block;
 	width: auto !important;
 	max-width: 100%;

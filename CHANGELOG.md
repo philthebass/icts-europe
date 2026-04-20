@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.7 - 2026-04-20
+### Added
+- No new features in this release.
+
+### Changed
+- Removed the Solutions Slider intro width cap so section introductions can use the available layout width.
+- Updated feature-card icon selectors and title height handling so USP and icon-aligned card layouts behave more consistently with the current block markup.
+
+### Fixed
+- Prevented the header nav from showing both `Industries` and `Solutions` as selected when the shared TravelDoc airline page is active from both navigation trees.
+
+### Notes
+- Validate the TravelDoc airline page header state, the Solutions Slider intro layout, and feature-card icon/title alignment after deploying the `1.0.7` package.
+
 ## 1.0.6 - 2026-04-17
 ### Added
 - Added Testimonials Slider block controls for filtering slides by `customer-type`.

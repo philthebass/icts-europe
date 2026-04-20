@@ -370,6 +370,57 @@ body.rtl .icts-site-header__language .wp-block-polylang-language-switcher select
 		animation: icts-nav-selected-underline-in .75s ease forwards;
 	}
 
+	/*
+		One-off nav exception: if both top-level Industries and Solutions items are
+		marked current for the same page, prefer the first item (Industries).
+	*/
+	.icts-site-header__nav
+		.wp-block-navigation__container
+		> .wp-block-navigation-item:nth-child(1):is(
+			.current-menu-item,
+			.current-menu-ancestor,
+			.current-menu-parent,
+			.current-page-parent,
+			.current-page-ancestor,
+			.current_page_parent,
+			.current_page_ancestor
+		)
+		+ .wp-block-navigation-item:nth-child(2):is(
+			.current-menu-item,
+			.current-menu-ancestor,
+			.current-menu-parent,
+			.current-page-parent,
+			.current-page-ancestor,
+			.current_page_parent,
+			.current_page_ancestor
+		)
+		> .wp-block-navigation-item__content:not(.has-background),
+	.icts-site-header__nav
+		.wp-block-navigation__container
+		> .wp-block-navigation-item:nth-child(1):is(
+			.current-menu-item,
+			.current-menu-ancestor,
+			.current-menu-parent,
+			.current-page-parent,
+			.current-page-ancestor,
+			.current_page_parent,
+			.current_page_ancestor
+		)
+		+ .wp-block-navigation-item:nth-child(2):is(
+			.current-menu-item,
+			.current-menu-ancestor,
+			.current-menu-parent,
+			.current-page-parent,
+			.current-page-ancestor,
+			.current_page_parent,
+			.current_page_ancestor
+		)
+		> .wp-block-navigation-submenu__toggle {
+		color: inherit;
+		background-size: 0 2px;
+		animation: none;
+	}
+
 	.icts-site-header .wp-block-navigation + .wp-block-buttons {
 		margin-inline-start: var(--icts-header-nav-gap);
 	}
