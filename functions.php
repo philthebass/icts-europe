@@ -1437,7 +1437,7 @@ function render_header_search_modal() {
 		<div class="icts-header-search-modal__backdrop" data-icts-search-close></div>
 		<div class="icts-header-search-modal__panel" role="document">
 			<button type="button" class="icts-header-search-modal__close" data-icts-search-close aria-label="<?php esc_attr_e( 'Close search', 'icts-europe' ); ?>">×</button>
-			<?php echo do_blocks( $search_block ); ?>
+			<?php echo do_blocks( $search_block ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core renders sanitized block markup from a static block string. ?>
 		</div>
 	</div>
 	<?php
@@ -2284,8 +2284,8 @@ add_filter( 'render_block_core/paragraph', __NAMESPACE__ . '\update_footer_copyr
             }
         }
 
-        if ( $src ) {
-            echo '<img src="' . $src . '" alt="" style="max-width:60px;height:auto;display:block;margin:0 auto;" />';
+	        if ( $src ) {
+	            echo '<img src="' . esc_url( $src ) . '" alt="" style="max-width:60px;height:auto;display:block;margin:0 auto;" />';
         } else {
             // Little dash so you can easily see "no logo".
             echo '<span aria-hidden="true">—</span>';
@@ -2454,11 +2454,12 @@ function render_category_color_field_edit( $term ) {
 }
 
 function save_category_color_field( $term_id ) {
-    if ( ! isset( $_POST['icts_category_color_slug'] ) ) {
+    // WordPress core taxonomy forms submit with core nonce protection.
+    if ( ! isset( $_POST['icts_category_color_slug'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
         return;
     }
 
-    $color_slug = sanitize_key( (string) \wp_unslash( $_POST['icts_category_color_slug'] ) );
+    $color_slug = sanitize_key( (string) \wp_unslash( $_POST['icts_category_color_slug'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
     if ( '' === $color_slug ) {
         \delete_term_meta( $term_id, 'icts_category_color_slug' );
@@ -4154,7 +4155,7 @@ function ajax_save_faq_reorder() {
 		);
 	}
 
-	$ordered_ids = isset( $_POST['orderedIds'] ) ? (array) \wp_unslash( $_POST['orderedIds'] ) : [];
+		$ordered_ids = isset( $_POST['orderedIds'] ) ? (array) \wp_unslash( $_POST['orderedIds'] ) : []; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Protected by check_ajax_referer() above and sanitized below with absint.
 	$ordered_ids = \array_values(
 		\array_filter(
 			\array_map( 'absint', $ordered_ids )

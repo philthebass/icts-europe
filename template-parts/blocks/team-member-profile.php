@@ -96,11 +96,11 @@ $portrait = get_the_post_thumbnail(
 	<div class="team-member-profile__layout">
 		<div class="team-member-profile__main">
 			<div class="team-member-profile__inner">
-				<?php if ( $portrait ) : ?>
-					<div class="team-member-profile__media">
-						<?php echo $portrait; ?>
-					</div>
-				<?php endif; ?>
+					<?php if ( $portrait ) : ?>
+						<div class="team-member-profile__media">
+							<?php echo $portrait; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress core generates post thumbnail markup. ?>
+						</div>
+					<?php endif; ?>
 
 				<div class="team-member-profile__content">
 					<header class="team-member-profile__header">
@@ -165,11 +165,11 @@ $portrait = get_the_post_thumbnail(
 							?>
 							<li class="team-member-profile__sidebar-item">
 								<div class="team-member-profile__sidebar-member">
-									<?php if ( $other_member_img ) : ?>
-										<a class="team-member-profile__sidebar-image-link" href="<?php echo esc_url( $other_member_url ); ?>">
-											<?php echo $other_member_img; ?>
-										</a>
-									<?php endif; ?>
+										<?php if ( $other_member_img ) : ?>
+											<a class="team-member-profile__sidebar-image-link" href="<?php echo esc_url( $other_member_url ); ?>">
+												<?php echo $other_member_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress core generates post thumbnail markup. ?>
+											</a>
+										<?php endif; ?>
 
 									<div class="team-member-profile__sidebar-member-text">
 										<a class="team-member-profile__sidebar-link" href="<?php echo esc_url( $other_member_url ); ?>">

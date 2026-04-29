@@ -116,7 +116,7 @@ if ( '' === $image_html && $image_url ) {
 	);
 }
 ?>
-<article <?php echo get_block_wrapper_attributes( [ 'class' => 'icts-sector-card' ] ); ?>>
+<article <?php echo get_block_wrapper_attributes( [ 'class' => 'icts-sector-card' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core escapes block wrapper attributes. ?>>
 	<div class="icts-sector-card__card">
 		<?php if ( '' !== $image_html ) : ?>
 			<figure class="icts-sector-card__media">

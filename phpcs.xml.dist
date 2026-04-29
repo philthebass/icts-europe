@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="ICTS Europe Theme">
+	<description>PHPCS rules for the ICTS Europe WordPress theme.</description>
+
+	<file>functions.php</file>
+	<file>inc</file>
+	<file>blocks</file>
+	<file>template-parts</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+
+	<arg name="basepath" value="."/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="4"/>
+	<arg name="warning-severity" value="0"/>
+
+	<config name="testVersion" value="7.3-"/>
+	<config name="minimum_supported_wp_version" value="6.9"/>
+
+	<!-- Keep the initial gate focused on higher-signal pre-live issues.
+	This avoids turning CI into a repo-wide formatting rewrite. -->
+	<rule ref="WordPress.Security.EscapeOutput"/>
+	<rule ref="WordPress.Security.NonceVerification"/>
+	<rule ref="WordPress.Security.ValidatedSanitizedInput"/>
+	<rule ref="WordPress.WP.AlternativeFunctions"/>
+	<rule ref="WordPress.DB.DirectDatabaseQuery"/>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

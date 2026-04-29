@@ -1,5 +1,8 @@
 {
     "name": "philipevans/icts-europe",
+    "scripts": {
+        "lint:phpcs": "vendor/bin/phpcs"
+    },
     "authors": [
         {
             "name": "philthebass",
@@ -7,6 +10,15 @@
         }
     ],
     "require-dev": {
-        "php-stubs/wordpress-stubs": "^6.9"
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "php-stubs/wordpress-stubs": "^6.9",
+        "squizlabs/php_codesniffer": "^3.10",
+        "wp-coding-standards/wpcs": "^3.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
