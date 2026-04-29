@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.9 - 2026-04-29
+### Added
+- No new features in this release.
+
+### Changed
+- Updated feature-card title styles so industry and USP card titles use the theme `x-large` font-size, bold font-weight, and snug line-height tokens.
+
+### Fixed
+- No bug fixes in this release.
+
+### Notes
+- Validate feature-card title sizing and card heights on the affected pages after deploying the `1.0.9` package.
+
 ## 1.0.8 - 2026-04-20
 ### Added
 - No new features in this release.

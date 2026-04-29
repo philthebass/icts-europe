@@ -83,6 +83,7 @@ Editor usage (feature card grid)
 - For reusable feature card sections built with the core Grid block, add a variant class to the parent Grid block under Advanced → Additional CSS class(es).
 - Use `feature-card-grid--industries` for the wider industry card layout: `3` columns from `960px` to `1759px`, `2` columns from `617px` to `959px`, and `1` column at `616px` and below.
 - Use `feature-card-grid--usp` for 4-up USP/benefit card layouts: `4` columns from `960px` to `1759px`, `2` columns from `617px` to `959px`, and `1` column at `616px` and below.
+- Add `feature-card-grid--title-2-lines` to the same Grid block only when a card set includes titles that wrap to two lines and body text should start at a consistent height.
 - Keep the Grid block for editor authoring, but treat these variant classes as required when feature-card sections need predictable wrapping behavior.
 - Expected inner classes:
   - Shared card wrapper: `feature-card`
