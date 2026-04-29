@@ -5,7 +5,7 @@
 
     var desktopQuery = window.matchMedia('(min-width: 1094px)');
     var mobileQuery = window.matchMedia('(max-width: 1093px)');
-    var DESKTOP_CLOSE_MS = 1000;
+    var DESKTOP_CLOSE_MS = 320;
     var DESKTOP_FLYOUT_MS = 320;
     var MOBILE_SLIDE_MS = 280;
 

@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.10 - 2026-04-29
+### Added
+- No new features in this release.
+
+### Changed
+- Sped up the desktop mega menu panel transition from 1 second to 320ms, matching the existing desktop flyout timing.
+- Balanced the desktop mega menu flyout row spacing so hover states have matching right-side breathing room.
+
+### Fixed
+- Prevented the horizontal strands section helper from creating page-level horizontal overflow while keeping the decorative strands visible around constrained groups.
+
+### Notes
+- Validate pages using `section-strands-bg-horizontal` and the desktop mega menu after deploying the `1.0.10` package.
+
 ## 1.0.9 - 2026-04-29
 ### Added
 - No new features in this release.
