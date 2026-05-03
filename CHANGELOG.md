@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.11 - 2026-05-03
+### Added
+- No new features in this release.
+
+### Changed
+- Extended horizontal overflow clipping to the hero slider wrappers and horizontal strands page context so decorative full-width sections do not create sideways scroll.
+- Added matching nested mega-menu hover and focus-within background styling for deeper desktop flyout rows.
+
+### Fixed
+- Prevented the Steps Primary decorative strands area from contributing to page-level horizontal overflow.
+
+### Notes
+- Validate pages using the Hero Slider, Steps Primary, `section-strands-bg-horizontal`, and the desktop mega menu after deploying the `1.0.11` package.
+
 ## 1.0.10 - 2026-04-29
 ### Added
 - No new features in this release.

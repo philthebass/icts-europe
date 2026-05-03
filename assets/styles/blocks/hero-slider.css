@@ -9,6 +9,8 @@
     position: relative;
     width: 100vw;
     max-width: 100vw;
+    overflow-x: hidden;
+    overflow-x: clip;
     margin-left: calc(50% - 50vw) !important;
     margin-right: calc(50% - 50vw) !important;
 }
@@ -51,6 +53,8 @@
 .icts-hero-slider {
     position: relative;
     width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
     color: var(--wp--preset--color--base, #ffffff);
 
     /* Layout tuning (XD spec) */

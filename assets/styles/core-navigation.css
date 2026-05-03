@@ -254,6 +254,11 @@
 		background: color-mix(in srgb, var(--wp--preset--color--main), transparent 96%);
 	}
 
+	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega > .wp-block-navigation__submenu-container > .wp-block-navigation-item.has-child > .wp-block-navigation__submenu-container > .wp-block-navigation-item:hover,
+	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega > .wp-block-navigation__submenu-container > .wp-block-navigation-item.has-child > .wp-block-navigation__submenu-container > .wp-block-navigation-item:focus-within {
+		background: color-mix(in srgb, var(--wp--preset--color--main), transparent 96%);
+	}
+
 	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega > .wp-block-navigation__submenu-container a:hover,
 	.wp-block-navigation.icts-nav-enhanced .wp-block-navigation__container > .wp-block-navigation-item.icts-nav-has-mega > .wp-block-navigation__submenu-container .wp-block-navigation-submenu__toggle:hover {
 		background: transparent;
