@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.12 - 2026-05-22
+### Added
+- Added a `has-white-background-below-1321` utility class for improving page-wire hero readability on narrower screens.
+
+### Changed
+- No broader behavior changes in this release.
+
+### Fixed
+- No bug fixes in this release.
+
+### Notes
+- Apply `has-white-background-below-1321` to hero/content groups where decorative page wires reduce text readability below 1321px.
+
 ## 1.0.11 - 2026-05-03
 ### Added
 - No new features in this release.
