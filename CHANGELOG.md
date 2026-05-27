@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.14 - 2026-05-27
+### Added
+- No new features in this release.
+
+### Changed
+- No broader behavior changes in this release.
+
+### Fixed
+- Prevented Solutions Slider frames from inheriting parent text color as visible border, outline, or shadow chrome while preserving inherited text color inside dark sections.
+
+### Notes
+- Validate Solutions Slider instances inside dark parent groups where parent text color is set to white after deploying the `1.0.14` package.
+
 ## 1.0.13 - 2026-05-27
 ### Added
 - No new features in this release.
