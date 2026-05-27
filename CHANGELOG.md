@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.15 - 2026-05-27
+### Added
+- No new features in this release.
+
+### Changed
+- Throttled desktop mega-menu scroll positioning so layout work only runs once per animation frame.
+
+### Fixed
+- Prevented mobile Safari reloads/crashes by skipping desktop mega-menu positioning work during mobile page scroll.
+
+### Notes
+- Validate mobile scrolling and hamburger navigation on iOS Safari after deploying the `1.0.15` package.
+- Spot-check the desktop mega menu at the 1093px/1094px breakpoint and wider desktop widths.
+
 ## 1.0.14 - 2026-05-27
 ### Added
 - No new features in this release.

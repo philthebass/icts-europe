@@ -1,7 +1,7 @@
 (function () {
     // Simple runtime marker to confirm the latest script is loaded in the browser.
     // Update when debugging version/caching issues.
-    window.__ICTS_NAV_MEGA_MENU_VERSION = '2026-02-12-back-debug-1';
+    window.__ICTS_NAV_MEGA_MENU_VERSION = '2026-05-27-ios-scroll-throttle-1';
 
     var desktopQuery = window.matchMedia('(min-width: 1094px)');
     var mobileQuery = window.matchMedia('(max-width: 1093px)');
@@ -1067,17 +1067,35 @@
             navBlocks.forEach(function (nav) {
                 applyCompanySelectedState(nav);
                 syncMobileDrawerLanguage(nav);
-                setMegaTop(nav);
-                refreshDesktopFlyoutOffsets(nav);
                 if (!desktopQuery.matches) {
                     closeDesktopAll(nav, true);
+                    updateDesktopMegaOpenState(nav);
+                    return;
                 }
+
+                setMegaTop(nav);
+                refreshDesktopFlyoutOffsets(nav);
                 updateDesktopMegaOpenState(nav);
+            });
+        };
+        var scrollFrame = null;
+        var setDesktopPositionsOnScroll = function () {
+            if (!desktopQuery.matches || scrollFrame) {
+                return;
+            }
+
+            scrollFrame = window.requestAnimationFrame(function () {
+                scrollFrame = null;
+                navBlocks.forEach(function (nav) {
+                    setMegaTop(nav);
+                    refreshDesktopFlyoutOffsets(nav);
+                    updateDesktopMegaOpenState(nav);
+                });
             });
         };
 
         window.addEventListener('resize', setPositions);
-        window.addEventListener('scroll', setPositions, { passive: true });
+        window.addEventListener('scroll', setDesktopPositionsOnScroll, { passive: true });
     }
 
     document.addEventListener('DOMContentLoaded', init);
