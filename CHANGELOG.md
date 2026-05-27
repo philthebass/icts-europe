@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.13 - 2026-05-27
+### Added
+- No new features in this release.
+
+### Changed
+- Added a responsive white background and token padding to the Steps Primary heading below 1321px so decorative page wires do not reduce heading readability.
+
+### Fixed
+- No bug fixes in this release.
+
+### Notes
+- Validate the Steps Primary block on pages using decorative page wires at tablet and narrow desktop widths after deploying the `1.0.13` package.
+
 ## 1.0.12 - 2026-05-22
 ### Added
 - Added a `has-white-background-below-1321` utility class for improving page-wire hero readability on narrower screens.

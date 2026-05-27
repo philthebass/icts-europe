@@ -30,6 +30,14 @@
 	text-align: left;
 }
 
+@media (max-width: 1321px) {
+	.wp-block-icts-steps-primary .icts-steps-primary__heading {
+		box-sizing: border-box;
+		background: var(--wp--preset--color--base, #ffffff);
+		padding: var(--wp--preset--spacing--small);
+	}
+}
+
 .wp-block-icts-steps-primary .icts-steps-primary__list {
 	display: grid;
 	gap: var(--icts-steps-gap);
