@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-05-27 — Footer navigation stays as plain links at all breakpoints — Footer utility menus should remain visible and scannable on mobile instead of inheriting the header-style burger drawer behavior — Footer navigation is now scoped to bypass responsive overlay controls, while header navigation remains unchanged.
+
 2026-04-13 — Yoast breadcrumb separator is forced in theme code — Translated Yoast/Polylang contexts can localize the breadcrumb separator option inconsistently between languages — Theme now returns a fixed `»` separator through `wpseo_breadcrumb_separator`, so all languages render the same glyph regardless of translated plugin settings.
 
 2026-04-07 — Yoast breadcrumbs omit empty hierarchical ancestor pages — Some parent pages exist only to preserve clean nested URLs and should not appear in visible breadcrumbs when they have no editor content — Theme now filters Yoast breadcrumb links for hierarchical singular content so empty ancestor pages are hidden while the URL structure remains unchanged.

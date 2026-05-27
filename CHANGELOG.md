@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.16 - 2026-05-27
+### Added
+- No new features in this release.
+
+### Changed
+- No broader behavior changes in this release.
+
+### Fixed
+- Kept footer navigation visible as plain links on mobile and centered the ISO certification logos on narrow screens.
+
+### Notes
+- Verify footer utility links and ISO logos on mobile after deploying the `1.0.16` package.
+
 ## 1.0.15 - 2026-05-27
 ### Added
 - No new features in this release.

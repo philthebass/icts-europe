@@ -7,7 +7,7 @@ Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.0.15
+Version: 1.0.16
 License: GNU General Public License v3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
@@ -463,6 +463,46 @@ body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
 :where(.wp-site-blocks) > footer.site-footer,
 :where(.wp-site-blocks) > .site-footer.wp-block-template-part {
 	margin-block-start: 0;
+}
+
+/* Keep footer navigation as plain links on every breakpoint. */
+.site-footer .wp-block-navigation .wp-block-navigation__responsive-container-open,
+.site-footer .wp-block-navigation .wp-block-navigation__responsive-container-close {
+	display: none !important;
+}
+
+.site-footer .wp-block-navigation .wp-block-navigation__responsive-container,
+.site-footer .wp-block-navigation .wp-block-navigation__responsive-container[hidden],
+.site-footer .wp-block-navigation .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.is-menu-open) {
+	display: block !important;
+	position: relative;
+	inset: auto;
+	width: 100%;
+	height: auto;
+	z-index: auto;
+	overflow: visible;
+	visibility: visible;
+	opacity: 1;
+	background: transparent;
+	color: inherit;
+	pointer-events: auto;
+}
+
+.site-footer .wp-block-navigation .wp-block-navigation__responsive-container-content {
+	display: block;
+	padding: 0;
+}
+
+.site-footer .wp-block-navigation .wp-block-navigation__container {
+	display: flex;
+	gap: var(--wp--preset--spacing--small);
+}
+
+@media (max-width: 781px) {
+	.site-footer .icts-footer-certifications,
+	.site-footer .wp-block-group:has(> .wp-block-image img[src*="ISO-27001"]) {
+		justify-content: center !important;
+	}
 }
 
 .row-logos > figure {
