@@ -2597,6 +2597,12 @@ function save_category_color_field( $term_id ) {
         );
 
         \pll_register_string(
+            'archive_label_latest_news',
+            'Latest news',
+            'Theme: Archive'
+        );
+
+        \pll_register_string(
             'archive_label_related_articles',
             'Related articles',
             'Theme: Archive'

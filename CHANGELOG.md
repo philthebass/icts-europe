@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.17 - 2026-05-27
+### Added
+- Registered the Latest News Slider default heading (`Latest news`) as a Polylang string under `Theme: Archive`.
+
+### Changed
+- No broader behavior changes in this release.
+
+### Fixed
+- Enabled the default Latest News Slider heading to be translated through Polylang string translations.
+
+### Notes
+- After deploying, load wp-admin once and translate `Latest news` in Languages -> String translations -> Theme: Archive.
+
 ## 1.0.16 - 2026-05-27
 ### Added
 - No new features in this release.
