@@ -16,6 +16,8 @@
   "attributes": {
     "heading": {
       "type": "string",
+      "source": "html",
+      "selector": "h2.icts-steps-primary__heading",
       "default": "How it works"
     }
   },

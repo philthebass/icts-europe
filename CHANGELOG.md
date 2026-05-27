@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.18 - 2026-05-27
+### Added
+- Documented the Steps Primary translation-safe attribute sourcing decision.
+
+### Changed
+- Updated Steps Primary and Steps Primary Step block attributes to read translated text and image data from saved markup.
+
+### Fixed
+- Prevented Polylang/DeepL-translated Steps Primary blocks from needing recovery and losing translated heading, title, and description text.
+
+### Notes
+- After deploying, translate a page containing Steps Primary and confirm the parent block and step blocks open without recovery prompts.
+
 ## 1.0.17 - 2026-05-27
 ### Added
 - Registered the Latest News Slider default heading (`Latest news`) as a Polylang string under `Theme: Archive`.

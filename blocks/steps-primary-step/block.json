@@ -12,14 +12,21 @@
   "attributes": {
     "title": {
       "type": "string",
+      "source": "html",
+      "selector": "h3.icts-steps-primary-step__title",
       "default": "Step 1:"
     },
     "description": {
       "type": "string",
+      "source": "html",
+      "selector": "p.icts-steps-primary-step__description",
       "default": ""
     },
     "imageUrl": {
       "type": "string",
+      "source": "attribute",
+      "selector": ".icts-steps-primary-step__media img",
+      "attribute": "src",
       "default": ""
     },
     "imageId": {
@@ -27,6 +34,9 @@
     },
     "imageAlt": {
       "type": "string",
+      "source": "attribute",
+      "selector": ".icts-steps-primary-step__media img",
+      "attribute": "alt",
       "default": ""
     }
   },
