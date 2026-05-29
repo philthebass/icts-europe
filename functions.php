@@ -1431,12 +1431,25 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_post_archive_filters
  * Render header search modal in front end only.
  */
 function render_header_search_modal() {
-	$search_block = '<!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search\u2026","buttonText":"Search","buttonUseIcon":true,"className":"icts-header-search-modal__search"} /-->';
+	$search_label       = function_exists( 'pll__' ) ? pll__( 'Search' ) : __( 'Search', 'icts-europe' );
+	$search_placeholder = function_exists( 'pll__' ) ? pll__( 'Search...' ) : __( 'Search...', 'icts-europe' );
+	$site_search_label  = function_exists( 'pll__' ) ? pll__( 'Site search' ) : __( 'Site search', 'icts-europe' );
+	$close_label        = function_exists( 'pll__' ) ? pll__( 'Close search' ) : __( 'Close search', 'icts-europe' );
+	$search_block       = '<!-- wp:search ' . wp_json_encode(
+		array(
+			'label'         => $search_label,
+			'showLabel'     => false,
+			'placeholder'   => $search_placeholder,
+			'buttonText'    => $search_label,
+			'buttonUseIcon' => true,
+			'className'     => 'icts-header-search-modal__search',
+		)
+	) . ' /-->';
 	?>
-	<div class="icts-header-search-modal" id="icts-header-search-modal" role="dialog" aria-modal="true" aria-label="Site search" hidden>
+	<div class="icts-header-search-modal" id="icts-header-search-modal" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr( $site_search_label ); ?>" hidden>
 		<div class="icts-header-search-modal__backdrop" data-icts-search-close></div>
 		<div class="icts-header-search-modal__panel" role="document">
-			<button type="button" class="icts-header-search-modal__close" data-icts-search-close aria-label="<?php esc_attr_e( 'Close search', 'icts-europe' ); ?>">×</button>
+			<button type="button" class="icts-header-search-modal__close" data-icts-search-close aria-label="<?php echo esc_attr( $close_label ); ?>">×</button>
 			<?php echo do_blocks( $search_block ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core renders sanitized block markup from a static block string. ?>
 		</div>
 	</div>
@@ -2546,6 +2559,30 @@ function save_category_color_field( $term_id ) {
             'breadcrumb_home',
             'Home',
             'Theme: Breadcrumbs'
+        );
+
+        \pll_register_string(
+            'header_search_label',
+            'Search',
+            'Theme: Header Search'
+        );
+
+        \pll_register_string(
+            'header_search_placeholder',
+            'Search...',
+            'Theme: Header Search'
+        );
+
+        \pll_register_string(
+            'header_search_dialog_label',
+            'Site search',
+            'Theme: Header Search'
+        );
+
+        \pll_register_string(
+            'header_search_close_label',
+            'Close search',
+            'Theme: Header Search'
         );
 
         \pll_register_string(
