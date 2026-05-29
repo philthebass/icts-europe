@@ -137,12 +137,14 @@ if ( 'specific' === $product_filter_mode && $product_taxonomy_term instanceof WP
 }
 
 $args = array(
-    'post_type'      => 'customers',
-    'post_status'    => 'publish',
-    'posts_per_page' => -1,
-    'orderby'        => 'title',
-    'order'          => 'ASC',
-    'meta_query'     => array(
+    'post_type'        => 'customers',
+    'post_status'      => 'publish',
+    'posts_per_page'   => -1,
+    'orderby'          => 'title',
+    'order'            => 'ASC',
+    'lang'             => '',
+    'suppress_filters' => true,
+    'meta_query'       => array(
         array(
             'key'     => 'customer_logo',
             'compare' => 'EXISTS',
@@ -187,12 +189,14 @@ if ( in_array( $logo_source_mode, array( 'customers', 'both' ), true ) ) {
 if ( in_array( $logo_source_mode, array( 'partners', 'both' ), true ) ) {
     $partners_query = new WP_Query(
         array(
-            'post_type'      => 'partner',
-            'post_status'    => 'publish',
-            'posts_per_page' => -1,
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-            'meta_query'     => array(
+            'post_type'        => 'partner',
+            'post_status'      => 'publish',
+            'posts_per_page'   => -1,
+            'orderby'          => 'title',
+            'order'            => 'ASC',
+            'lang'             => '',
+            'suppress_filters' => true,
+            'meta_query'       => array(
                 array(
                     'key'     => '_thumbnail_id',
                     'compare' => 'EXISTS',

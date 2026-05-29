@@ -3426,19 +3426,31 @@ function apply_search_category_filter( $query ) {
 \add_action( 'pre_get_posts', __NAMESPACE__ . '\apply_search_category_filter', 11 );
 
 /**
- * Admin: add FAQ taxonomy filters to the FAQ posts list screen.
+ * Get admin-list taxonomy filters keyed by post type.
+ *
+ * @return array<string,array<int,string>>
+ */
+function get_admin_list_taxonomy_filters() {
+	return [
+		'customers' => [ 'customer-type', 'product' ],
+		'faq'       => [ 'product', 'customer-type' ],
+	];
+}
+
+/**
+ * Admin: add taxonomy filters to supported posts list screens.
  *
  * @param string $post_type Current post type.
  * @return void
  */
-function render_faq_admin_taxonomy_filters( $post_type ) {
-	if ( 'faq' !== $post_type ) {
+function render_admin_list_taxonomy_filters( $post_type ) {
+	$filters = get_admin_list_taxonomy_filters();
+
+	if ( empty( $filters[ $post_type ] ) ) {
 		return;
 	}
 
-	$taxonomies = [ 'product', 'customer-type' ];
-
-	foreach ( $taxonomies as $taxonomy ) {
+	foreach ( $filters[ $post_type ] as $taxonomy ) {
 		$taxonomy_object = \get_taxonomy( $taxonomy );
 		if ( ! $taxonomy_object ) {
 			continue;
@@ -3466,10 +3478,10 @@ function render_faq_admin_taxonomy_filters( $post_type ) {
 		);
 	}
 }
-\add_action( 'restrict_manage_posts', __NAMESPACE__ . '\render_faq_admin_taxonomy_filters' );
+\add_action( 'restrict_manage_posts', __NAMESPACE__ . '\render_admin_list_taxonomy_filters' );
 
 /**
- * Admin: normalize FAQ taxonomy filter request values to term slugs.
+ * Admin: normalize taxonomy filter request values to term slugs.
  *
  * The list-table dropdowns submit term IDs, but the edit screen query vars for
  * hierarchical taxonomies are interpreted more reliably when populated with the
@@ -3478,7 +3490,7 @@ function render_faq_admin_taxonomy_filters( $post_type ) {
  * @param \WP_Query $query Query instance.
  * @return void
  */
-function normalize_faq_admin_taxonomy_filter_request( $query ) {
+function normalize_admin_list_taxonomy_filter_request( $query ) {
 	global $pagenow;
 
 	if ( ! ( $query instanceof \WP_Query ) || ! \is_admin() || ! $query->is_main_query() ) {
@@ -3494,13 +3506,13 @@ function normalize_faq_admin_taxonomy_filter_request( $query ) {
 		$post_type = \sanitize_key( (string) \wp_unslash( $_GET['post_type'] ) );
 	}
 
-	if ( 'faq' !== $post_type ) {
+	$filters = get_admin_list_taxonomy_filters();
+
+	if ( empty( $filters[ $post_type ] ) ) {
 		return;
 	}
 
-	$taxonomies = [ 'product', 'customer-type' ];
-
-	foreach ( $taxonomies as $taxonomy ) {
+	foreach ( $filters[ $post_type ] as $taxonomy ) {
 		$term_id = isset( $_GET[ $taxonomy ] ) ? \absint( (int) \wp_unslash( $_GET[ $taxonomy ] ) ) : 0;
 		if ( $term_id <= 0 ) {
 			continue;
@@ -3514,7 +3526,7 @@ function normalize_faq_admin_taxonomy_filter_request( $query ) {
 		$query->set( $taxonomy, $term->slug );
 	}
 }
-\add_action( 'pre_get_posts', __NAMESPACE__ . '\normalize_faq_admin_taxonomy_filter_request', 20 );
+\add_action( 'pre_get_posts', __NAMESPACE__ . '\normalize_admin_list_taxonomy_filter_request', 20 );
 
 /**
  * Add a custom filtered FAQ reorder screen.

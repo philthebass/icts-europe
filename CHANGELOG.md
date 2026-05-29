@@ -7,6 +7,21 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.19 - 2026-05-29
+### Added
+- Added Customer Type and Product dropdown filters to the Customers admin list.
+- Added source-controlled ACF JSON for the Customers CPT and Countries taxonomy.
+
+### Changed
+- Documented the global logo-query behavior and Customers admin filter decision.
+
+### Fixed
+- Fixed Logos Slider results on translated Polylang pages by querying shared customer and partner logo records across languages while preserving block filters.
+
+### Notes
+- After deploying, verify the Portuguese Ground Handlers page shows the same Ground Handler logos as English.
+- Confirm ACF shows Customers and Countries as saved; Events and inactive Subsidiaries can remain out of scope for this release.
+
 ## 1.0.18 - 2026-05-27
 ### Added
 - Documented the Steps Primary translation-safe attribute sourcing decision.

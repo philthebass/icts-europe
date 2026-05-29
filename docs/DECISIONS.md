@@ -2,6 +2,10 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-05-29 — Logos Slider queries global logo records across languages — Customer and partner logos are shared brand assets, and translated pages should show the same block-filtered logo set even when translated Customer CPT posts do not carry matching taxonomy assignments — `acf/client-logos-slider` now sets `lang` to an empty value and suppresses filters for its customer/partner queries while preserving the block-level customer-type/product filters.
+
+2026-05-29 — Customers admin list supports taxonomy filtering — Editors need to quickly inspect customer logos by segment when configuring page-level logo sliders — The shared admin list taxonomy filter helper now adds Customer Type and Product dropdowns to the Customers list while preserving the existing FAQ filters.
+
 2026-05-27 — Footer navigation stays as plain links at all breakpoints — Footer utility menus should remain visible and scannable on mobile instead of inheriting the header-style burger drawer behavior — Footer navigation is now scoped to bypass responsive overlay controls, while header navigation remains unchanged.
 
 2026-05-27 — Steps Primary block text is sourced from saved HTML for translations — Polylang/DeepL translation can change visible block markup while original comment attributes remain in the source language, causing block recovery and lost translations — Steps Primary heading, step title, step description, and image attributes now parse from saved markup so translated pages remain valid after machine translation.
