@@ -112,7 +112,41 @@ $get_customer_logo_html = static function ( $logo, $title ) {
     return is_string( $img_html ) ? $img_html : '';
 };
 
+/**
+ * Resolve a post to the default-language member of its Polylang translation set.
+ *
+ * @param int $post_id Post ID.
+ * @return int
+ */
+$get_canonical_customer_post_id = static function ( $post_id ) {
+    $post_id = (int) $post_id;
+
+    if ( ! function_exists( 'pll_get_post_translations' ) ) {
+        return $post_id;
+    }
+
+    $translations = pll_get_post_translations( $post_id );
+    if ( empty( $translations ) || ! is_array( $translations ) ) {
+        return $post_id;
+    }
+
+    if ( function_exists( 'pll_default_language' ) ) {
+        $default_language = (string) pll_default_language();
+        if ( '' !== $default_language && ! empty( $translations[ $default_language ] ) ) {
+            return (int) $translations[ $default_language ];
+        }
+    }
+
+    $translation_ids = array_filter( array_map( 'intval', $translations ) );
+    if ( empty( $translation_ids ) ) {
+        return $post_id;
+    }
+
+    return min( $translation_ids );
+};
+
 $logo_items = array();
+$rendered_customer_ids = array();
 
 // ----- Build customers data ---------------------------------------------------
 
@@ -164,14 +198,21 @@ if ( in_array( $logo_source_mode, array( 'customers', 'both' ), true ) ) {
         while ( $customers_query->have_posts() ) {
             $customers_query->the_post();
 
-            $logo     = get_field( 'customer_logo', get_the_ID() );
-            $logo_url = get_field( 'link', get_the_ID() );
-            $title    = get_the_title();
+            $customer_id = $get_canonical_customer_post_id( get_the_ID() );
+            if ( isset( $rendered_customer_ids[ $customer_id ] ) ) {
+                continue;
+            }
+
+            $logo     = get_field( 'customer_logo', $customer_id );
+            $logo_url = get_field( 'link', $customer_id );
+            $title    = get_the_title( $customer_id );
             $img_html = $get_customer_logo_html( $logo, $title );
 
             if ( '' === $img_html ) {
                 continue;
             }
+
+            $rendered_customer_ids[ $customer_id ] = true;
 
             $logo_items[] = array(
                 'title'    => $title,

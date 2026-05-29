@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.20 - 2026-05-29
+### Added
+- No new features in this release.
+
+### Changed
+- Logos Slider global customer queries now resolve Polylang translation groups to their default-language customer record before rendering.
+
+### Fixed
+- Prevented duplicate customer logos when a translated page uses Logos Slider with all customer types/products selected.
+
+### Notes
+- After deploying, verify `pt/traveldoc-pro/` shows each customer logo once when the Logos Slider is set to show all customers.
+
 ## 1.0.19 - 2026-05-29
 ### Added
 - Added Customer Type and Product dropdown filters to the Customers admin list.
