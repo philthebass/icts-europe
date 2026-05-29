@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.22 - 2026-05-29
+### Added
+- Registered the live Team Member archive intro text for Polylang translation under `Theme: Team Member`.
+
+### Changed
+- Team Member archive intro rendering now uses the current saved template copy as its translatable source text.
+
+### Fixed
+- Enabled translation of the `Meet the team driving our vision, technology and growth.` archive text on multilingual Team Member archive pages.
+
+### Notes
+- After deploying, load wp-admin once, then translate the Team Member archive intro in Polylang String Translations.
+
 ## 1.0.21 - 2026-05-29
 ### Added
 - Registered header search modal strings for Polylang translation under `Theme: Header Search`.

@@ -2539,7 +2539,7 @@ function save_category_color_field( $term_id ) {
 
         \pll_register_string(
             'team_member_archive_intro',
-            'We will need some text to go here.',
+            'Meet the team driving our vision, technology and growth.',
             'Theme: Team Member'
         );
 
@@ -2709,7 +2709,7 @@ function get_team_member_archive_page_heading_label() {
  */
 function get_team_member_archive_intro_label() {
     $label = \__(
-        'We will need some text to go here.',
+        'Meet the team driving our vision, technology and growth.',
         'icts-europe'
     );
 
@@ -2879,6 +2879,7 @@ function filter_team_member_archive_intro_paragraph( $block_content, $block ) {
 
     $plain_content = \wp_strip_all_tags( $block_content );
     if (
+        false === \strpos( $plain_content, 'Meet the team driving our vision, technology and growth.' ) &&
         false === \strpos( $plain_content, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' ) &&
         false === \strpos( $plain_content, 'We will need some text to go here.' )
     ) {
