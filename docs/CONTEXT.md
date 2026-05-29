@@ -54,7 +54,7 @@ Team archive slug:
 
 Plugins
 - ACF Pro (+ Options/Local JSON)
-- Polylang (optional)
+- Polylang Pro (required)
 - WooCommerce (optional styles)
 
 Required plugin settings
