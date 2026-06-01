@@ -3366,10 +3366,22 @@ function filter_yoast_breadcrumb_links_translation( $links ) {
 add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_links_translation', 20, 1 );
 
 \add_filter( 'register_post_type_args', function ( $args, $post_type ) {
+	$internal_post_types = [ 'customers', 'partner', 'testimonial', 'faq' ];
 
-    if ( 'team-member' !== $post_type ) {
-        return $args;
-    }
+	if ( \in_array( $post_type, $internal_post_types, true ) ) {
+		$args['publicly_queryable']  = false;
+		$args['exclude_from_search'] = true;
+		$args['has_archive']         = false;
+		$args['rewrite']             = false;
+		$args['show_ui']             = true;
+		$args['show_in_rest']        = true;
+
+		return $args;
+	}
+
+	if ( 'team-member' !== $post_type ) {
+		return $args;
+	}
 
     if ( \function_exists( 'pll__' ) ) {
         $args['has_archive'] = \pll__( 'management-team' );
@@ -3379,8 +3391,90 @@ add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_
         ];
     }
 
-    return $args;
+	return $args;
 }, 10, 2 );
+
+/**
+ * Keep internal taxonomy terms out of public archive URLs.
+ *
+ * Product, Customer Type, and Country terms are editorial/filtering metadata,
+ * not landing pages. They remain available in admin, ACF controls, REST-backed
+ * editor controls, and post list filters.
+ */
+\add_filter(
+	'register_taxonomy_args',
+	function ( $args, $taxonomy ) {
+		$internal_taxonomies = [ 'product', 'customer-type', 'country' ];
+
+		if ( ! \in_array( $taxonomy, $internal_taxonomies, true ) ) {
+			return $args;
+		}
+
+		$args['publicly_queryable'] = false;
+		$args['rewrite']           = false;
+		$args['show_ui']           = true;
+		$args['show_admin_column'] = true;
+		$args['show_in_rest']      = true;
+
+		return $args;
+	},
+	10,
+	2
+);
+
+/**
+ * Keep the editor link picker focused on real navigation destinations.
+ *
+ * The Site Editor's Navigation block uses the core `/wp/v2/search` endpoint for
+ * link suggestions. Without narrowing, it can search every REST-visible CPT and
+ * taxonomy term, including internal filter content such as Customers, FAQs, and
+ * Product terms.
+ *
+ * @param array            $query_args Search query args.
+ * @param \WP_REST_Request $request    REST request.
+ * @return array
+ */
+function filter_rest_post_link_search_query( $query_args, $request ) {
+	if ( ! ( $request instanceof \WP_REST_Request ) ) {
+		return $query_args;
+	}
+
+	$subtype = $request->get_param( 'subtype' );
+	if ( ! empty( $subtype ) && 'any' !== $subtype ) {
+		return $query_args;
+	}
+
+	$query_args['post_type'] = [ 'page', 'post', 'team-member' ];
+
+	return $query_args;
+}
+\add_filter( 'rest_post_search_query', __NAMESPACE__ . '\filter_rest_post_link_search_query', 10, 2 );
+
+/**
+ * Limit term results in the editor link picker.
+ *
+ * Product and Customer Type terms are used for internal filtering and are not
+ * intended as menu destinations, so keep them out of autocomplete suggestions.
+ *
+ * @param array            $query_args Search query args.
+ * @param \WP_REST_Request $request    REST request.
+ * @return array
+ */
+function filter_rest_term_link_search_query( $query_args, $request ) {
+	if ( ! ( $request instanceof \WP_REST_Request ) ) {
+		return $query_args;
+	}
+
+	$subtype = $request->get_param( 'subtype' );
+	if ( ! empty( $subtype ) && 'any' !== $subtype ) {
+		return $query_args;
+	}
+
+	$query_args['taxonomy'] = [ 'category' ];
+
+	return $query_args;
+}
+\add_filter( 'rest_term_search_query', __NAMESPACE__ . '\filter_rest_term_link_search_query', 10, 2 );
 
 /**
  * Exclude FAQ CPT entries from front-end search results.

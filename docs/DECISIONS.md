@@ -2,6 +2,10 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-06-01 — Editor link picker search is narrowed to navigation destinations — Site Editor navigation link autocomplete was slow and suggested internal filter archives such as Product terms plus non-menu CPT content — Core REST search now limits default post suggestions to pages, posts, and team members, and limits default term suggestions to categories.
+
+2026-06-01 — Internal CPTs and filter taxonomies do not register public URLs — Customers, Partners, Testimonials, FAQs, Product terms, Customer Type terms, and Country terms are editorial/filtering data rather than landing pages — Theme registration overrides disable public querying, archives, rewrites, and search inclusion for those objects while preserving admin UI and REST availability for editor controls.
+
 2026-05-29 — Logos Slider queries global logo records across languages — Customer and partner logos are shared brand assets, and translated pages should show the same block-filtered logo set even when translated Customer CPT posts do not carry matching taxonomy assignments — `acf/client-logos-slider` now sets `lang` to an empty value and suppresses filters for its customer/partner queries while preserving the block-level customer-type/product filters.
 
 2026-05-29 — Logos Slider renders one logo per customer translation set — Global all-language customer queries can return every translated copy when no taxonomy filter is selected — `acf/client-logos-slider` now resolves Polylang Customer translations to the default-language customer record and renders each translation set once.

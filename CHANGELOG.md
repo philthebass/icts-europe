@@ -7,6 +7,21 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.23 - 2026-06-01
+### Added
+- Documented the editor link picker search and internal URL visibility decisions.
+
+### Changed
+- Narrowed default editor link autocomplete suggestions to pages, posts, team members, and categories.
+- Kept Customers, Partners, Testimonials, FAQs, Product terms, Customer Type terms, and Country terms available for admin/editor use while disabling their public archive/single URL registration.
+
+### Fixed
+- Prevented internal filtering content such as Product term archives from appearing as default Site Editor navigation link suggestions.
+
+### Notes
+- After deploying, flush permalinks once and verify URLs such as `/product/traveldoc-compliance/` no longer resolve as public archives.
+- Re-test Site Editor navigation link autocomplete for speed and relevance.
+
 ## 1.0.22 - 2026-05-29
 ### Added
 - Registered the live Team Member archive intro text for Polylang translation under `Theme: Team Member`.
