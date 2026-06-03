@@ -143,12 +143,14 @@
     left: calc(
         var(--icts-solutions-arrow-edge-offset) - var(--icts-solutions-panel-padding)
     );
+    right: auto;
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button.next {
     right: calc(
         var(--icts-solutions-arrow-edge-offset) - var(--icts-solutions-panel-padding)
     );
+    left: auto;
 }
 
 .icts-solutions-slider__track .flickity-prev-next-button .flickity-button-icon {

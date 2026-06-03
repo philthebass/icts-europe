@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.24 - 2026-06-03
+### Added
+- No new features in this release.
+
+### Changed
+- No behavior changes beyond the scoped Solutions Slider positioning fix.
+
+### Fixed
+- Kept Solutions Slider previous and next arrows on opposite sides on Arabic RTL pages by clearing Flickity's opposite-side arrow positioning.
+
+### Notes
+- After deploying, verify an Arabic page with Solutions Slider shows one arrow on each side of the slider at desktop widths.
+
 ## 1.0.23 - 2026-06-01
 ### Added
 - Documented the editor link picker search and internal URL visibility decisions.
