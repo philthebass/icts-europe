@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.26 - 2026-06-08
+### Added
+- Added Yoast graph extensions for Team Member profile pages so published `team-member` singles emit `Person` schema using the profile title, job title, biography, featured image, LinkedIn URL, and existing Organization node.
+
+### Changed
+- Linked Team Member profile `WebPage` schema to the generated `Person` node via `mainEntity`.
+- Normalized Team Member schema text output by stripping markup, decoding HTML entities, and collapsing whitespace before JSON-LD output.
+
+### Fixed
+- No bug fixes in this release.
+
+### Notes
+- After deploying, view source on an English and translated Team Member profile and confirm the Yoast JSON-LD graph includes a `Person` node with a localized `@id`, `url`, `jobTitle`, `description`, `worksFor`, and `sameAs` where a LinkedIn profile is set.
+
 ## 1.0.25 - 2026-06-08
 ### Added
 - No new features in this release.

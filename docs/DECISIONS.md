@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-06-08 — Team Member profile pages emit Person schema — Team Member singles are profile pages but Yoast only emitted generic WebPage schema for the CPT — Theme now appends a Person graph node for `team-member` singles using title, job title, bio, featured image, LinkedIn URL, and the existing Yoast Organization node, and links the WebPage `mainEntity` to that Person.
+
 2026-06-01 — Editor link picker search is narrowed to navigation destinations — Site Editor navigation link autocomplete was slow and suggested internal filter archives such as Product terms plus non-menu CPT content — Core REST search now limits default post suggestions to pages, posts, and team members, and limits default term suggestions to categories.
 
 2026-06-01 — Internal CPTs and filter taxonomies do not register public URLs — Customers, Partners, Testimonials, FAQs, Product terms, Customer Type terms, and Country terms are editorial/filtering data rather than landing pages — Theme registration overrides disable public querying, archives, rewrites, and search inclusion for those objects while preserving admin UI and REST availability for editor controls.

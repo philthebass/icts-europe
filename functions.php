@@ -12,6 +12,8 @@ namespace ICTS_Europe;
 
 // Load custom ACF / PHP-rendered blocks.
 require_once __DIR__ . '/inc/blocks.php';
+// Extend Yoast schema output for theme-owned content types.
+require_once __DIR__ . '/inc/seo-schema.php';
 // Register native (JS) blocks assets.
 \add_action( 'init', function () {
     $theme_dir = get_template_directory();
