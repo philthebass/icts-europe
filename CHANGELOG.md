@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.27 - 2026-06-08
+### Added
+- Registered legacy `header`, `footer`, `Features`, and `Banners` pattern categories so older theme pattern metadata remains visible in the editor.
+
+### Changed
+- Preserved WordPress's open-ended block inserter allow-list when no explicit block restrictions are active.
+
+### Fixed
+- Restored theme patterns in the editor by avoiding conversion of `allowed_block_types_all === true` into a fixed registered-block list, which modern WordPress editor builds can use to filter all patterns out of the inserter.
+- Targeted the actual legacy ACF counter block name (`acf/counter`) when filtering explicit block allow-lists.
+
+### Notes
+- After deploying, purge LiteSpeed, hard reload the editor, and confirm `window.top.wp.data.select('core/block-editor').getSettings().__experimentalBlockPatterns?.length` is greater than `0`.
+
 ## 1.0.26 - 2026-06-08
 ### Added
 - Added Yoast graph extensions for Team Member profile pages so published `team-member` singles emit `Person` schema using the profile title, job title, biography, featured image, LinkedIn URL, and existing Organization node.

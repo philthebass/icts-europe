@@ -2,7 +2,7 @@
 
 Contributors: Early Marketing
 Requires at least: 6.9
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 5.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -35,4 +35,3 @@ GNU General Public License for more details.
 
 
 ICTS Europe is based on Ollie (http://olliewp.com), (C) Mike McAlister, [GNU General Public License v3.0 (or later)](https://www.gnu.org/licenses/gpl-3.0.html)
-

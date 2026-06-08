@@ -25,7 +25,7 @@ Audience
 - The legacy site and its staging remain separate during the rebuild.
 
 Tech targets:
-- WordPress: 6.9.x
+- WordPress: 7.0.x
 - PHP: 7.3+
 
 

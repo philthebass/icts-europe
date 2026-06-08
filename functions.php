@@ -2014,9 +2014,21 @@ function pattern_categories() {
 		'icts-europe/testimonial'    => array(
 			'label' => __( 'Testimonials', 'icts-europe' ),
 		),
-		'icts-europe/menu'    => array(
+		'icts-europe/menu'           => array(
 			'label' => __( 'Menu', 'icts-europe' ),
-		)
+		),
+		'header'                     => array(
+			'label' => __( 'Headers', 'icts-europe' ),
+		),
+		'footer'                     => array(
+			'label' => __( 'Footers', 'icts-europe' ),
+		),
+		'Features'                   => array(
+			'label' => __( 'Features', 'icts-europe' ),
+		),
+		'Banners'                    => array(
+			'label' => __( 'Banners', 'icts-europe' ),
+		),
 	);
 
 	foreach ( $block_pattern_categories as $name => $properties ) {
@@ -2144,12 +2156,7 @@ add_action( 'init', __NAMESPACE__ . '\unregister_legacy_patterns', 30 );
 function filter_allowed_block_types( $allowed_block_types, $block_editor_context ) {
 	unset( $block_editor_context );
 
-	$blocked_types = [ 'core/counter' ];
-
-	if ( true === $allowed_block_types && class_exists( '\WP_Block_Type_Registry' ) ) {
-		$all_types = array_keys( \WP_Block_Type_Registry::get_instance()->get_all_registered() );
-		return array_values( array_diff( $all_types, $blocked_types ) );
-	}
+	$blocked_types = [ 'acf/counter' ];
 
 	if ( is_array( $allowed_block_types ) ) {
 		return array_values( array_diff( $allowed_block_types, $blocked_types ) );
