@@ -7,6 +7,22 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.25 - 2026-06-08
+### Added
+- No new features in this release.
+
+### Changed
+- Left-aligned the Gravity Forms contact split footer actions to match the form layout.
+- Increased the mobile Hero Slider height allowance and tightened narrow-screen panel spacing for longer translated copy.
+
+### Fixed
+- Prevented verbose Hero Slider copy from overflowing the slider bounds on narrow mobile screens.
+- Kept the Hero Slider content panel inside the viewport by including panel/content padding in width calculations.
+
+### Notes
+- After deploying, verify the homepage Hero Slider at 438px, 414px, 390px, and 375px wide using the longer Dutch-style slide copy.
+- Check a contact split Gravity Form to confirm footer buttons align correctly.
+
 ## 1.0.24 - 2026-06-03
 ### Added
 - No new features in this release.
