@@ -18,8 +18,8 @@
 <!-- /wp:image -->
 
 <!-- wp:group {"metadata":{"name":"Titles"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"medium"} -->
-<p class="has-text-align-center has-medium-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Sandra Voyager', 'icts-europe' ); ?></p>
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"base"} -->
+<p class="has-text-align-center has-base-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Sandra Voyager', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"align":"center","textColor":"secondary"} -->

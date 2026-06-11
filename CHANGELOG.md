@@ -7,6 +7,32 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.0 - 2026-06-11
+### Added
+- Added temporary legacy token compatibility CSS for saved database content while source templates and patterns move to current theme tokens.
+- Added structured archive filter REST response data for safer front-end DOM rendering while keeping temporary legacy HTML response fields.
+- Added launch pattern curation documentation in `docs/PATTERN-CURATION.md`.
+- Added Hero Slide deprecations for older saved slider markup variants to reduce editor recovery prompts during migration.
+
+### Changed
+- Loaded front-end utility scripts and styles conditionally based on rendered content instead of globally where possible.
+- Limited page wires JavaScript to rendered wires containers while keeping the home page wires treatment.
+- Rendered the Hero Slider content panel in saved markup and preloaded key home page font files to reduce mobile layout shift.
+- Disabled arbitrary custom font-size entry in the editor so font-size choices stay token-based.
+- Curated the Site Editor pattern inserter to a launch-approved ICTS pattern allow-list while retaining inherited pattern files for future reuse.
+- Aligned README, docs, and theme metadata around WordPress 6.9.x, PHP 7.3+, GPL v2-or-later licensing, and current dependency notes.
+
+### Fixed
+- Migrated undefined legacy color, font, and spacing preset references in source files to current theme tokens.
+- Hardened archive filter REST arguments with schemas, sanitization, and validation.
+- Removed demo placeholder copy from the approved ICTS card pattern.
+- Reduced mobile Hero Slider layout shift caused by late content-panel creation and delayed primary font rendering.
+
+### Notes
+- After deploying, hard reload the editor and front end, then verify the home page Hero Slider, page wires, navigation, search modal, language switcher, archive filters, counters, and curated pattern inserter.
+- Some existing multilingual home pages may still need one manual Hero Slider block recovery and save because of older translated RichText serialization. Check each language home page once after deployment.
+- Keep the temporary legacy token compatibility CSS until production saved content has been audited and resaved.
+
 ## 1.0.29 - 2026-06-11
 ### Added
 - Added truthful `operatingSystem` values to canonical solution `SoftwareApplication` schema so Google's Software Apps rich-result parser has the second required property without inventing offer or review data.

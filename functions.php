@@ -325,9 +325,115 @@ function should_enable_page_wires_editor_fallback() {
 	return false;
 }
 
+function enqueue_page_wires_script() {
+	static $enqueued = false;
+
+	if ( $enqueued ) {
+		return;
+	}
+
+	$enqueued               = true;
+	$page_wires_script_path = get_template_directory() . '/assets/js/page-wires.js';
+
+	\wp_enqueue_script(
+		'icts-page-wires',
+		get_template_directory_uri() . '/assets/js/page-wires.js',
+		[],
+		\file_exists( $page_wires_script_path ) ? (string) \filemtime( $page_wires_script_path ) : \wp_get_theme()->get( 'Version' ),
+		true
+	);
+
+	\wp_add_inline_script(
+		'icts-page-wires',
+		'window.ictsPageWiresConfig = ' . \wp_json_encode(
+			[
+				'allowEditorFallback' => should_enable_page_wires_editor_fallback(),
+			]
+		) . ';',
+		'before'
+	);
+}
+
+function get_theme_asset_version( $relative_path ) {
+	$theme_dir     = get_template_directory();
+	$theme_version = wp_get_theme()->get( 'Version' );
+	$absolute_path = $theme_dir . $relative_path;
+
+	return file_exists( $absolute_path ) ? (string) filemtime( $absolute_path ) : $theme_version;
+}
+
+function enqueue_reveal_utility_assets() {
+	wp_enqueue_style(
+		'icts-reveal-utility',
+		get_template_directory_uri() . '/assets/styles/utilities/reveal.css',
+		[],
+		get_theme_asset_version( '/assets/styles/utilities/reveal.css' )
+	);
+
+	wp_enqueue_script(
+		'icts-reveal-utility',
+		get_template_directory_uri() . '/assets/js/reveal-grid.js',
+		[],
+		get_theme_asset_version( '/assets/js/reveal-grid.js' ),
+		true
+	);
+}
+
+function enqueue_navigation_mega_menu_script() {
+	static $enqueued = false;
+
+	if ( $enqueued ) {
+		return;
+	}
+
+	$enqueued = true;
+	$company_selected_contexts = [
+		'single-post',
+		'post-type-archive-team-member',
+		'single-team-member',
+	];
+
+	wp_enqueue_script(
+		'icts-navigation-mega-menu',
+		get_template_directory_uri() . '/assets/js/navigation-mega-menu.js',
+		[],
+		get_theme_asset_version( '/assets/js/navigation-mega-menu.js' ),
+		true
+	);
+	wp_add_inline_script(
+		'icts-navigation-mega-menu',
+		'window.ictsNavSelectedContexts = ' . wp_json_encode( $company_selected_contexts ) . ';',
+		'before'
+	);
+}
+
+function enqueue_header_search_modal_script() {
+	wp_enqueue_script(
+		'icts-header-search-modal',
+		get_template_directory_uri() . '/assets/js/header-search-modal.js',
+		[],
+		get_theme_asset_version( '/assets/js/header-search-modal.js' ),
+		true
+	);
+}
+
+function enqueue_header_language_switcher_script() {
+	wp_enqueue_script(
+		'icts-header-language-switcher',
+		get_template_directory_uri() . '/assets/js/header-language-switcher.js',
+		[],
+		get_theme_asset_version( '/assets/js/header-language-switcher.js' ),
+		true
+	);
+}
+
+function require_header_search_modal() {
+	$GLOBALS['icts_header_search_modal_required'] = true;
+	enqueue_header_search_modal_script();
+}
+
 \add_action( 'enqueue_block_editor_assets', function () {
 	$counter_band_limit_script_path = get_template_directory() . '/assets/js/counter-band-editor-limit.js';
-	$page_wires_script_path         = get_template_directory() . '/assets/js/page-wires.js';
 	$editor_preview_css             = '
 		.components-popover .block-editor-block-styles__preview,
 		.components-popover .block-editor-block-styles__preview-content,
@@ -369,23 +475,7 @@ function should_enable_page_wires_editor_fallback() {
 		'before'
 	);
 
-	\wp_enqueue_script(
-		'icts-page-wires',
-		get_template_directory_uri() . '/assets/js/page-wires.js',
-		[],
-		\file_exists( $page_wires_script_path ) ? (string) \filemtime( $page_wires_script_path ) : \wp_get_theme()->get( 'Version' ),
-		true
-	);
-
-	\wp_add_inline_script(
-		'icts-page-wires',
-		'window.ictsPageWiresConfig = ' . \wp_json_encode(
-			[
-				'allowEditorFallback' => should_enable_page_wires_editor_fallback(),
-			]
-		) . ';',
-		'before'
-	);
+	enqueue_page_wires_script();
 
 	\wp_add_inline_style( 'wp-edit-blocks', $editor_preview_css );
 } );
@@ -395,25 +485,7 @@ function should_enable_page_wires_editor_fallback() {
 		return;
 	}
 
-	$page_wires_script_path = get_template_directory() . '/assets/js/page-wires.js';
-
-	\wp_enqueue_script(
-		'icts-page-wires',
-		get_template_directory_uri() . '/assets/js/page-wires.js',
-		[],
-		\file_exists( $page_wires_script_path ) ? (string) \filemtime( $page_wires_script_path ) : \wp_get_theme()->get( 'Version' ),
-		true
-	);
-
-	\wp_add_inline_script(
-		'icts-page-wires',
-		'window.ictsPageWiresConfig = ' . \wp_json_encode(
-			[
-				'allowEditorFallback' => should_enable_page_wires_editor_fallback(),
-			]
-		) . ';',
-		'before'
-	);
+	enqueue_page_wires_script();
 } );
 
 /**
@@ -436,60 +508,124 @@ function setup() {
  */
 function enqueue_style_sheet() {
 	$handle = 'icts-europe';
-	$company_selected_contexts = [
-		'single-post',
-		'post-type-archive-team-member',
-		'single-team-member',
-	];
 	wp_enqueue_style( $handle, get_stylesheet_uri(), array(), wp_get_theme()->get( 'Version' ) );
-	wp_enqueue_style(
-		'icts-reveal-utility',
-		get_template_directory_uri() . '/assets/styles/utilities/reveal.css',
-		array(),
-		wp_get_theme()->get( 'Version' )
-	);
-	wp_enqueue_script(
-		'icts-reveal-utility',
-		get_template_directory_uri() . '/assets/js/reveal-grid.js',
-		array(),
-		wp_get_theme()->get( 'Version' ),
-		true
-	);
-	wp_enqueue_script(
-		'icts-navigation-mega-menu',
-		get_template_directory_uri() . '/assets/js/navigation-mega-menu.js',
-		array(),
-		wp_get_theme()->get( 'Version' ),
-		true
-	);
-	wp_add_inline_script(
-		'icts-navigation-mega-menu',
-		'window.ictsNavSelectedContexts = ' . wp_json_encode( $company_selected_contexts ) . ';',
-		'before'
-	);
-	wp_enqueue_script(
-		'icts-header-search-modal',
-		get_template_directory_uri() . '/assets/js/header-search-modal.js',
-		array(),
-		wp_get_theme()->get( 'Version' ),
-		true
-	);
-	wp_enqueue_script(
-		'icts-header-language-switcher',
-		get_template_directory_uri() . '/assets/js/header-language-switcher.js',
-		array(),
-		wp_get_theme()->get( 'Version' ),
-		true
-	);
-	wp_enqueue_script(
-		'icts-page-wires',
-		get_template_directory_uri() . '/assets/js/page-wires.js',
-		array(),
-		wp_get_theme()->get( 'Version' ),
-		true
-	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
+
+function get_current_queried_post_content() {
+	$queried_object = get_queried_object();
+
+	if ( $queried_object instanceof \WP_Post ) {
+		return (string) $queried_object->post_content;
+	}
+
+	$page_for_posts = (int) get_option( 'page_for_posts' );
+	if ( is_home() && $page_for_posts > 0 ) {
+		return (string) get_post_field( 'post_content', $page_for_posts );
+	}
+
+	return '';
+}
+
+function enqueue_content_scoped_frontend_assets() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$content = get_current_queried_post_content();
+
+	if ( '' === $content ) {
+		return;
+	}
+
+	if ( false !== strpos( $content, 'icts-reveal-grid' ) ) {
+		enqueue_reveal_utility_assets();
+	}
+
+	if ( false !== strpos( $content, 'icts-counter-block' ) || false !== strpos( $content, '<!-- wp:acf/counter' ) ) {
+		enqueue_counter_assets();
+	}
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_content_scoped_frontend_assets', 25 );
+
+function maybe_enqueue_page_wires_for_rendered_block( $block_content ) {
+	if ( \is_admin() || false === \strpos( $block_content, 'page-wires-bg' ) ) {
+		return $block_content;
+	}
+
+	if ( \preg_match_all( '/class=(["\'])(.*?)\1/s', $block_content, $matches ) ) {
+		foreach ( $matches[2] as $class_value ) {
+			$classes = \preg_split( '/\s+/', \trim( (string) $class_value ) );
+
+			if ( \is_array( $classes ) && \in_array( 'page-wires-bg', $classes, true ) ) {
+				enqueue_page_wires_script();
+				break;
+			}
+		}
+	}
+
+	return $block_content;
+}
+add_filter( 'render_block', __NAMESPACE__ . '\maybe_enqueue_page_wires_for_rendered_block', 9 );
+
+function maybe_enqueue_frontend_assets_for_rendered_block( $block_content ) {
+	if ( \is_admin() ) {
+		return $block_content;
+	}
+
+	if ( false !== \strpos( $block_content, 'icts-site-header__nav' ) ) {
+		enqueue_navigation_mega_menu_script();
+	}
+
+	if ( false !== \strpos( $block_content, 'icts-reveal-grid' ) ) {
+		enqueue_reveal_utility_assets();
+	}
+
+	if ( false !== \strpos( $block_content, 'icts-counter-block' ) ) {
+		enqueue_counter_assets();
+	}
+
+	return $block_content;
+}
+add_filter( 'render_block', __NAMESPACE__ . '\maybe_enqueue_frontend_assets_for_rendered_block', 11 );
+
+function filter_hero_slide_content_panel_markup( $block_content, $block ) {
+	$block_name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+
+	if ( 'icts-europe/hero-slide' !== $block_name || false !== \strpos( $block_content, 'icts-hero-slider__content-panel' ) ) {
+		return $block_content;
+	}
+
+	$updated_content = \preg_replace(
+		'/(<div class="icts-hero-slider__content">)(.*)(<\/div>\s*<\/article>)/s',
+		'$1<div class="icts-hero-slider__content-panel">$2</div>$3',
+		$block_content,
+		1
+	);
+
+	return \is_string( $updated_content ) ? $updated_content : $block_content;
+}
+add_filter( 'render_block', __NAMESPACE__ . '\filter_hero_slide_content_panel_markup', 15, 2 );
+
+function preload_primary_font_assets() {
+	if ( ! \is_front_page() ) {
+		return;
+	}
+
+	$font_files = [
+		'/assets/fonts/nunito-sans/nunito-sans-v19-latin-regular.woff2',
+		'/assets/fonts/nunito-sans/nunito-sans-v19-latin-500.woff2',
+		'/assets/fonts/nunito-sans/nunito-sans-v19-latin-600.woff2',
+	];
+
+	foreach ( $font_files as $font_file ) {
+		printf(
+			'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+			\esc_url( get_theme_file_uri( $font_file ) )
+		);
+	}
+}
+add_action( 'wp_head', __NAMESPACE__ . '\preload_primary_font_assets', 1 );
 
 /**
  * Whether current request should use enhanced post archive controls/cards.
@@ -1085,8 +1221,20 @@ function get_post_archive_primary_category_term( $post_id ) {
  * @return string
  */
 function get_post_archive_category_marker_style( $term ) {
+	$color_slug = get_post_archive_category_marker_color_slug( $term );
+
+	return \sprintf( 'background-color:var(--wp--preset--color--%s);', \esc_attr( $color_slug ) );
+}
+
+/**
+ * Get category marker color token slug.
+ *
+ * @param \WP_Term|null $term Category term.
+ * @return string
+ */
+function get_post_archive_category_marker_color_slug( $term ) {
 	if ( ! ( $term instanceof \WP_Term ) ) {
-		return 'background-color:var(--wp--preset--color--brand-secondary);';
+		return 'brand-secondary';
 	}
 
 	$color_slug = (string) \get_term_meta( $term->term_id, 'icts_category_color_slug', true );
@@ -1094,7 +1242,48 @@ function get_post_archive_category_marker_style( $term ) {
 		$color_slug = 'brand-secondary';
 	}
 
-	return \sprintf( 'background-color:var(--wp--preset--color--%s);', \esc_attr( $color_slug ) );
+	return $color_slug;
+}
+
+/**
+ * Build structured archive card data for one post.
+ *
+ * @param int $post_id Post ID.
+ * @return array
+ */
+function get_post_archive_card_data( $post_id ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return [];
+	}
+
+	$primary_term = get_post_archive_primary_category_term( $post_id );
+	$author       = get_post_display_author_data( $post_id );
+	$image_id     = (int) \get_post_thumbnail_id( $post_id );
+	$image_url    = $image_id > 0 ? (string) \wp_get_attachment_image_url( $image_id, 'large' ) : '';
+	$image_alt    = $image_id > 0 ? \trim( \wp_strip_all_tags( \get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : '';
+	$post_classes = \get_post_class( 'icts-archive-post-item', $post_id );
+
+	return [
+		'id'          => $post_id,
+		'className'   => \implode( ' ', array_map( 'sanitize_html_class', $post_classes ) ),
+		'title'       => (string) \get_the_title( $post_id ),
+		'permalink'   => (string) \get_permalink( $post_id ),
+		'date'        => get_post_archive_localized_date( $post_id ),
+		'author'      => [
+			'name' => isset( $author['name'] ) ? (string) $author['name'] : '',
+			'url'  => isset( $author['url'] ) ? (string) $author['url'] : '',
+		],
+		'category'    => [
+			'name'            => $primary_term instanceof \WP_Term ? (string) $primary_term->name : '',
+			'markerColorSlug' => get_post_archive_category_marker_color_slug( $primary_term ),
+		],
+		'image'       => [
+			'url' => $image_url,
+			'alt' => $image_alt,
+		],
+		'buttonLabel' => get_post_archive_label( 'Find out more' ),
+	];
 }
 
 /**
@@ -1270,16 +1459,20 @@ function get_post_archive_filters_rest_response( \WP_REST_Request $request ) {
 	$query = new \WP_Query( $args );
 
 	$items_html = '';
+	$items      = [];
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
-			$items_html .= render_post_archive_card_html( (int) \get_the_ID() );
+			$post_id     = (int) \get_the_ID();
+			$items[]     = get_post_archive_card_data( $post_id );
+			$items_html .= render_post_archive_card_html( $post_id );
 		}
 	} else {
 		$items_html = '<li class="wp-block-post icts-archive-post-empty"><p>' . \esc_html( get_post_archive_label( 'No posts found.' ) ) . '</p></li>';
 	}
 
 	$current_page    = max( 1, (int) $query->get( 'paged' ) );
+	$total_pages     = (int) $query->max_num_pages;
 	$pagination_html = render_post_archive_pagination_html( $current_page, (int) $query->max_num_pages );
 
 	\wp_reset_postdata();
@@ -1288,11 +1481,52 @@ function get_post_archive_filters_rest_response( \WP_REST_Request $request ) {
 		[
 			'success' => true,
 			'data'    => [
+				'items'           => $items,
+				'pagination'      => [
+					'currentPage'   => $current_page,
+					'totalPages'    => $total_pages,
+					'previousPage'  => $current_page > 1 ? $current_page - 1 : null,
+					'nextPage'      => $current_page < $total_pages ? $current_page + 1 : null,
+					'previousLabel' => __( 'Previous Page', 'icts-europe' ),
+					'nextLabel'     => __( 'Next Page', 'icts-europe' ),
+				],
+				'message'         => get_post_archive_label( 'No posts found.' ),
 				'items_html'      => $items_html,
 				'pagination_html' => $pagination_html,
 			],
 		]
 	);
+}
+
+function sanitize_post_archive_rest_archive_type( $value ) {
+	return \sanitize_key( (string) $value );
+}
+
+function validate_post_archive_rest_archive_type( $value ) {
+	return \in_array( \sanitize_key( (string) $value ), [ 'none', 'category', 'tag' ], true );
+}
+
+function sanitize_post_archive_rest_lang( $value ) {
+	return \sanitize_key( (string) $value );
+}
+
+function validate_post_archive_rest_lang( $value ) {
+	$lang = \sanitize_key( (string) $value );
+
+	if ( '' === $lang ) {
+		return true;
+	}
+
+	if ( ! \preg_match( '/^[a-z0-9_-]{2,12}$/', $lang ) ) {
+		return false;
+	}
+
+	if ( \function_exists( 'pll_languages_list' ) ) {
+		$languages = \pll_languages_list( [ 'fields' => 'slug' ] );
+		return \is_array( $languages ) && \in_array( $lang, $languages, true );
+	}
+
+	return true;
 }
 
 /**
@@ -1306,6 +1540,64 @@ function register_post_archive_filters_rest_route() {
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => __NAMESPACE__ . '\get_post_archive_filters_rest_response',
 			'permission_callback' => '__return_true',
+			'args'                => [
+				'page'         => [
+					'description'       => __( 'Results page number.', 'icts-europe' ),
+					'type'              => 'integer',
+					'default'           => 1,
+					'minimum'           => 1,
+					'sanitize_callback' => 'absint',
+					'validate_callback' => 'rest_validate_request_arg',
+				],
+				'per_page'     => [
+					'description'       => __( 'Number of posts per page.', 'icts-europe' ),
+					'type'              => 'integer',
+					'default'           => 6,
+					'minimum'           => 1,
+					'maximum'           => 24,
+					'sanitize_callback' => 'absint',
+					'validate_callback' => 'rest_validate_request_arg',
+				],
+				'search'       => [
+					'description'       => __( 'Search query.', 'icts-europe' ),
+					'type'              => 'string',
+					'default'           => '',
+					'maxLength'         => 120,
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => 'rest_validate_request_arg',
+				],
+				'category'     => [
+					'description'       => __( 'Category term ID.', 'icts-europe' ),
+					'type'              => 'integer',
+					'default'           => 0,
+					'minimum'           => 0,
+					'sanitize_callback' => 'absint',
+					'validate_callback' => 'rest_validate_request_arg',
+				],
+				'archive_type' => [
+					'description'       => __( 'Current archive context type.', 'icts-europe' ),
+					'type'              => 'string',
+					'default'           => 'none',
+					'enum'              => [ 'none', 'category', 'tag' ],
+					'sanitize_callback' => __NAMESPACE__ . '\sanitize_post_archive_rest_archive_type',
+					'validate_callback' => __NAMESPACE__ . '\validate_post_archive_rest_archive_type',
+				],
+				'archive_term' => [
+					'description'       => __( 'Current archive term ID.', 'icts-europe' ),
+					'type'              => 'integer',
+					'default'           => 0,
+					'minimum'           => 0,
+					'sanitize_callback' => 'absint',
+					'validate_callback' => 'rest_validate_request_arg',
+				],
+				'lang'         => [
+					'description'       => __( 'Polylang language slug.', 'icts-europe' ),
+					'type'              => 'string',
+					'default'           => '',
+					'sanitize_callback' => __NAMESPACE__ . '\sanitize_post_archive_rest_lang',
+					'validate_callback' => __NAMESPACE__ . '\validate_post_archive_rest_lang',
+				],
+			],
 		]
 	);
 }
@@ -1433,6 +1725,10 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_post_archive_filters
  * Render header search modal in front end only.
  */
 function render_header_search_modal() {
+	if ( empty( $GLOBALS['icts_header_search_modal_required'] ) ) {
+		return;
+	}
+
 	$search_label       = function_exists( 'pll__' ) ? pll__( 'Search' ) : __( 'Search', 'icts-europe' );
 	$search_placeholder = function_exists( 'pll__' ) ? pll__( 'Search...' ) : __( 'Search...', 'icts-europe' );
 	$site_search_label  = function_exists( 'pll__' ) ? pll__( 'Site search' ) : __( 'Site search', 'icts-europe' );
@@ -1479,6 +1775,8 @@ function render_header_search_trigger_button( $block_content, $block ) {
 	if ( '' === $class_name || false === strpos( $class_name, 'icts-site-header__search-toggle' ) ) {
 		return $block_content;
 	}
+
+	require_header_search_modal();
 
 	$previous_libxml_state = libxml_use_internal_errors( true );
 	$document              = new \DOMDocument( '1.0', 'UTF-8' );
@@ -1838,6 +2136,8 @@ function render_custom_polylang_language_switcher( $block_content, $block ) {
 	$output .= '</ul>';
 	$output .= '</div>';
 
+	enqueue_header_language_switcher_script();
+
 	return $output;
 }
 add_filter( 'render_block', __NAMESPACE__ . '\render_custom_polylang_language_switcher', 10, 2 );
@@ -1955,7 +2255,7 @@ function enqueue_woocommerce_styles() {
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_woocommerce_styles' );
 
 /**
- * Enqueue counter assets globally so recovered/static pattern markup still animates.
+ * Enqueue counter assets for ACF counters and recovered/static pattern markup.
  */
 function enqueue_counter_assets() {
 	$theme_dir  = get_template_directory();
@@ -1981,7 +2281,6 @@ function enqueue_counter_assets() {
 		true
 	);
 }
-add_action( 'enqueue_block_assets', __NAMESPACE__ . '\enqueue_counter_assets', 20 );
 
 
 /**
@@ -2124,25 +2423,48 @@ function register_counter_band_pattern() {
 add_action( 'init', __NAMESPACE__ . '\register_counter_band_pattern', 25 );
 
 /**
- * Keep the inserter focused on the current counter workflow.
+ * Return the launch-approved pattern slugs exposed to editors.
+ */
+function get_launch_approved_pattern_slugs() {
+	return [
+		'icts-europe/benefits',
+		'icts-europe/contact-map-static',
+		'icts-europe/counter-band',
+		'icts-europe/icts-card',
+	];
+}
+
+/**
+ * Keep the inserter focused on launch-approved editor patterns.
+ *
+ * Inherited Ollie-style patterns remain in the theme for future reuse, but
+ * many contain demo content or template-part variants that should not be part
+ * of the initial editor handoff.
  */
 function unregister_legacy_patterns() {
 	if ( ! function_exists( 'unregister_block_pattern' ) || ! class_exists( '\WP_Block_Patterns_Registry' ) ) {
 		return;
 	}
 
-	$registry = \WP_Block_Patterns_Registry::get_instance();
-	$patterns = $registry->get_all_registered();
+	$registry          = \WP_Block_Patterns_Registry::get_instance();
+	$patterns          = $registry->get_all_registered();
+	$approved_patterns = get_launch_approved_pattern_slugs();
 
 	foreach ( $patterns as $slug => $pattern ) {
+		$slug  = (string) $slug;
 		$title = isset( $pattern['title'] ) ? wp_strip_all_tags( (string) $pattern['title'] ) : '';
+
+		if ( 0 === strpos( $slug, 'icts-europe/' ) && ! in_array( $slug, $approved_patterns, true ) ) {
+			unregister_block_pattern( $slug );
+			continue;
+		}
 
 		if (
 			'icts-europe/numbers-stacked' === $slug ||
-			false !== strpos( (string) $slug, 'numbers-stacked' ) ||
+			false !== strpos( $slug, 'numbers-stacked' ) ||
 			0 === strcasecmp( $title, 'Numbers Stacked' )
 		) {
-			unregister_block_pattern( (string) $slug );
+			unregister_block_pattern( $slug );
 		}
 	}
 }

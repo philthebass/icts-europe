@@ -5,17 +5,54 @@ Author: Early Marketing
 Author URI: 
 Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.0.29
-License: GNU General Public License v3 or later
+Version: 1.1.0
+License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
 Tags: Blog, Portfolio, Entertainment, Grid Layout, One Column, Two Columns, Three Columns, Four Columns, Block Editor Patterns, Block Editor Styles, Custom Logo, custom-menu, Editor Style, Featured Images, Site Editor, Full Width Template, rtl-language-support, Style Variations, Template Editing, Theme Options, translation-ready, Wide Blocks
 
-ICTS Europe WordPress Theme, (C) 2025 Mike McAlister.
+ICTS Europe WordPress Theme, (C) 2025 Early Marketing.
 ICTS Europe is distributed under the terms of the GNU GPL.
 */
+
+/* Temporary legacy token compatibility.
+ * Remove after saved content has been audited and resaved with current tokens.
+---------------------------------------------------------------------------- */
+
+:root {
+	--wp--preset--color--primary: var(--wp--preset--color--brand-primary);
+	--wp--preset--color--main-accent: var(--wp--preset--color--tertiary);
+	--wp--preset--color--primary-accent: var(--wp--preset--color--brand-primary-light);
+	--wp--preset--color--primary-alt: var(--wp--preset--color--brand-primary-light);
+	--wp--preset--color--border-dark: var(--wp--preset--color--secondary);
+	--wp--preset--font-family--primary: var(--wp--preset--font-family--nunito-sans);
+	--wp--preset--font-size--medium: var(--wp--preset--font-size--base);
+	--wp--preset--spacing--xx-large: var(--wp--preset--spacing--x-large);
+}
+
+.has-primary-color { color: var(--wp--preset--color--brand-primary) !important; }
+.has-primary-background-color { background-color: var(--wp--preset--color--brand-primary) !important; }
+.has-primary-border-color { border-color: var(--wp--preset--color--brand-primary) !important; }
+
+.has-main-accent-color { color: var(--wp--preset--color--tertiary) !important; }
+.has-main-accent-background-color { background-color: var(--wp--preset--color--tertiary) !important; }
+.has-main-accent-border-color { border-color: var(--wp--preset--color--tertiary) !important; }
+
+.has-primary-accent-color,
+.has-primary-alt-color { color: var(--wp--preset--color--brand-primary-light) !important; }
+.has-primary-accent-background-color,
+.has-primary-alt-background-color { background-color: var(--wp--preset--color--brand-primary-light) !important; }
+.has-primary-accent-border-color,
+.has-primary-alt-border-color { border-color: var(--wp--preset--color--brand-primary-light) !important; }
+
+.has-border-dark-color { color: var(--wp--preset--color--secondary) !important; }
+.has-border-dark-background-color { background-color: var(--wp--preset--color--secondary) !important; }
+.has-border-dark-border-color { border-color: var(--wp--preset--color--secondary) !important; }
+
+.has-primary-font-family { font-family: var(--wp--preset--font-family--nunito-sans) !important; }
+.has-medium-font-size { font-size: var(--wp--preset--font-size--base) !important; }
 
 /* CSS Reset
 ---------------------------------------------------------------------------- */
@@ -105,7 +142,7 @@ textarea,
 
 input:focus-visible,
 textarea:focus-visible {
-	outline-color: var(--wp--preset--color--primary);
+	outline-color: var(--wp--preset--color--brand-primary);
 }
 
 input[type="checkbox"],
@@ -545,7 +582,7 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 ---------------------------------------------------------------------------- */
 
 .gform_wrapper.gform-theme--orbital .gform_required_legend {
-	color: var(--wp--preset--color--primary);
+	color: var(--wp--preset--color--brand-primary);
 }
 
 .gform_wrapper.gform-theme--orbital .gform_required_legend .gfield_required_asterisk {

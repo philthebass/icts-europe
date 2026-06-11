@@ -16,8 +16,8 @@
 <p class="has-base-color has-text-color has-large-font-size" style="line-height:1.3"><?php esc_html_e( 'Wow, I really can\'t believe how powerful the WordPress Site Editor is combined with ICTS Europe. I don\'t even need a page builder anymore!', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
-<!-- wp:separator {"className":"is-style-separator-thin","backgroundColor":"border-dark"} -->
-<hr class="wp-block-separator has-text-color has-border-dark-color has-alpha-channel-opacity has-border-dark-background-color has-background is-style-separator-thin"/>
+<!-- wp:separator {"className":"is-style-separator-thin","backgroundColor":"secondary"} -->
+<hr class="wp-block-separator has-text-color has-secondary-color has-alpha-channel-opacity has-secondary-background-color has-background is-style-separator-thin"/>
 <!-- /wp:separator -->
 
 <!-- wp:group {"metadata":{"name":"Cite"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
@@ -30,8 +30,8 @@
 <p class="has-base-color has-text-color"><strong><?php esc_html_e( 'Maryann Alpine', 'icts-europe' ); ?></strong></p>
 <!-- /wp:paragraph -->
 
-<!-- wp:paragraph {"textColor":"main-accent","fontSize":"small"} -->
-<p class="has-main-accent-color has-text-color has-small-font-size"><?php esc_html_e( 'Product Designer', 'icts-europe' ); ?></p>
+<!-- wp:paragraph {"textColor":"tertiary","fontSize":"small"} -->
+<p class="has-tertiary-color has-text-color has-small-font-size"><?php esc_html_e( 'Product Designer', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>

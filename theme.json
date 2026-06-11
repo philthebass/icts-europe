@@ -249,7 +249,7 @@
 			]
 		},
 		"typography": {
-			"customFontSize": true,
+			"customFontSize": false,
 			"defaultFontSizes": false,
 			"dropCap": false,
 			"fluid": true,

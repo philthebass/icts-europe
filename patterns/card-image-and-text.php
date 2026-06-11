@@ -17,8 +17,8 @@
 <!-- /wp:image -->
 
 <!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"medium"} -->
-<p class="has-medium-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Image and Text Card', 'icts-europe' ); ?></p>
+<div class="wp-block-group"><!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"base"} -->
+<p class="has-base-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Image and Text Card', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->

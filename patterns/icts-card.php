@@ -15,12 +15,12 @@
 <!-- /wp:image -->
 
 <!-- wp:group {"className":"icts-card__body","style":{"spacing":{"blockGap":"var:preset|spacing|small","padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}}},"textColor":"near-black","layout":{"type":"constrained"}} -->
-<div class="wp-block-group icts-card__body has-near-black-color has-text-color" style="padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"textColor":"brand-primary","fontSize":"medium"} -->
-<p class="has-brand-primary-color has-text-color has-medium-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Airlines', 'icts-europe' ); ?></p>
+<div class="wp-block-group icts-card__body has-near-black-color has-text-color" style="padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"textColor":"brand-primary","fontSize":"base"} -->
+<p class="has-brand-primary-color has-text-color has-base-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Airlines', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin in tristique est. Proin pellentesque posuere cursus. Ut commodo elementum semper. In facilisis sollicitudin nulla vel.', 'icts-europe' ); ?></p>
+<p><?php esc_html_e( 'Use this card to introduce an industry, service, or solution with a clear next step.', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"className":"icts-card__buttons","style":{"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"layout":{"type":"flex","justifyContent":"left"}} -->

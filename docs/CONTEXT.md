@@ -25,7 +25,7 @@ Audience
 - The legacy site and its staging remain separate during the rebuild.
 
 Tech targets:
-- WordPress: 7.0.x
+- WordPress: 6.9.x
 - PHP: 7.3+
 
 
@@ -56,7 +56,8 @@ Team archive slug:
 Plugins
 - ACF Pro (+ Options/Local JSON)
 - Polylang Pro (required)
-- WooCommerce (optional styles)
+- WooCommerce (optional; styles only enqueue when active)
+- Flickity v2.x (vendored theme dependency)
 
 Required plugin settings
 - Polylang → Languages → Settings → Synchronization → `Custom fields`: **enabled**.
@@ -94,6 +95,10 @@ Editor usage (feature card grid)
   - Body copy: `feature-card__body`
   - USP icon block only: `feature-card__icon`
 - Current USP SVG icon set is normalized to shared `180x80` artboards in `assets/images/feature-icon-*-normalized.svg`; re-upload those files to WordPress media if the icon sources are replaced.
+
+Editor usage (patterns)
+- The editor inserter is curated for launch handoff. Only the approved pattern slugs listed in `docs/PATTERN-CURATION.md` are visible by default.
+- Inherited Ollie-style pattern files remain in the repository for future reuse, but hidden patterns should be modernised before being added to the allow-list.
 
 Performance
 - No bundler required. Vendor JS: Flickity v2.x.

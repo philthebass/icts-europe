@@ -12,8 +12,8 @@
  */
 ?>
 <!-- wp:group {"metadata":{"name":"Menu"},"className":"is-style-default","style":{"position":{"type":""},"spacing":{"padding":{"right":"var:preset|spacing|medium","left":"var:preset|spacing|medium","top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium"},"blockGap":"var:preset|spacing|x-large"},"border":{"radius":"10px"}},"backgroundColor":"tertiary","layout":{"type":"constrained","justifyContent":"left"}} -->
-<div class="wp-block-group is-style-default has-tertiary-background-color has-background" style="border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Section"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"textColor":"main-accent","fontSize":"medium","layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-main-accent-color has-text-color has-medium-font-size"><!-- wp:paragraph {"style":{"typography":{"textDecoration":"none"}}} -->
+<div class="wp-block-group is-style-default has-tertiary-background-color has-background" style="border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Section"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"textColor":"tertiary","fontSize":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-tertiary-color has-text-color has-base-font-size"><!-- wp:paragraph {"style":{"typography":{"textDecoration":"none"}}} -->
 <p style="text-decoration:none"><a href="#"><?php esc_html_e( 'Library', 'icts-europe' ); ?></a></p>
 <!-- /wp:paragraph -->
 

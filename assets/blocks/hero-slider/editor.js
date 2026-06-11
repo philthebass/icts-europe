@@ -19,6 +19,63 @@
     || (wp.editor && (wp.editor.LinkControl || wp.editor.__experimentalLinkControl))
     || null;
 
+  const heroSlideAttributes = {
+    title: { type: 'string', source: 'text', selector: 'h2.icts-hero-slider__title' },
+    text: { type: 'string', source: 'html', selector: '.icts-hero-slider__text' },
+    ctaLabel: { type: 'string', source: 'html', selector: 'a.icts-hero-slider__button', default: '' },
+    ctaUrl: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'href', default: '' },
+    ctaTarget: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'target', default: '' },
+    logoId: { type: 'number' },
+    logoUrl: { type: 'string', default: '' },
+    logoAlt: { type: 'string', default: '' },
+    logoLinkUrl: { type: 'string', default: '' },
+    logoLinkTarget: { type: 'string', default: '' },
+    showLogo: { type: 'boolean', default: true },
+    mediaId: { type: 'number' },
+    mediaUrl: { type: 'string' },
+    focalPoint: { type: 'object', default: { x: 0.5, y: 0.5 } }
+  };
+
+  function renderHeroSlideSave(attributes, includeContentPanel, textFontSizeClass, useRawTextHtml) {
+    const a = attributes;
+    const textClassName = 'icts-hero-slider__text ' + (textFontSizeClass || 'has-base-font-size');
+    const hasLogo = !!(a.showLogo && a.logoUrl && a.logoUrl.trim());
+    const objPos = ((a.focalPoint?.x || 0.5) * 100).toFixed(2) + '% ' + ((a.focalPoint?.y || 0.5) * 100).toFixed(2) + '%';
+    const contentChildren = [
+      hasLogo && el('div', { className: 'icts-hero-slider__logo' },
+        a.logoLinkUrl
+          ? el('a', {
+            className: 'icts-hero-slider__logo-link',
+            href: a.logoLinkUrl,
+            target: a.logoLinkTarget || undefined,
+            rel: a.logoLinkTarget === '_blank' ? 'noreferrer noopener' : undefined
+          },
+          el('img', { src: a.logoUrl, alt: a.logoAlt || '' }))
+          : el('img', { src: a.logoUrl, alt: a.logoAlt || '' })
+      ),
+      el(RichText.Content, { tagName: 'h2', className: 'icts-hero-slider__title', value: a.title }),
+      useRawTextHtml
+        ? el('div', {
+          className: textClassName,
+          dangerouslySetInnerHTML: { __html: a.text || '' }
+        })
+        : el(RichText.Content, { tagName: 'div', className: textClassName, value: a.text }),
+      (a.ctaLabel && a.ctaUrl) && el('a', { className: 'icts-hero-slider__button wp-element-button', href: a.ctaUrl, target: a.ctaTarget || undefined }, a.ctaLabel)
+    ];
+
+    return el('article', { className: 'icts-hero-slider__slide' },
+      a.mediaUrl && el('div', { className: 'icts-hero-slider__media' },
+        el('img', { src: a.mediaUrl, alt: '', style: { objectPosition: objPos } })
+      ),
+      el('div', { className: 'icts-hero-slider__overlay' }),
+      el('div', { className: 'icts-hero-slider__content' },
+        includeContentPanel
+          ? el('div', { className: 'icts-hero-slider__content-panel' }, contentChildren)
+          : contentChildren
+      )
+    );
+  }
+
   // Child: hero-slide
   registerBlockType('icts-europe/hero-slide', {
     apiVersion: 3,
@@ -27,22 +84,7 @@
     parent: ['icts-europe/hero-slider'],
     category: 'layout',
     supports: { reusable: false, html: false },
-    attributes: {
-      title: { type: 'string', source: 'text', selector: 'h2.icts-hero-slider__title' },
-      text: { type: 'string', source: 'html', selector: '.icts-hero-slider__text' },
-      ctaLabel: { type: 'string', source: 'html', selector: 'a.icts-hero-slider__button', default: '' },
-      ctaUrl: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'href', default: '' },
-      ctaTarget: { type: 'string', source: 'attribute', selector: 'a.icts-hero-slider__button', attribute: 'target', default: '' },
-      logoId: { type: 'number' },
-      logoUrl: { type: 'string', default: '' },
-      logoAlt: { type: 'string', default: '' },
-      logoLinkUrl: { type: 'string', default: '' },
-      logoLinkTarget: { type: 'string', default: '' },
-      showLogo: { type: 'boolean', default: true },
-      mediaId: { type: 'number' },
-      mediaUrl: { type: 'string' },
-      focalPoint: { type: 'object', default: { x: 0.5, y: 0.5 } }
-    },
+    attributes: heroSlideAttributes,
     edit: function (props) {
       const { attributes, setAttributes, className } = props;
       const { title, text, ctaLabel, ctaUrl, ctaTarget, logoId, logoUrl, logoAlt, logoLinkUrl, logoLinkTarget, showLogo, mediaId, mediaUrl, focalPoint } = attributes;
@@ -255,68 +297,84 @@
           // Overlay must not capture pointer events in editor
           el('div', { className: 'icts-hero-slider__overlay', style: { pointerEvents: 'none' } }),
           el('div', { className: 'icts-hero-slider__content' },
-            hasLogo && el('div', { className: 'icts-hero-slider__logo' },
-              logoLinkUrl
-                ? el('a', {
-                  className: 'icts-hero-slider__logo-link',
-                  href: logoLinkUrl,
-                  target: logoLinkTarget || undefined,
-                  rel: logoLinkTarget === '_blank' ? 'noreferrer noopener' : undefined
-                },
-                el('img', { src: logoUrl, alt: logoAlt || '' }))
-                : el('img', { src: logoUrl, alt: logoAlt || '' })
-            ),
-            el(RichText, {
-              tagName: 'h2',
-              className: 'icts-hero-slider__title',
-              value: title,
-              allowedFormats: [],
-              placeholder: __('Heading…', 'icts-europe'),
-              onChange: (v) => setAttributes({ title: v })
-            }),
-            el(RichText, {
-              tagName: 'div',
-              className: 'icts-hero-slider__text has-medium-font-size',
-              value: text,
-              placeholder: __('Summary…', 'icts-europe'),
-              onChange: (v) => setAttributes({ text: v })
-            }),
-            (ctaLabel || ctaUrl) && el('a', {
-              className: 'icts-hero-slider__button wp-element-button',
-              href: ctaUrl || '#',
-              target: ctaTarget || undefined
-            }, ctaLabel || __('Button', 'icts-europe'))
+            el('div', { className: 'icts-hero-slider__content-panel' },
+              hasLogo && el('div', { className: 'icts-hero-slider__logo' },
+                logoLinkUrl
+                  ? el('a', {
+                    className: 'icts-hero-slider__logo-link',
+                    href: logoLinkUrl,
+                    target: logoLinkTarget || undefined,
+                    rel: logoLinkTarget === '_blank' ? 'noreferrer noopener' : undefined
+                  },
+                  el('img', { src: logoUrl, alt: logoAlt || '' }))
+                  : el('img', { src: logoUrl, alt: logoAlt || '' })
+              ),
+              el(RichText, {
+                tagName: 'h2',
+                className: 'icts-hero-slider__title',
+                value: title,
+                allowedFormats: [],
+                placeholder: __('Heading…', 'icts-europe'),
+                onChange: (v) => setAttributes({ title: v })
+              }),
+              el(RichText, {
+                tagName: 'div',
+                className: 'icts-hero-slider__text has-base-font-size',
+                value: text,
+                placeholder: __('Summary…', 'icts-europe'),
+                onChange: (v) => setAttributes({ text: v })
+              }),
+              (ctaLabel || ctaUrl) && el('a', {
+                className: 'icts-hero-slider__button wp-element-button',
+                href: ctaUrl || '#',
+                target: ctaTarget || undefined
+              }, ctaLabel || __('Button', 'icts-europe'))
+            )
           )
         )
       );
     },
     save: function (props) {
-      const a = props.attributes;
-      const hasLogo = !!(a.showLogo && a.logoUrl && a.logoUrl.trim());
-      const objPos = ((a.focalPoint?.x || 0.5) * 100).toFixed(2) + '% ' + ((a.focalPoint?.y || 0.5) * 100).toFixed(2) + '%';
-      return el('article', { className: 'icts-hero-slider__slide' },
-        a.mediaUrl && el('div', { className: 'icts-hero-slider__media' },
-          el('img', { src: a.mediaUrl, alt: '', style: { objectPosition: objPos } })
-        ),
-        el('div', { className: 'icts-hero-slider__overlay' }),
-        el('div', { className: 'icts-hero-slider__content' },
-          hasLogo && el('div', { className: 'icts-hero-slider__logo' },
-            a.logoLinkUrl
-              ? el('a', {
-                className: 'icts-hero-slider__logo-link',
-                href: a.logoLinkUrl,
-                target: a.logoLinkTarget || undefined,
-                rel: a.logoLinkTarget === '_blank' ? 'noreferrer noopener' : undefined
-              },
-              el('img', { src: a.logoUrl, alt: a.logoAlt || '' }))
-              : el('img', { src: a.logoUrl, alt: a.logoAlt || '' })
-          ),
-          el(RichText.Content, { tagName: 'h2', className: 'icts-hero-slider__title', value: a.title }),
-          el(RichText.Content, { tagName: 'div', className: 'icts-hero-slider__text has-medium-font-size', value: a.text }),
-          (a.ctaLabel && a.ctaUrl) && el('a', { className: 'icts-hero-slider__button wp-element-button', href: a.ctaUrl, target: a.ctaTarget || undefined }, a.ctaLabel)
-        )
-      );
-    }
+      return renderHeroSlideSave(props.attributes, true);
+    },
+    deprecated: [
+      {
+        attributes: heroSlideAttributes,
+        save: function (props) {
+          return renderHeroSlideSave(props.attributes, false);
+        }
+      },
+      {
+        attributes: heroSlideAttributes,
+        save: function (props) {
+          return renderHeroSlideSave(props.attributes, false, undefined, true);
+        }
+      },
+      {
+        attributes: heroSlideAttributes,
+        save: function (props) {
+          return renderHeroSlideSave(props.attributes, false, 'has-medium-font-size');
+        }
+      },
+      {
+        attributes: heroSlideAttributes,
+        save: function (props) {
+          return renderHeroSlideSave(props.attributes, false, 'has-medium-font-size', true);
+        }
+      },
+      {
+        attributes: heroSlideAttributes,
+        save: function (props) {
+          return renderHeroSlideSave(props.attributes, true, 'has-medium-font-size');
+        }
+      },
+      {
+        attributes: heroSlideAttributes,
+        save: function (props) {
+          return renderHeroSlideSave(props.attributes, true, 'has-medium-font-size', true);
+        }
+      }
+    ]
   });
 
   // Parent: hero-slider

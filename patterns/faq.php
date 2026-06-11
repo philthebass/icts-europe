@@ -11,10 +11,10 @@
  * Inserter: true
  */
 ?>
-<!-- wp:group {"metadata":{"name":"Frequently Asked"},"align":"full","className":"feature-boxes","style":{"spacing":{"margin":{"top":"0px"},"padding":{"top":"var:preset|spacing|xx-large","bottom":"var:preset|spacing|xx-large","right":"var:preset|spacing|medium","left":"var:preset|spacing|medium"},"blockGap":"var:preset|spacing|x-large"}},"layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group alignfull feature-boxes" style="margin-top:0px;padding-top:var(--wp--preset--spacing--xx-large);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--xx-large);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Titles"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"textColor":"primary","fontSize":"small"} -->
-<p class="has-text-align-center has-primary-color has-text-color has-small-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e( 'Frequently Asked', 'icts-europe' ); ?></p>
+<!-- wp:group {"metadata":{"name":"Frequently Asked"},"align":"full","className":"feature-boxes","style":{"spacing":{"margin":{"top":"0px"},"padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|x-large","right":"var:preset|spacing|medium","left":"var:preset|spacing|medium"},"blockGap":"var:preset|spacing|x-large"}},"layout":{"inherit":true,"type":"constrained"}} -->
+<div class="wp-block-group alignfull feature-boxes" style="margin-top:0px;padding-top:var(--wp--preset--spacing--x-large);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--x-large);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Titles"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"textColor":"brand-primary","fontSize":"small"} -->
+<p class="has-text-align-center has-brand-primary-color has-text-color has-small-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e( 'Frequently Asked', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"textAlign":"center"} -->
@@ -31,8 +31,8 @@
 <div class="wp-block-columns alignwide" style="margin-top:0px;margin-bottom:0px"><!-- wp:column {"className":"is-style-default","style":{"spacing":{"blockGap":"var:preset|spacing|medium"}}} -->
 <div class="wp-block-column is-style-default"><!-- wp:group {"metadata":{"name":"Entry"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"},"border":{"radius":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="border-radius:5px"><!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"medium"} -->
-<h3 class="wp-block-heading has-medium-font-size"><?php echo esc_html_x( 'What exactly is ICTS Europe?', 'FAQ question', 'icts-europe' ); ?></h3>
+<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"base"} -->
+<h3 class="wp-block-heading has-base-font-size"><?php echo esc_html_x( 'What exactly is ICTS Europe?', 'FAQ question', 'icts-europe' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
@@ -43,8 +43,8 @@
 
 <!-- wp:group {"metadata":{"name":"Entry"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"},"border":{"radius":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="border-radius:5px"><!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"medium"} -->
-<h3 class="wp-block-heading has-medium-font-size"><?php echo esc_html_x( 'Do I need any other plugins?', 'FAQ question', 'icts-europe' ); ?></h3>
+<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"base"} -->
+<h3 class="wp-block-heading has-base-font-size"><?php echo esc_html_x( 'Do I need any other plugins?', 'FAQ question', 'icts-europe' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
@@ -57,8 +57,8 @@
 <!-- wp:column {"className":"is-style-default","style":{"spacing":{"blockGap":"var:preset|spacing|medium"}}} -->
 <div class="wp-block-column is-style-default"><!-- wp:group {"metadata":{"name":"Entry"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"},"border":{"radius":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="border-radius:5px"><!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"medium"} -->
-<h3 class="wp-block-heading has-medium-font-size"><?php echo esc_html_x( 'What if I\'ve never used the Site Editor?', 'FAQ question', 'icts-europe' ); ?></h3>
+<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"base"} -->
+<h3 class="wp-block-heading has-base-font-size"><?php echo esc_html_x( 'What if I\'ve never used the Site Editor?', 'FAQ question', 'icts-europe' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
@@ -69,8 +69,8 @@
 
 <!-- wp:group {"metadata":{"name":"Entry"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"},"border":{"radius":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="border-radius:5px"><!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"medium"} -->
-<h3 class="wp-block-heading has-medium-font-size"><?php echo esc_html_x( 'What are patterns?', 'FAQ question', 'icts-europe' ); ?></h3>
+<div class="wp-block-group"><!-- wp:heading {"level":3,"fontSize":"base"} -->
+<h3 class="wp-block-heading has-base-font-size"><?php echo esc_html_x( 'What are patterns?', 'FAQ question', 'icts-europe' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
@@ -91,8 +91,8 @@
 <!-- /wp:image -->
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"5px"}},"layout":{"type":"flex","orientation":"vertical"}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"medium"} -->
-<p class="has-medium-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Still have questions?', 'icts-europe' ); ?></p>
+<div class="wp-block-group"><!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"base"} -->
+<p class="has-base-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Still have questions?', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->

@@ -6,7 +6,7 @@
 	border-radius: 5px;
 	background-color: var(--wp--preset--color--tertiary);
 	font-size: var(--wp--preset--font-size--x-small);
-	color: var(--wp--preset--color--primary);
+	color: var(--wp--preset--color--brand-primary);
 	line-height: 1.4;
 }
 

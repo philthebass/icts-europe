@@ -348,6 +348,10 @@
 			observeContainer( container, doc, observer );
 		} );
 
+		if ( ! allowEditorFallback ) {
+			return;
+		}
+
 		const containerObserver = new MutationObserver( () => {
 			getContainers().forEach( ( container ) => {
 				observeContainer( container, doc, observer );
@@ -373,6 +377,11 @@
 
 	function initAllContexts() {
 		initDocument( document );
+
+		if ( ! allowEditorFallback ) {
+			return;
+		}
+
 		document.querySelectorAll( 'iframe' ).forEach( ( iframe ) => {
 			initIframe( iframe );
 			iframe.addEventListener( 'load', () => initIframe( iframe ), { once: true } );

@@ -16,7 +16,7 @@
 <div class="wp-block-group"><!-- wp:avatar {"size":74,"style":{"border":{"radius":"500px"}}} /-->
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:post-author-name {"style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"fontSize":"medium"} /-->
+<div class="wp-block-group"><!-- wp:post-author-name {"style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"fontSize":"base"} /-->
 
 <!-- wp:post-author-biography /-->
 

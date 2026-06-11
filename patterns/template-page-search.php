@@ -33,7 +33,7 @@ if ( $search_results_current_cat <= 0 && isset( $_GET['cat'] ) ) {
 
 <!-- wp:group {"align":"full","style":{"spacing":{"margin":{"top":"0","bottom":"0"},"padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|x-large"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:group {"className":"icts-search-results-header-controls"} -->
-<div class="wp-block-group icts-search-results-header-controls"><!-- wp:query-title {"type":"search","className":"icts-search-results-controls__title","fontSize":"medium"} /-->
+<div class="wp-block-group icts-search-results-header-controls"><!-- wp:query-title {"type":"search","className":"icts-search-results-controls__title","fontSize":"base"} /-->
 
 <form role="search" method="get" class="icts-archive-controls icts-search-results-controls" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 	<div class="icts-archive-controls__search">
@@ -66,8 +66,8 @@ if ( $search_results_current_cat <= 0 && isset( $_GET['cat'] ) ) {
 <!-- /wp:group --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"tagName":"main","className":"site-content","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xx-large","bottom":"var:preset|spacing|xx-large"}}}} -->
-<main class="wp-block-group site-content" style="margin-top:0;padding-top:var(--wp--preset--spacing--xx-large);padding-bottom:var(--wp--preset--spacing--xx-large)"><!-- wp:query {"queryId":0,"className":"icts-search-results-query","query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"layout":{"contentSize":null,"type":"constrained"}} -->
+<!-- wp:group {"tagName":"main","className":"site-content","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|x-large"}}}} -->
+<main class="wp-block-group site-content" style="margin-top:0;padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:query {"queryId":0,"className":"icts-search-results-query","query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"layout":{"contentSize":null,"type":"constrained"}} -->
 <div class="wp-block-query icts-search-results-query"><!-- wp:post-template {"layout":{"type":"default"}} -->
 <!-- wp:group {"className":"icts-search-result-item","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between","verticalAlignment":"top"}} -->
 <div class="wp-block-group icts-search-result-item"><!-- wp:group {"className":"icts-search-result-item__content","layout":{"type":"constrained"}} -->

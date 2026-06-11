@@ -24,6 +24,41 @@
 
 	rootQuery.classList.add( 'is-icts-archive-enhanced' );
 
+	function clearElement( element ) {
+		if ( ! element ) {
+			return;
+		}
+
+		if ( typeof element.replaceChildren === 'function' ) {
+			element.replaceChildren();
+			return;
+		}
+
+		while ( element.firstChild ) {
+			element.removeChild( element.firstChild );
+		}
+	}
+
+	function appendChildren( parent, children ) {
+		children.forEach( function ( child ) {
+			if ( child ) {
+				parent.appendChild( child );
+			}
+		} );
+		return parent;
+	}
+
+	function createElement( tagName, className, text ) {
+		var element = document.createElement( tagName );
+		if ( className ) {
+			element.className = className;
+		}
+		if ( typeof text === 'string' ) {
+			element.textContent = text;
+		}
+		return element;
+	}
+
 	function getControlsWrapper() {
 		var existing = document.querySelector( '.icts-archive-controls' );
 		if ( existing ) {
@@ -31,23 +66,35 @@
 		}
 
 		var controls = document.createElement( 'div' );
+		var searchWrap = createElement( 'div', 'icts-archive-controls__search' );
+		var searchLabel = createElement( 'label', 'screen-reader-text', config.i18n.searchLabel || '' );
+		var searchInput = document.createElement( 'input' );
+		var categoryWrap = createElement( 'div', 'icts-archive-controls__category' );
+		var categoryLabel = createElement( 'label', 'screen-reader-text', config.i18n.filterLabel || '' );
+		var categorySelect = document.createElement( 'select' );
+
 		controls.className = 'icts-archive-controls alignwide';
-		controls.innerHTML =
-			'<div class="icts-archive-controls__search">' +
-				'<label class="screen-reader-text" for="icts-archive-search">' + config.i18n.searchLabel + '</label>' +
-				'<input id="icts-archive-search" type="search" class="icts-archive-controls__search-input" placeholder="' + config.i18n.searchPlaceholder + '" autocomplete="off" />' +
-			'</div>' +
-			'<div class="icts-archive-controls__category">' +
-				'<label class="screen-reader-text" for="icts-archive-category">' + config.i18n.filterLabel + '</label>' +
-				'<select id="icts-archive-category" class="icts-archive-controls__category-select"></select>' +
-			'</div>';
+		searchLabel.setAttribute( 'for', 'icts-archive-search' );
+		searchInput.id = 'icts-archive-search';
+		searchInput.type = 'search';
+		searchInput.className = 'icts-archive-controls__search-input';
+		searchInput.placeholder = config.i18n.searchPlaceholder || '';
+		searchInput.autocomplete = 'off';
+
+		categoryLabel.setAttribute( 'for', 'icts-archive-category' );
+		categorySelect.id = 'icts-archive-category';
+		categorySelect.className = 'icts-archive-controls__category-select';
+
+		appendChildren( searchWrap, [ searchLabel, searchInput ] );
+		appendChildren( categoryWrap, [ categoryLabel, categorySelect ] );
+		appendChildren( controls, [ searchWrap, categoryWrap ] );
 
 		rootQuery.parentNode.insertBefore( controls, rootQuery );
 		return controls;
 	}
 
 	function populateCategorySelect( select ) {
-		select.innerHTML = '';
+		clearElement( select );
 
 		var allOption = document.createElement( 'option' );
 		allOption.value = '0';
@@ -141,13 +188,147 @@
 		return paginationHost;
 	}
 
-	function renderNoResults() {
-		postTemplate.innerHTML =
-			'<li class="wp-block-post icts-archive-post-empty">' +
-				'<p>' + config.i18n.noResults + '</p>' +
-			'</li>';
+	function renderNoResults( message ) {
+		var item = createElement( 'li', 'wp-block-post icts-archive-post-empty' );
+		var text = createElement( 'p', '', message || config.i18n.noResults || '' );
+
+		clearElement( postTemplate );
+		item.appendChild( text );
+		postTemplate.appendChild( item );
+
 		var host = ensurePaginationHost();
-		host.innerHTML = '';
+		clearElement( host );
+	}
+
+	function renderArchiveCard( item ) {
+		var listItem = createElement( 'li', item.className || 'wp-block-post icts-archive-post-item' );
+		var article = createElement( 'article', 'icts-archive-post-card' );
+		var imageLink = createElement( 'a', 'icts-archive-post-card__image-link' );
+		var body = createElement( 'div', 'icts-archive-post-card__body' );
+		var title = createElement( 'h3', 'icts-archive-post-card__title' );
+		var titleLink = document.createElement( 'a' );
+		var meta = createElement( 'p', 'icts-archive-post-card__meta' );
+		var date = createElement( 'span', 'icts-archive-post-card__date', item.date || '' );
+		var authorWrap = createElement( 'span', 'icts-archive-post-card__author' );
+		var buttons = createElement( 'div', 'wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex icts-archive-post-card__buttons' );
+		var button = createElement( 'div', 'wp-block-button has-custom-width wp-block-button__width-100' );
+		var buttonLink = createElement( 'a', 'wp-block-button__link wp-element-button', item.buttonLabel || '' );
+		var permalink = item.permalink || '#';
+
+		imageLink.href = permalink;
+		if ( item.image && item.image.url ) {
+			var image = document.createElement( 'img' );
+			image.className = 'icts-archive-post-card__image';
+			image.src = item.image.url;
+			image.alt = item.image.alt || '';
+			image.loading = 'lazy';
+			image.decoding = 'async';
+			imageLink.appendChild( image );
+		} else {
+			imageLink.appendChild( createElement( 'div', 'icts-archive-post-card__image-placeholder' ) );
+			imageLink.firstChild.setAttribute( 'aria-hidden', 'true' );
+		}
+
+		if ( item.category && item.category.name ) {
+			var category = createElement( 'p', 'icts-archive-post-card__category' );
+			var marker = createElement( 'span', 'icts-archive-post-card__category-marker' );
+			var markerSlug = /^[a-z0-9-]+$/.test( item.category.markerColorSlug || '' )
+				? item.category.markerColorSlug
+				: 'brand-secondary';
+			var categoryText = createElement( 'span', 'icts-archive-post-card__category-text', item.category.name );
+
+			marker.style.backgroundColor = 'var(--wp--preset--color--' + markerSlug + ')';
+			appendChildren( category, [ marker, categoryText ] );
+			body.appendChild( category );
+		}
+
+		titleLink.href = permalink;
+		titleLink.textContent = item.title || '';
+		title.appendChild( titleLink );
+
+		if ( item.author && item.author.url ) {
+			var authorLink = createElement( 'a', '', item.author.name || '' );
+			authorLink.href = item.author.url;
+			authorWrap.appendChild( authorLink );
+		} else {
+			authorWrap.textContent = item.author && item.author.name ? item.author.name : '';
+		}
+
+		appendChildren( meta, [ date, authorWrap ] );
+
+		buttonLink.href = permalink;
+		button.appendChild( buttonLink );
+		buttons.appendChild( button );
+
+		appendChildren( body, [ title, meta, buttons ] );
+		appendChildren( article, [ imageLink, body ] );
+		listItem.appendChild( article );
+
+		return listItem;
+	}
+
+	function renderArchiveItems( items, message ) {
+		clearElement( postTemplate );
+
+		if ( ! Array.isArray( items ) || ! items.length ) {
+			renderNoResults( message );
+			return;
+		}
+
+		items.forEach( function ( item ) {
+			postTemplate.appendChild( renderArchiveCard( item || {} ) );
+		} );
+	}
+
+	function createPaginationLink( page, className, label ) {
+		var link = createElement( 'a', className, label );
+		link.href = '#';
+		link.dataset.ictsPage = String( page );
+		return link;
+	}
+
+	function renderPagination( pagination ) {
+		var host = ensurePaginationHost();
+		var totalPages = pagination && pagination.totalPages ? parseInt( pagination.totalPages, 10 ) : 0;
+		var current = pagination && pagination.currentPage ? parseInt( pagination.currentPage, 10 ) : currentPage;
+
+		clearElement( host );
+
+		if ( Number.isNaN( totalPages ) || totalPages <= 1 ) {
+			return;
+		}
+
+		if ( pagination.previousPage ) {
+			host.appendChild(
+				createPaginationLink(
+					pagination.previousPage,
+					'wp-block-query-pagination-previous is-style-wp-block-button__link',
+					pagination.previousLabel || 'Previous Page'
+				)
+			);
+		}
+
+		var numbers = createElement( 'div', 'wp-block-query-pagination-numbers' );
+		for ( var page = 1; page <= totalPages; page++ ) {
+			if ( page === current ) {
+				var currentItem = createElement( 'span', 'page-numbers current', String( page ) );
+				currentItem.setAttribute( 'aria-current', 'page' );
+				numbers.appendChild( currentItem );
+			} else {
+				numbers.appendChild( createPaginationLink( page, 'page-numbers', String( page ) ) );
+			}
+		}
+		host.appendChild( numbers );
+
+		if ( pagination.nextPage ) {
+			host.appendChild(
+				createPaginationLink(
+					pagination.nextPage,
+					'wp-block-query-pagination-next is-style-wp-block-button__link',
+					pagination.nextLabel || 'Next Page'
+				)
+			);
+		}
 	}
 
 	function fetchPosts( page ) {
@@ -181,14 +362,8 @@
 				}
 
 				var data = payload.data;
-				if ( data.items_html ) {
-					postTemplate.innerHTML = data.items_html;
-				} else {
-					renderNoResults();
-				}
-
-				var host = ensurePaginationHost();
-				host.innerHTML = data.pagination_html || '';
+				renderArchiveItems( data.items || [], data.message );
+				renderPagination( data.pagination || null );
 				updateBrowserUrl();
 			} )
 			.catch( function ( error ) {

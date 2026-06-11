@@ -11,14 +11,14 @@
  * Inserter: true
  */
 ?>
-<!-- wp:group {"metadata":{"name":"Call To Action Box"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","right":"var:preset|spacing|large","left":"var:preset|spacing|large"}},"border":{"radius":"5px"}},"backgroundColor":"primary","textColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-base-color has-primary-background-color has-text-color has-background" style="border-radius:5px;padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"medium"} -->
-<p class="has-text-align-center has-medium-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Build With Patterns', 'icts-europe' ); ?></p>
+<!-- wp:group {"metadata":{"name":"Call To Action Box"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","right":"var:preset|spacing|large","left":"var:preset|spacing|large"}},"border":{"radius":"5px"}},"backgroundColor":"brand-primary","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-base-color has-brand-primary-background-color has-text-color has-background" style="border-radius:5px;padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"600"}},"fontSize":"base"} -->
+<p class="has-text-align-center has-base-font-size" style="font-style:normal;font-weight:600"><?php esc_html_e( 'Build With Patterns', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph -->
 
-<!-- wp:paragraph {"align":"center","textColor":"primary-accent"} -->
-<p class="has-text-align-center has-primary-accent-color has-text-color"><?php esc_html_e( 'Build your blazing fast website with the power of the WordPress Site Editor and beautiful, pre-made pattern designs from ICTS Europe. No coding skills required.', 'icts-europe' ); ?></p>
+<!-- wp:paragraph {"align":"center","textColor":"brand-primary-light"} -->
+<p class="has-text-align-center has-brand-primary-light-color has-text-color"><?php esc_html_e( 'Build your blazing fast website with the power of the WordPress Site Editor and beautiful, pre-made pattern designs from ICTS Europe. No coding skills required.', 'icts-europe' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 

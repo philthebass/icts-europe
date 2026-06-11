@@ -19,8 +19,8 @@
 <!-- /wp:image -->
 
 <!-- wp:group {"metadata":{"name":"Name and Title"},"style":{"spacing":{"blockGap":"0px"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"align":"center","fontSize":"medium"} -->
-<p class="has-text-align-center has-medium-font-size"><strong><?php esc_html_e( 'Margo Middleton', 'icts-europe' ); ?></strong></p>
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","fontSize":"base"} -->
+<p class="has-text-align-center has-base-font-size"><strong><?php esc_html_e( 'Margo Middleton', 'icts-europe' ); ?></strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"align":"center","style":{"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary"} -->
