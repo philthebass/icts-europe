@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-06-11 — Solution SoftwareApplication schema includes operatingSystem — Google Rich Results requires at least two Software Apps properties from offers, aggregateRating, applicationCategory, and operatingSystem; the theme already provides applicationCategory but the project does not have real offer or review data — Theme now emits truthful operatingSystem text for each canonical solution and registers those values for Polylang translation, while continuing to omit fake offers and aggregate ratings.
+
 2026-06-11 — Canonical solution pages emit SoftwareApplication schema — The six main solution pages describe software products, but Yoast only emits generic WebPage schema and Google rich-result software markup would require real offer/review data that is not available — Theme now appends SoftwareApplication graph nodes for TravelDoc ADC, TravelDoc Compliance, TravelDoc Pro, TravelDoc Explore, Global APIS, and CPM using Polylang-translatable metadata, links each WebPage mainEntity to the software node, and leaves industry-specific landing pages for a later lighter reference pattern.
 
 2026-06-08 — Team Member profile pages emit Person schema — Team Member singles are profile pages but Yoast only emitted generic WebPage schema for the CPT — Theme now appends a Person graph node for `team-member` singles using title, job title, bio, featured image, LinkedIn URL, and the existing Yoast Organization node, and links the WebPage `mainEntity` to that Person.

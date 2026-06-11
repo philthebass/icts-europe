@@ -100,6 +100,7 @@ function get_solution_software_schema_items() {
 			'application_category'     => 'BusinessApplication',
 			'application_sub_category' => 'Hybrid (SaaS platform + API)',
 			'audience'                 => 'Airlines, ground handlers, travel providers, maritime and rail operators',
+			'operating_system'         => 'API-compatible systems',
 			'runtime_platform'         => 'API-based, with DCS integration',
 		],
 		'traveldoc-compliance' => [
@@ -108,6 +109,7 @@ function get_solution_software_schema_items() {
 			'application_category'     => 'BusinessApplication',
 			'application_sub_category' => 'Hybrid (SaaS application + API/widget)',
 			'audience'                 => 'Airlines',
+			'operating_system'         => 'Web browser, iOS and Android',
 			'runtime_platform'         => 'Browser-based staff portal, embeddable web widget or iOS/Android app integration, with DCS output',
 		],
 		'traveldoc-pro'        => [
@@ -116,6 +118,7 @@ function get_solution_software_schema_items() {
 			'application_category'     => 'BusinessApplication',
 			'application_sub_category' => 'Software application (SaaS)',
 			'audience'                 => 'Airlines, ground handlers, travel agencies, travel providers, maritime & rail operators and individual travellers',
+			'operating_system'         => 'Web browser',
 			'runtime_platform'         => 'Browser-based interface',
 		],
 		'traveldoc-explore'    => [
@@ -124,6 +127,7 @@ function get_solution_software_schema_items() {
 			'application_category'     => 'TravelApplication',
 			'application_sub_category' => 'Software application (B2C)',
 			'audience'                 => 'Individual travellers',
+			'operating_system'         => 'Web browser',
 			'runtime_platform'         => 'Browser-based, mobile-friendly web application',
 		],
 		'global-apis'          => [
@@ -132,6 +136,7 @@ function get_solution_software_schema_items() {
 			'application_category'     => 'BusinessApplication',
 			'application_sub_category' => 'API/platform (managed gateway)',
 			'audience'                 => 'Airlines, travel providers, maritime and rail operators',
+			'operating_system'         => 'API-compatible systems',
 			'runtime_platform'         => 'API-based gateway, with operator-facing interface',
 		],
 		'cpm'                  => [
@@ -140,6 +145,7 @@ function get_solution_software_schema_items() {
 			'application_category'     => 'BusinessApplication',
 			'application_sub_category' => 'Installed software (hardware-deployed)',
 			'audience'                 => 'Airlines',
+			'operating_system'         => 'Dedicated hardware unit',
 			'runtime_platform'         => 'Installed software on dedicated hardware units, operates offline',
 		],
 	];
@@ -156,7 +162,7 @@ function register_solution_software_schema_strings() {
 	}
 
 	foreach ( get_solution_software_schema_items() as $slug => $item ) {
-		foreach ( [ 'name', 'description', 'application_sub_category', 'audience', 'runtime_platform' ] as $field ) {
+		foreach ( [ 'name', 'description', 'application_sub_category', 'audience', 'operating_system', 'runtime_platform' ] as $field ) {
 			if ( empty( $item[ $field ] ) || ! \is_string( $item[ $field ] ) ) {
 				continue;
 			}
@@ -358,6 +364,7 @@ function add_solution_software_application_schema( $graph, $context ) {
 			'@type'        => 'Audience',
 			'audienceType' => translate_schema_text( $item['audience'] ),
 		],
+		'operatingSystem'        => translate_schema_text( $item['operating_system'] ),
 		'runtimePlatform'        => translate_schema_text( $item['runtime_platform'] ),
 	];
 

@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.29 - 2026-06-11
+### Added
+- Added truthful `operatingSystem` values to canonical solution `SoftwareApplication` schema so Google's Software Apps rich-result parser has the second required property without inventing offer or review data.
+- Registered solution `operatingSystem` values in the Polylang `Theme: Solution schema` string group.
+
+### Changed
+- No behavior changes beyond the solution schema field addition.
+
+### Fixed
+- Resolved the Google Rich Results critical Software Apps issue that required at least two of `offers`, `aggregateRating`, `applicationCategory`, and `operatingSystem`.
+
+### Notes
+- After deploying, revisit a canonical solution page, translate/review the new `operatingSystem` strings in `Theme: Solution schema`, purge cache, and retest with Google's Rich Results Test. `offers` and `aggregateRating` may still appear as optional warnings until real pricing/review data exists.
+
 ## 1.0.28 - 2026-06-11
 ### Added
 - Added Yoast graph extensions for the six canonical solution pages so TravelDoc ADC, TravelDoc Compliance, TravelDoc Pro, TravelDoc Explore, Global APIS, and CPM emit `SoftwareApplication` schema.
