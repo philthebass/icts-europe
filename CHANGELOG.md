@@ -7,6 +7,22 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.0.28 - 2026-06-11
+### Added
+- Added Yoast graph extensions for the six canonical solution pages so TravelDoc ADC, TravelDoc Compliance, TravelDoc Pro, TravelDoc Explore, Global APIS, and CPM emit `SoftwareApplication` schema.
+- Registered solution schema metadata under the Polylang string group `Theme: Solution schema` for translation review across the multilingual site.
+
+### Changed
+- Linked each canonical solution page `WebPage` schema node to its generated software entity via `mainEntity`, and linked software entities back to the page via `mainEntityOfPage`.
+- Matched translated solution pages through their default-language Polylang source slug so schema output does not depend on environment-specific page IDs.
+
+### Fixed
+- No bug fixes in this release.
+
+### Notes
+- After deploying, visit at least one canonical solution page to register the new Polylang strings, translate/review the `Theme: Solution schema` group in production, and verify one English and one translated solution page include exactly one `SoftwareApplication` node in Yoast JSON-LD.
+- Industry-specific solution landing pages intentionally do not emit full `SoftwareApplication` schema in this release.
+
 ## 1.0.27 - 2026-06-08
 ### Added
 - Registered legacy `header`, `footer`, `Features`, and `Banners` pattern categories so older theme pattern metadata remains visible in the editor.

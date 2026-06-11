@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-06-11 — Canonical solution pages emit SoftwareApplication schema — The six main solution pages describe software products, but Yoast only emits generic WebPage schema and Google rich-result software markup would require real offer/review data that is not available — Theme now appends SoftwareApplication graph nodes for TravelDoc ADC, TravelDoc Compliance, TravelDoc Pro, TravelDoc Explore, Global APIS, and CPM using Polylang-translatable metadata, links each WebPage mainEntity to the software node, and leaves industry-specific landing pages for a later lighter reference pattern.
+
 2026-06-08 — Team Member profile pages emit Person schema — Team Member singles are profile pages but Yoast only emitted generic WebPage schema for the CPT — Theme now appends a Person graph node for `team-member` singles using title, job title, bio, featured image, LinkedIn URL, and the existing Yoast Organization node, and links the WebPage `mainEntity` to that Person.
 
 2026-06-08 — Preserve open-ended block insertion when filtering editor blocks — Modern WordPress editor builds filter patterns by parsing every block in the pattern against the editor allow-list, so converting `true` into a fixed registered-block array can hide valid theme patterns when plugin/runtime blocks are not present at that exact point — The theme now leaves `allowed_block_types_all` as `true` unless another layer has already supplied an explicit array, and only removes `acf/counter` from explicit arrays; legacy `header`, `footer`, `Features`, and `Banners` pattern categories are registered for older pattern files.

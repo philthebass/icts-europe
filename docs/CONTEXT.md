@@ -37,6 +37,7 @@ Content Model
 - CPTs: customers, testimonial, team-member, faq.
 - Taxonomies: customer-type, product (shared filters across customers + FAQs).
 - FAQ rendering: `acf/faq-accordion` block with optional block-level taxonomy scoping and per-block FAQPage JSON-LD output.
+- SEO/schema: Yoast graph extensions add `Person` schema for Team Member profiles and `SoftwareApplication` schema for the six canonical solution pages; solution schema text is registered for Polylang translation.
 - Reusable metrics: `acf/counter` block for editable numeric counters (up/down, affixes, labels).
 
 ## Languages
