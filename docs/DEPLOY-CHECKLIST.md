@@ -26,6 +26,7 @@ Installed LocalWP theme copy: `/Users/philipevans/Local Sites/iesaero/app/public
 15. Replace the existing `icts-europe` theme with the uploaded version.
 16. Clear any cache if needed.
 17. Check the key pages on the server.
+18. If the release affects sliders, links, navigation, analytics, or schema, re-run Lighthouse Accessibility, SEO, and Best Practices checks against the key page and update `docs/LIGHTHOUSE-AUDIT.md` if the baseline changes.
 
 ## Important rules
 

@@ -27,6 +27,7 @@ Use this checklist when preparing a new ICTS Europe theme release.
 12. Replace the existing `icts-europe` theme.
 13. Clear cache if needed.
 14. Check the affected pages and features.
+15. For releases touching templates, navigation, sliders, CTAs, tracking scripts, or SEO/schema output, re-run Lighthouse Accessibility, SEO, and Best Practices checks and compare against `docs/LIGHTHOUSE-AUDIT.md`.
 
 ## Important Rules
 
@@ -35,6 +36,7 @@ Use this checklist when preparing a new ICTS Europe theme release.
 - Do not edit theme files directly in the LocalWP theme folder.
 - Do not upload a GitHub "Download ZIP"; always use the zip from `dist/`.
 - If no ACF fields changed in WordPress admin, nothing special is needed for `acf-json/`.
+- Keep unresolved Lighthouse Accessibility, SEO, and Best Practices findings visible in `docs/LIGHTHOUSE-AUDIT.md`.
 
 ## Short Version
 

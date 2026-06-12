@@ -66,6 +66,7 @@ Required plugin settings
 Accessibility & Motion
 - Sliders pause on hover; respect prefers-reduced-motion. No visible Pause control required for now.
 - Indicators keyboard accessible; ARIA labels present.
+- Current Lighthouse audit notes for Accessibility, SEO, and Best Practices are tracked in `docs/LIGHTHOUSE-AUDIT.md`.
 - Reusable reveal utility available: add `.icts-reveal-grid` to a container to animate children on viewport entry (optional `data-icts-reveal-item-selector` override; `data-icts-reveal-skip` per-item opt-out).
 - Navigation uses click-driven mega panels (desktop) and drawer panels (mobile), with reverse close animations.
 - Desktop supports second-level and fixed-position third-level flyouts; mobile supports parent-aware Back navigation.
@@ -112,6 +113,7 @@ Deployment
 Open Questions
 - Final brand palette/contrast targets.
 - Autoplay policy for hero/testimonials (current defaults OK).
+- Whether LinkedIn Insight tracking remains required for launch analytics.
 
 Design decisions should favour:
 - Reusability
