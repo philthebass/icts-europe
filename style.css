@@ -7,7 +7,7 @@ Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.1.0
+Version: 1.1.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
@@ -646,11 +646,12 @@ body:not(.wp-admin) header:has(>.is-position-sticky) {
 	transform: translateY(-2px);
 }
 
-/* Gravity Form ID 1: hide required legend + tighten field spacing */
-#gform_wrapper_1.gform_wrapper.gform-theme--orbital .gform_required_legend {
+/* Footer signup forms: hide required legend across translated form IDs */
+.site-footer .gform_wrapper.gform-theme--orbital .gform_required_legend {
 	display: none;
 }
 
+/* Gravity Form ID 1: tighten field spacing */
 #gform_wrapper_1.gform_wrapper.gform-theme--orbital {
 	--gf-field-gap-y: 0.5rem;
 }

@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.1 - 2026-06-12
+### Added
+- No new features in this release.
+
+### Changed
+- Scoped the footer Gravity Forms required legend hide rule to all footer Orbital forms so translated signup form IDs inherit the same treatment as the English form.
+
+### Fixed
+- Hid the required fields message on translated footer mailing list forms, including the Portuguese footer signup form.
+
+### Notes
+- After deploying, purge cache and verify the footer signup form on English plus at least one translated home page, such as `/pt/casa/`.
+
 ## 1.1.0 - 2026-06-11
 ### Added
 - Added temporary legacy token compatibility CSS for saved database content while source templates and patterns move to current theme tokens.
