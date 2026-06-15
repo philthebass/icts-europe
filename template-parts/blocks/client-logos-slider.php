@@ -118,7 +118,7 @@ $get_customer_logo_html = static function ( $logo, $title ) {
  * @param int $post_id Post ID.
  * @return int
  */
-$get_canonical_customer_post_id = static function ( $post_id ) {
+$get_canonical_post_id = static function ( $post_id ) {
     $post_id = (int) $post_id;
 
     if ( ! function_exists( 'pll_get_post_translations' ) ) {
@@ -147,6 +147,7 @@ $get_canonical_customer_post_id = static function ( $post_id ) {
 
 $logo_items = array();
 $rendered_customer_ids = array();
+$rendered_partner_ids  = array();
 
 // ----- Build customers data ---------------------------------------------------
 
@@ -198,7 +199,7 @@ if ( in_array( $logo_source_mode, array( 'customers', 'both' ), true ) ) {
         while ( $customers_query->have_posts() ) {
             $customers_query->the_post();
 
-            $customer_id = $get_canonical_customer_post_id( get_the_ID() );
+            $customer_id = $get_canonical_post_id( get_the_ID() );
             if ( isset( $rendered_customer_ids[ $customer_id ] ) ) {
                 continue;
             }
@@ -250,9 +251,14 @@ if ( in_array( $logo_source_mode, array( 'partners', 'both' ), true ) ) {
         while ( $partners_query->have_posts() ) {
             $partners_query->the_post();
 
-            $title    = get_the_title();
-            $logo_url = get_field( 'partner_site', get_the_ID() );
-            $image_id = get_post_thumbnail_id( get_the_ID() );
+            $partner_id = $get_canonical_post_id( get_the_ID() );
+            if ( isset( $rendered_partner_ids[ $partner_id ] ) ) {
+                continue;
+            }
+
+            $title    = get_the_title( $partner_id );
+            $logo_url = get_field( 'partner_site', $partner_id );
+            $image_id = get_post_thumbnail_id( $partner_id );
             $img_html = '';
 
             if ( $image_id ) {
@@ -271,6 +277,8 @@ if ( in_array( $logo_source_mode, array( 'partners', 'both' ), true ) ) {
             if ( '' === $img_html ) {
                 continue;
             }
+
+            $rendered_partner_ids[ $partner_id ] = true;
 
             $logo_items[] = array(
                 'title'    => $title,

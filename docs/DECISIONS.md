@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-06-15 — Logos Slider renders one logo per partner translation set — Partner logos are shared brand assets like customer logos, and all-language partner queries can return translated copies of the same partner record — `acf/client-logos-slider` now resolves Polylang Partner translations to the default-language partner record and renders each translation set once.
+
 2026-06-12 — Track Lighthouse accessibility, SEO, and best-practices findings in docs — The current production homepage Lighthouse report has actionable findings across slider focus management, ARIA semantics, link naming, descriptive CTA text, and a LinkedIn Insight deprecation warning — Added `docs/LIGHTHOUSE-AUDIT.md` as the working audit/TODO note and linked it from project context and release checks so fixes can be implemented and re-tested without losing the baseline.
 
 2026-06-11 — Curated editor inserter patterns with a launch allow-list — The theme retains inherited Ollie-style pattern files for future reuse, but many contain demo content or template-part variants unsuitable for editor handoff — Added `get_launch_approved_pattern_slugs()` and expanded the existing unregister pass so only approved ICTS patterns appear in the inserter; documented the curated set in `docs/PATTERN-CURATION.md`.

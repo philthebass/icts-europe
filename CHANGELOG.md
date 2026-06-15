@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.2 - 2026-06-15
+### Added
+- No new features in this release.
+
+### Changed
+- No general behavior changes beyond Logo Slider partner de-duplication.
+
+### Fixed
+- Prevented the Logos Slider from rendering duplicate Partner logos from translated Polylang partner records.
+
+### Notes
+- After deploying, purge cache and verify `/about-us/` shows each partner logo once in the "Our partners" Logos Slider.
+
 ## 1.1.1 - 2026-06-12
 ### Added
 - No new features in this release.
