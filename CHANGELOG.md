@@ -7,6 +7,21 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.8 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Logos Slider now renders a maximum of 24 logo images on the front end to reduce DOM size, image decode work, and memory pressure on long pages.
+- Logos Slider initializes the normal Flickity ticker on iOS/iPadOS again, using the smaller rendered logo set instead of the static fallback.
+- Counter Band removes decorative cover image markup on the front end when the `icts-counter-band` class is present.
+
+### Fixed
+- Reduced late painting at the bottom of the counter band and improved scroll stability before the Logos Slider on the TravelDoc Pro travel providers page.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome with the Page No Wires template active.
+
 ## 1.1.7 - 2026-06-18
 ### Added
 - No new features in this release.

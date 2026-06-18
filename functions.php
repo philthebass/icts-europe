@@ -635,6 +635,22 @@ function filter_steps_primary_step_image_markup( $block_content, $block ) {
 }
 add_filter( 'render_block', __NAMESPACE__ . '\filter_steps_primary_step_image_markup', 16, 2 );
 
+function filter_counter_band_cover_image_markup( $block_content ) {
+	if ( \is_admin() || false === \strpos( $block_content, 'icts-counter-band' ) ) {
+		return $block_content;
+	}
+
+	$updated_content = \preg_replace(
+		'/<img\b(?=[^>]*\bwp-block-cover__image-background\b)[^>]*>/i',
+		'',
+		$block_content,
+		1
+	);
+
+	return \is_string( $updated_content ) ? $updated_content : $block_content;
+}
+add_filter( 'render_block_core/cover', __NAMESPACE__ . '\filter_counter_band_cover_image_markup', 10 );
+
 function preload_primary_font_assets() {
 	if ( ! \is_front_page() ) {
 		return;

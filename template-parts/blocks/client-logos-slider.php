@@ -300,6 +300,10 @@ if ( 'both' === $logo_source_mode && ! empty( $logo_items ) ) {
     );
 }
 
+if ( ! is_admin() && count( $logo_items ) > 24 ) {
+    $logo_items = array_slice( $logo_items, 0, 24 );
+}
+
 // ----- Render ----------------------------------------------------------------
 ?>
 
