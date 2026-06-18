@@ -300,9 +300,28 @@ if ( 'both' === $logo_source_mode && ! empty( $logo_items ) ) {
     );
 }
 
-if ( ! is_admin() && count( $logo_items ) > 24 ) {
-    $logo_items = array_slice( $logo_items, 0, 24 );
+if ( ! is_admin() && count( $logo_items ) > 12 ) {
+    $logo_items = array_slice( $logo_items, 0, 12 );
 }
+
+$render_logo_item = static function ( $logo_item, $is_duplicate = false ) {
+    ?>
+    <div class="client-logos-slider__cell"<?php echo $is_duplicate ? ' aria-hidden="true"' : ''; ?>>
+        <?php if ( ! $is_duplicate && ! empty( $logo_item['url'] ) ) : ?>
+            <a
+                href="<?php echo esc_url( $logo_item['url'] ); ?>"
+                class="client-logos-slider__logo-link"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <?php echo $logo_item['img_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            </a>
+        <?php else : ?>
+            <?php echo $logo_item['img_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+        <?php endif; ?>
+    </div>
+    <?php
+};
 
 // ----- Render ----------------------------------------------------------------
 ?>
@@ -315,22 +334,15 @@ if ( ! is_admin() && count( $logo_items ) > 24 ) {
         <div class="client-logos-slider__carousel">
             <?php
             foreach ( $logo_items as $logo_item ) :
-                ?>
-                <div class="client-logos-slider__cell">
-                    <?php if ( ! empty( $logo_item['url'] ) ) : ?>
-                        <a
-                            href="<?php echo esc_url( $logo_item['url'] ); ?>"
-                            class="client-logos-slider__logo-link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <?php echo $logo_item['img_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                        </a>
-                    <?php else : ?>
-                        <?php echo $logo_item['img_html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
+                $render_logo_item( $logo_item );
+            endforeach;
+
+            if ( ! is_admin() && count( $logo_items ) > 1 ) :
+                foreach ( $logo_items as $logo_item ) :
+                    $render_logo_item( $logo_item, true );
+                endforeach;
+            endif;
+            ?>
         </div>
 
     <?php elseif ( is_admin() ) : ?>

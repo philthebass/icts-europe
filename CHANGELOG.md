@@ -7,6 +7,22 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.9 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Logos Slider no longer enqueues Flickity or its ticker script; front-end motion is now a lightweight CSS marquee.
+- Logos Slider renders 12 source logos plus one non-interactive duplicate set for a seamless loop.
+- Steps Primary front-end script is now inert so step cards render in their final state without scroll observers, transforms, or reveal transitions.
+
+### Fixed
+- Recovered from the iOS instability introduced by re-enabling the JavaScript logo carousel in 1.1.8.
+- Reduced scroll-time JavaScript and image work around the Counter Band, Steps Primary, and Logos Slider sequence on long product pages.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome with the Page No Wires template active.
+
 ## 1.1.8 - 2026-06-18
 ### Added
 - No new features in this release.

@@ -1,5 +1,5 @@
 /* ================================
-   Client Logos Slider (Flickity)
+   Client Logos Slider
    ================================ */
 
 /* Full-width band for alignfull (front end + editor) */
@@ -25,26 +25,15 @@
     line-height: 0;
 }
 
-/* Hide carousel until Flickity has initialised (front end only) */
 .client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel {
-    width: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s ease;
-}
-
-/* Front-end: once JS adds .is-ready we show it */
-.client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel.is-ready {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Flickity viewport – keep things vertically centred */
-.client-logos-slider .flickity-viewport {
-    width: 100%;
-    height: 100%;
     display: flex;
     align-items: center;
+    width: max-content;
+    min-width: 100%;
+    opacity: 1;
+    visibility: visible;
+    animation: icts-client-logos-marquee 38s linear infinite;
+    will-change: transform;
 }
 
 /* =========================================================
@@ -101,6 +90,24 @@
     -webkit-filter: grayscale(0%);
     opacity: 1;
     transform: translateY(-1px);
+}
+
+@keyframes icts-client-logos-marquee {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel {
+        animation: none;
+        transform: none;
+        will-change: auto;
+    }
 }
 
 /* =========================================

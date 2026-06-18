@@ -32,36 +32,7 @@ namespace ICTS_Europe;
 					'anchor' => true,
 				],
 				'enqueue_assets'  => function () {
-					$theme_dir = \get_template_directory();
-					$theme_uri = \get_template_directory_uri();
-					$script_path = '/assets/js/client-logos-flickity.js';
-					$script_abs  = $theme_dir . $script_path;
-
-					if ( ! \wp_style_is( 'flickity', 'registered' ) ) {
-						\wp_register_style(
-							'flickity',
-							$theme_uri . '/assets/vendor/flickity/flickity.min.css',
-							[],
-							'2.3.0'
-						);
-					}
-
-					\wp_enqueue_style( 'flickity' );
-					\wp_enqueue_script(
-						'flickity',
-						$theme_uri . '/assets/vendor/flickity/flickity.pkgd.min.js',
-						[],
-						'2.3.0',
-						true
-					);
-
-					\wp_enqueue_script(
-						'icts-client-logos-flickity',
-						$theme_uri . $script_path,
-						[ 'flickity' ],
-						\file_exists( $script_abs ) ? (string) \filemtime( $script_abs ) : '1.0.0',
-						true
-					);
+					// Front-end motion is handled by CSS for this block.
 				},
 			]
 		);
@@ -264,7 +235,7 @@ function register_acf_block_styles() {
 			'block'  => 'acf/client-logos-slider',
 			'handle' => 'icts-client-logos-slider',
 			'src'    => '/assets/styles/blocks/client-logos-slider.css',
-			'deps'   => [ 'flickity' ],
+			'deps'   => [],
 		],
 		[
 			'block'  => 'acf/team-member-card',
