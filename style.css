@@ -7,7 +7,7 @@ Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.1.4
+Version: 1.1.5
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
@@ -280,6 +280,10 @@ body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
 	overflow: hidden;
 }
 
+.icts-counter-band > .wp-block-cover__image-background {
+	contain: paint;
+}
+
 .icts-counter-band .wp-block-cover__inner-container {
 	inline-size: 100%;
 }
@@ -365,6 +369,12 @@ body:not(.wp-admin) .icts-contact-map-static .wp-block-buttons {
 	min-inline-size: 0;
 	block-size: 100%;
 	display: flex;
+}
+
+@supports (-webkit-touch-callout: none) {
+	.icts-counter-band > .wp-block-cover__image-background {
+		display: none;
+	}
 }
 
 .editor-styles-wrapper .icts-counter-band__grid {

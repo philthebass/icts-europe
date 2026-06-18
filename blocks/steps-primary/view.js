@@ -1,9 +1,20 @@
 ( () => {
 	const prefersReducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
+	const ua = window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '';
+	const platform = window.navigator && window.navigator.platform ? window.navigator.platform : '';
+	const maxTouchPoints = window.navigator && window.navigator.maxTouchPoints ? window.navigator.maxTouchPoints : 0;
+	const isIOSWebKit = /iPad|iPhone|iPod/.test( ua ) || ( platform === 'MacIntel' && maxTouchPoints > 1 );
 
 	const initStepReveal = ( root ) => {
 		const steps = root.querySelectorAll( '.wp-block-icts-steps-primary-step' );
 		if ( ! steps.length ) {
+			return;
+		}
+
+		if ( isIOSWebKit ) {
+			steps.forEach( ( step ) => {
+				step.classList.add( 'is-inview' );
+			} );
 			return;
 		}
 

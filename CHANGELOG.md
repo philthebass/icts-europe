@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.5 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Steps Primary reveal effects are skipped on iOS/iPadOS WebKit so step cards remain stable while scrolling back and forth.
+- Counter band decorative cover images are suppressed on iOS/iPadOS WebKit to reduce image decode and repaint pressure around long product pages.
+
+### Fixed
+- Reduced remaining iOS scroll jitter around the TravelDoc Pro counter band and Steps Primary sections after switching the page to the no-wires template.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome with the Page No Wires template active.
+
 ## 1.1.4 - 2026-06-18
 ### Added
 - No new features in this release.

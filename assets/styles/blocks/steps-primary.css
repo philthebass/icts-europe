@@ -163,3 +163,12 @@
 		transition: none;
 	}
 }
+
+@supports (-webkit-touch-callout: none) {
+	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step.has-steps-primary-reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+		will-change: auto;
+	}
+}
