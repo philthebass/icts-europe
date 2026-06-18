@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.11 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Counter Band cover images are restored in front-end markup for non-iOS devices.
+- The existing iOS/iPadOS WebKit CSS rule still hides Counter Band cover images while stability testing continues.
+
+### Fixed
+- Restored the Counter Band visual treatment without reintroducing the image on iOS/iPadOS WebKit.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on desktop and iOS Safari or Chrome.
+
 ## 1.1.10 - 2026-06-18
 ### Added
 - No new features in this release.
