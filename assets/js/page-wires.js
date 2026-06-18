@@ -4,6 +4,8 @@
 	const STROKE_WIDTH = 5;
 	const initializedDocuments = new WeakSet();
 	const observedContainers = new WeakSet();
+	const renderedHeights = new WeakMap();
+	const scheduledContainers = new WeakMap();
 	const allowEditorFallback = !! (
 		window.ictsPageWiresConfig &&
 		window.ictsPageWiresConfig.allowEditorFallback
@@ -241,6 +243,13 @@
 			return;
 		}
 
+		const previousHeight = renderedHeights.get( container );
+		if ( previousHeight && Math.abs( previousHeight - height ) < 2 ) {
+			return;
+		}
+
+		renderedHeights.set( container, height );
+
 		let art = container.querySelector( '.page-wires-bg__art' );
 
 		if ( ! art ) {
@@ -291,6 +300,19 @@
 		art.replaceChildren( svg );
 	}
 
+	function scheduleRenderWires( container, doc ) {
+		if ( scheduledContainers.has( container ) ) {
+			return;
+		}
+
+		const frame = window.requestAnimationFrame( () => {
+			scheduledContainers.delete( container );
+			renderWires( container, doc );
+		} );
+
+		scheduledContainers.set( container, frame );
+	}
+
 	function observeContainer( container, doc, observer ) {
 		if ( observedContainers.has( container ) ) {
 			return;
@@ -314,7 +336,7 @@
 
 		const observer = new ResizeObserver( ( entries ) => {
 			entries.forEach( ( entry ) => {
-				renderWires( entry.target, doc );
+				scheduleRenderWires( entry.target, doc );
 			} );
 		} );
 

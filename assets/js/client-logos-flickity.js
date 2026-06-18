@@ -42,6 +42,8 @@
             // ----- ticker setup ---------------------------------------------
             var baseTickerSpeed = 0.6; // desktop baseline
             var isPaused = prefersReducedMotion;
+            var isInViewport = false;
+            var tickerFrame = null;
             var tickerEnabled = true;
 
             // Basic responsive tweak
@@ -58,13 +60,29 @@
 
             var tickerSpeed = baseTickerSpeed;
 
-            function updateTicker() {
-                if (!tickerEnabled) {
-                    return; // static mode – no animation
+            function shouldRunTicker() {
+                return tickerEnabled && !isPaused && isInViewport && !document.hidden;
+            }
+
+            function stopTickerFrame() {
+                if (tickerFrame) {
+                    window.cancelAnimationFrame(tickerFrame);
+                    tickerFrame = null;
+                }
+            }
+
+            function scheduleTicker() {
+                if (tickerFrame || !shouldRunTicker()) {
+                    return;
                 }
 
-                if (isPaused) {
-                    window.requestAnimationFrame(updateTicker);
+                tickerFrame = window.requestAnimationFrame(updateTicker);
+            }
+
+            function updateTicker() {
+                tickerFrame = null;
+
+                if (!shouldRunTicker()) {
                     return;
                 }
 
@@ -73,60 +91,95 @@
                 flkty.velocity = -tickerSpeed;
                 flkty.updateSelectedSlide();
 
-                window.requestAnimationFrame(updateTicker);
+                scheduleTicker();
             }
 
             carousel.addEventListener('mouseenter', function () {
                 isPaused = true;
+                stopTickerFrame();
             });
 
             carousel.addEventListener('mouseleave', function () {
                 if (!prefersReducedMotion && tickerEnabled) {
                     isPaused = false;
+                    scheduleTicker();
                 }
             });
 
-                    function startTicker() {
-            // -----------------------------------------------------------------
-            // 1) Ensure we have enough cells by repeating the existing logos
-            // -----------------------------------------------------------------
-            var minCells = 12; // tweak this – 10–14 usually feels good
-            var currentCells = flkty.getCellElements(); // DOM elements Flickity knows about
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    stopTickerFrame();
+                    return;
+                }
 
-            if (currentCells.length && currentCells.length < minCells) {
-                // Take a snapshot of the original cells
-                var originals = Array.prototype.slice.call(currentCells);
+                scheduleTicker();
+            });
 
-                // Keep duplicating until we reach at least minCells
-                while (flkty.getCellElements().length < minCells) {
-                    originals.forEach(function (elem) {
-                        // Clone the cell (including image + link)
-                        var clone = elem.cloneNode(true);
+            function startTicker() {
+                // -----------------------------------------------------------------
+                // 1) Ensure we have enough cells by repeating the existing logos
+                // -----------------------------------------------------------------
+                var minCells = 12; // tweak this – 10–14 usually feels good
+                var currentCells = flkty.getCellElements(); // DOM elements Flickity knows about
 
-                        // Append to the DOM
-                        carousel.appendChild(clone);
+                if (currentCells.length && currentCells.length < minCells) {
+                    // Take a snapshot of the original cells
+                    var originals = Array.prototype.slice.call(currentCells);
 
-                        // Tell Flickity about the new cell
-                        flkty.append(clone);
-                    });
+                    // Keep duplicating until we reach at least minCells
+                    while (flkty.getCellElements().length < minCells) {
+                        originals.forEach(function (elem) {
+                            // Clone the cell (including image + link)
+                            var clone = elem.cloneNode(true);
+
+                            // Append to the DOM
+                            carousel.appendChild(clone);
+
+                            // Tell Flickity about the new cell
+                            flkty.append(clone);
+                        });
+                    }
+                }
+
+                // -----------------------------------------------------------------
+                // 2) Normal ticker behaviour as before
+                // -----------------------------------------------------------------
+
+                tickerEnabled = true;
+
+                // Reveal carousel
+                carousel.classList.add('is-ready');
+
+                // Only run ticker if user does not prefer reduced motion
+                if (!prefersReducedMotion && tickerEnabled) {
+                    isPaused = false;
+                    scheduleTicker();
                 }
             }
 
-            // -----------------------------------------------------------------
-            // 2) Normal ticker behaviour as before
-            // -----------------------------------------------------------------
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (entry) {
+                            isInViewport = entry.isIntersecting;
+                            if (isInViewport) {
+                                scheduleTicker();
+                                return;
+                            }
 
-            tickerEnabled = true;
+                            stopTickerFrame();
+                        });
+                    },
+                    {
+                        threshold: 0,
+                        rootMargin: '160px 0px 160px 0px'
+                    }
+                );
 
-            // Reveal carousel
-            carousel.classList.add('is-ready');
-
-            // Only run ticker if user does not prefer reduced motion
-            if (!prefersReducedMotion && tickerEnabled) {
-                isPaused = false;
-                window.requestAnimationFrame(updateTicker);
+                observer.observe(carousel);
+            } else {
+                isInViewport = true;
             }
-        }
 
             // Normal path: wait for Flickity's ready event.
             flkty.on('ready', startTicker);
