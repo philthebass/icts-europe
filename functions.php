@@ -614,10 +614,42 @@ function filter_steps_primary_step_image_markup( $block_content, $block ) {
 		return $block_content;
 	}
 
+	$image_id = isset( $block['attrs']['imageId'] ) ? (int) $block['attrs']['imageId'] : 0;
+
+	if ( ! $image_id && \preg_match( '/<img\b[^>]*\bsrc=(["\'])([^"\']+)\1/i', $block_content, $matches ) ) {
+		$image_id = \attachment_url_to_postid( \esc_url_raw( $matches[2] ) );
+	}
+
+	if ( $image_id ) {
+		$alt      = isset( $block['attrs']['imageAlt'] ) ? (string) $block['attrs']['imageAlt'] : '';
+		$img_html = \wp_get_attachment_image(
+			$image_id,
+			'medium_large',
+			false,
+			[
+				'alt'      => $alt,
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+				'sizes'    => '(max-width: 960px) 100vw, 360px',
+			]
+		);
+
+		if ( \is_string( $img_html ) && '' !== $img_html ) {
+			$updated_content = \preg_replace(
+				'/(<div class="icts-steps-primary-step__media">)\s*<img\b[^>]*>\s*(<\/div>)/i',
+				'$1' . $img_html . '$2',
+				$block_content,
+				1
+			);
+
+			return \is_string( $updated_content ) ? $updated_content : $block_content;
+		}
+	}
+
 	if ( ! \class_exists( '\WP_HTML_Tag_Processor' ) ) {
 		return \preg_replace(
-			'/<img\b([^>]*)\sloading=(["\'])lazy\2([^>]*)\sdecoding=(["\'])async\4([^>]*)>/i',
-			'<img$1 loading="eager"$3 decoding="sync"$5>',
+			'/<img\b([^>]*)\sloading=(["\'])eager\2([^>]*)\sdecoding=(["\'])sync\4([^>]*)>/i',
+			'<img$1 loading="lazy"$3 decoding="async"$5>',
 			$block_content,
 			1
 		) ?: $block_content;
@@ -626,8 +658,8 @@ function filter_steps_primary_step_image_markup( $block_content, $block ) {
 	$processor = new \WP_HTML_Tag_Processor( $block_content );
 
 	while ( $processor->next_tag( 'img' ) ) {
-		$processor->set_attribute( 'loading', 'eager' );
-		$processor->set_attribute( 'decoding', 'sync' );
+		$processor->set_attribute( 'loading', 'lazy' );
+		$processor->set_attribute( 'decoding', 'async' );
 		break;
 	}
 

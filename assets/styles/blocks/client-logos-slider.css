@@ -110,6 +110,14 @@
     }
 }
 
+@supports (-webkit-touch-callout: none) {
+    .client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel {
+        animation: none;
+        transform: none;
+        will-change: auto;
+    }
+}
+
 /* =========================================
    Block editor: static centred preview
    ========================================= */

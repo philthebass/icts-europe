@@ -7,7 +7,7 @@ Description: This is the custom theme for ICTS Europe
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.3
-Version: 1.1.9
+Version: 1.1.10
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: icts-europe
@@ -1060,6 +1060,13 @@ body:has(.section-strands-bg-horizontal) {
   background-repeat: no-repeat, no-repeat;
   background-position: top right, bottom left;
   background-size: auto 60%, auto 60%;
+}
+
+@supports (-webkit-touch-callout: none) {
+	.bubbles-bg::after {
+		content: none;
+		background-image: none;
+	}
 }
 
 /* features card grid and cards */

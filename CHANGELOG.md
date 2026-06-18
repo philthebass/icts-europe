@@ -7,6 +7,22 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.10 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Steps Primary images now prefer WordPress attachment output with responsive image markup and explicit intrinsic dimensions.
+- Steps Primary no longer forces eager loading or synchronous image decoding.
+- Logos Slider marquee animation is disabled on iOS/iPadOS WebKit while remaining CSS-only elsewhere.
+- Decorative bubble backgrounds are disabled on iOS/iPadOS WebKit.
+
+### Fixed
+- Reduced iOS layout, decode, and paint work around the Logos Slider to Steps Primary boundary on long product pages.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome with the Page No Wires template active.
+
 ## 1.1.9 - 2026-06-18
 ### Added
 - No new features in this release.
