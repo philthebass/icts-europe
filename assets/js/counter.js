@@ -14,6 +14,14 @@
 		return sign + String( abs ).replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
 	}
 
+	function isIOSWebKit() {
+		var ua = window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '';
+		var platform = window.navigator && window.navigator.platform ? window.navigator.platform : '';
+		var maxTouchPoints = window.navigator && window.navigator.maxTouchPoints ? window.navigator.maxTouchPoints : 0;
+
+		return /iPad|iPhone|iPod/.test( ua ) || ( platform === 'MacIntel' && maxTouchPoints > 1 );
+	}
+
 	function animateCounter( node, prefersReducedMotion ) {
 		if ( ! node || node.dataset.counterAnimated === '1' ) {
 			return;
@@ -76,6 +84,14 @@
 		);
 
 		var prefersReducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+		var shouldSkipAnimatedCounters = prefersReducedMotion || isIOSWebKit();
+
+		if ( shouldSkipAnimatedCounters ) {
+			counters.forEach( function ( counter ) {
+				animateCounter( counter, true );
+			} );
+			return;
+		}
 
 		if ( 'IntersectionObserver' in window ) {
 			var observer = new IntersectionObserver(
@@ -88,7 +104,7 @@
 						var blockCounters = entry.target.querySelectorAll( '.icts-counter-block__number[data-from][data-to]' );
 
 						blockCounters.forEach( function ( counter ) {
-							animateCounter( counter, prefersReducedMotion );
+							animateCounter( counter, false );
 						} );
 
 						observer.unobserve( entry.target );

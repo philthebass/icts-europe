@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.4 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Counter blocks now render final values immediately on iOS/iPadOS WebKit instead of starting frame-by-frame number animation as the counter band enters view.
+
+### Fixed
+- Reduced iOS scroll-time crash risk around counter bands with very large animated values, including the TravelDoc Pro travel providers page.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome by scrolling from the CTA through the counter band and into the Logos Slider.
+
 ## 1.1.3 - 2026-06-18
 ### Added
 - No new features in this release.
