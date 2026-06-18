@@ -12,30 +12,7 @@
 		}
 
 		if ( isIOSWebKit ) {
-			steps.forEach( ( step, index ) => {
-				step.classList.add( 'has-steps-primary-reveal', 'is-ios-fade' );
-				step.style.setProperty( '--icts-step-delay', `${ index * 80 }ms` );
-			} );
-
-			if ( prefersReducedMotion.matches || typeof IntersectionObserver === 'undefined' ) {
-				steps.forEach( ( step ) => step.classList.add( 'is-inview' ) );
-				return;
-			}
-
-			const iosObserver = new IntersectionObserver(
-				( entries ) => {
-					entries.forEach( ( entry ) => {
-						if ( ! entry.isIntersecting ) {
-							return;
-						}
-						entry.target.classList.add( 'is-inview' );
-						iosObserver.unobserve( entry.target );
-					} );
-				},
-				{ threshold: 0.12, rootMargin: '0px 0px -4% 0px' }
-			);
-
-			steps.forEach( ( step ) => iosObserver.observe( step ) );
+			steps.forEach( ( step ) => step.classList.add( 'is-inview' ) );
 			return;
 		}
 

@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.7 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Logos Slider uses a static, six-logo fallback on iOS/iPadOS WebKit instead of initializing Flickity and the continuous ticker.
+- Steps Primary renders without scroll-triggered animation on iOS/iPadOS WebKit.
+
+### Fixed
+- Reduced iOS crash risk at the counter band to Logos Slider boundary on long product pages.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome with the Page No Wires template active.
+
 ## 1.1.6 - 2026-06-18
 ### Added
 - No new features in this release.

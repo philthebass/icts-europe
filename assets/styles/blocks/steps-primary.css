@@ -166,9 +166,9 @@
 
 @supports (-webkit-touch-callout: none) {
 	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step.has-steps-primary-reveal {
+		opacity: 1;
 		transform: none;
-		transition: opacity 320ms ease;
-		transition-delay: var(--icts-step-delay, 0ms);
+		transition: none;
 		will-change: auto;
 	}
 

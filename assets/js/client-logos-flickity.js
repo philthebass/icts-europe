@@ -1,4 +1,12 @@
 (function () {
+    function isIOSWebKit() {
+        var ua = window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '';
+        var platform = window.navigator && window.navigator.platform ? window.navigator.platform : '';
+        var maxTouchPoints = window.navigator && window.navigator.maxTouchPoints ? window.navigator.maxTouchPoints : 0;
+
+        return /iPad|iPhone|iPod/.test(ua) || (platform === 'MacIntel' && maxTouchPoints > 1);
+    }
+
     function initClientLogoCarousels(context) {
     var root = context || document;
     var carousels = root.querySelectorAll('.client-logos-slider__carousel');
@@ -12,7 +20,25 @@
         return;
     }
 
-    if (!carousels.length || typeof Flickity === 'undefined') {
+    if (!carousels.length) {
+        return;
+    }
+
+        if (isIOSWebKit()) {
+            carousels.forEach(function (carousel) {
+                if (carousel.dataset.flickityInit === '1') {
+                    return;
+                }
+
+                carousel.dataset.flickityInit = '1';
+                carousel.classList.add('is-ready');
+                carousel.classList.add('client-logos-slider__carousel--static');
+                carousel.classList.add('client-logos-slider__carousel--ios-static');
+            });
+            return;
+        }
+
+    if (typeof Flickity === 'undefined') {
         return;
     }
         var prefersReducedMotion = window.matchMedia(

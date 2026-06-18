@@ -48,6 +48,19 @@
     visibility: visible;
 }
 
+.client-logos-slider__carousel.client-logos-slider__carousel--ios-static {
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.client-logos-slider__carousel.client-logos-slider__carousel--ios-static .client-logos-slider__cell {
+    margin-inline: clamp(0.75rem, 4vw, 1.5rem);
+}
+
+.client-logos-slider__carousel.client-logos-slider__carousel--ios-static .client-logos-slider__cell:nth-child(n + 7) {
+    display: none;
+}
+
 /* Flickity viewport – keep things vertically centred */
 .client-logos-slider .flickity-viewport {
     width: 100%;
