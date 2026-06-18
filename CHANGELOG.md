@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.6 - 2026-06-18
+### Added
+- No new features in this release.
+
+### Changed
+- Steps Primary images now render eagerly on the front end so iOS does not repeatedly defer or re-decode them while scrolling through the section.
+- Steps Primary uses a lightweight fade-only reveal on iOS/iPadOS WebKit instead of disabling the reveal entirely or using horizontal transforms.
+
+### Fixed
+- Reduced visible image reloading and scroll jitter in Steps Primary sections on long iOS pages.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test `/industries/travel-providers/traveldoc-pro-for-travel-providers/` on iOS Safari or Chrome with the Page No Wires template active.
+
 ## 1.1.5 - 2026-06-18
 ### Added
 - No new features in this release.

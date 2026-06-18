@@ -607,6 +607,34 @@ function filter_hero_slide_content_panel_markup( $block_content, $block ) {
 }
 add_filter( 'render_block', __NAMESPACE__ . '\filter_hero_slide_content_panel_markup', 15, 2 );
 
+function filter_steps_primary_step_image_markup( $block_content, $block ) {
+	$block_name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+
+	if ( 'icts/steps-primary-step' !== $block_name || false === \strpos( $block_content, 'icts-steps-primary-step__media' ) ) {
+		return $block_content;
+	}
+
+	if ( ! \class_exists( '\WP_HTML_Tag_Processor' ) ) {
+		return \preg_replace(
+			'/<img\b([^>]*)\sloading=(["\'])lazy\2([^>]*)\sdecoding=(["\'])async\4([^>]*)>/i',
+			'<img$1 loading="eager"$3 decoding="sync"$5>',
+			$block_content,
+			1
+		) ?: $block_content;
+	}
+
+	$processor = new \WP_HTML_Tag_Processor( $block_content );
+
+	while ( $processor->next_tag( 'img' ) ) {
+		$processor->set_attribute( 'loading', 'eager' );
+		$processor->set_attribute( 'decoding', 'sync' );
+		break;
+	}
+
+	return $processor->get_updated_html();
+}
+add_filter( 'render_block', __NAMESPACE__ . '\filter_steps_primary_step_image_markup', 16, 2 );
+
 function preload_primary_font_assets() {
 	if ( ! \is_front_page() ) {
 		return;

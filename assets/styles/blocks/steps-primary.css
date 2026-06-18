@@ -166,9 +166,14 @@
 
 @supports (-webkit-touch-callout: none) {
 	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step.has-steps-primary-reveal {
+		transform: none;
+		transition: opacity 320ms ease;
+		transition-delay: var(--icts-step-delay, 0ms);
+		will-change: auto;
+	}
+
+	.wp-block-icts-steps-primary .wp-block-icts-steps-primary-step.has-steps-primary-reveal.is-inview {
 		opacity: 1;
 		transform: none;
-		transition: none;
-		will-change: auto;
 	}
 }
