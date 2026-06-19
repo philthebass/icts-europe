@@ -22,14 +22,17 @@
 		return /iPad|iPhone|iPod/.test( ua ) || ( platform === 'MacIntel' && maxTouchPoints > 1 );
 	}
 
-	function animateCounter( node, prefersReducedMotion ) {
+	function animateCounter( node, prefersReducedMotion, options ) {
 		if ( ! node || node.dataset.counterAnimated === '1' ) {
 			return;
 		}
 
+		options = options || {};
+
 		var from = parseIntSafe( node.dataset.from, 0 );
 		var to = parseIntSafe( node.dataset.to, from );
-		var duration = Math.max( 200, parseIntSafe( node.dataset.duration, 1600 ) );
+		var duration = Math.max( 200, parseIntSafe( options.duration || node.dataset.duration, 1600 ) );
+		var updateInterval = Math.max( 0, parseIntSafe( options.updateInterval, 0 ) );
 		var range = to - from;
 
 		node.dataset.counterAnimated = '1';
@@ -42,6 +45,7 @@
 		node.textContent = formatCounterValue( from );
 
 		var startTime = null;
+		var lastUpdateTime = 0;
 
 		var tick = function ( now ) {
 			if ( null === startTime ) {
@@ -50,6 +54,14 @@
 
 			var elapsed = now - startTime;
 			var progress = Math.min( elapsed / duration, 1 );
+
+			if ( updateInterval && progress < 1 && now - lastUpdateTime < updateInterval ) {
+				window.requestAnimationFrame( tick );
+				return;
+			}
+
+			lastUpdateTime = now;
+
 			var eased = 1 - Math.pow( 1 - progress, 3 );
 			var current = from + range * eased;
 			var nextValue = range >= 0 ? Math.floor( current ) : Math.ceil( current );
@@ -84,7 +96,9 @@
 		);
 
 		var prefersReducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
-		var shouldSkipAnimatedCounters = prefersReducedMotion || isIOSWebKit();
+		var shouldSkipAnimatedCounters = prefersReducedMotion;
+		var isIOS = isIOSWebKit();
+		var animationOptions = isIOS ? { duration: 800, updateInterval: 90 } : {};
 
 		if ( shouldSkipAnimatedCounters ) {
 			counters.forEach( function ( counter ) {
@@ -104,7 +118,7 @@
 						var blockCounters = entry.target.querySelectorAll( '.icts-counter-block__number[data-from][data-to]' );
 
 						blockCounters.forEach( function ( counter ) {
-							animateCounter( counter, false );
+							animateCounter( counter, false, animationOptions );
 						} );
 
 						observer.unobserve( entry.target );
@@ -124,7 +138,7 @@
 		}
 
 		counters.forEach( function ( counter ) {
-			animateCounter( counter, prefersReducedMotion );
+			animateCounter( counter, prefersReducedMotion, animationOptions );
 		} );
 	}
 

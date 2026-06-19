@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.15 - 2026-06-19
+### Added
+- No new features in this release.
+
+### Changed
+- Counter blocks now animate on iOS/iPadOS WebKit using a shorter, throttled update cadence.
+- Desktop counter animation remains unchanged, and reduced-motion users still receive the final values immediately.
+
+### Fixed
+- Restored animated counters on iOS without using full frame-by-frame updates.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test the TravelDoc Pro travel providers page on iOS Safari or Chrome around the Counter Band, Logos Slider, and Steps Primary sections.
+
 ## 1.1.14 - 2026-06-19
 ### Added
 - No new features in this release.
