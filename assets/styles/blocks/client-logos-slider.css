@@ -16,6 +16,8 @@
 
 /* Outer band */
 .client-logos-slider {
+    --icts-client-logos-duration: 38s;
+    --icts-client-logos-cell-gap: clamp(1.15rem, 3.5vw, 3rem);
     background-color: #fff;        /* keep band white */
     overflow: hidden;
     height: 120px;                 /* overall band height */
@@ -32,7 +34,7 @@
     min-width: 100%;
     opacity: 1;
     visibility: visible;
-    animation: icts-client-logos-marquee 38s linear infinite;
+    animation: icts-client-logos-marquee var(--icts-client-logos-duration) linear infinite;
     will-change: transform;
 }
 
@@ -48,8 +50,8 @@
     height: 100px;             /* old-site height */
     flex: 0 0 auto;            /* don’t stretch or shrink */
 
-    /* Spacing between logos (≈ old 96px total gap) */
-    margin: 0 48px;
+    /* Fluid spacing between logos */
+    margin: 0 var(--icts-client-logos-cell-gap);
 
     /* Centre the logo inside the box */
     display: flex;
@@ -58,6 +60,26 @@
     align-items: center;
 
     box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+    .client-logos-slider {
+        --icts-client-logos-duration: 30s;
+        --icts-client-logos-cell-gap: clamp(0.8rem, 3vw, 1.8rem);
+    }
+}
+
+@media (max-width: 600px) {
+    .client-logos-slider {
+        --icts-client-logos-duration: 10s;
+        --icts-client-logos-cell-gap: clamp(0.65rem, 2.75vw, 1.1rem);
+    }
+}
+
+@media (max-width: 430px) {
+    .client-logos-slider {
+        --icts-client-logos-duration: 8s;
+    }
 }
 
 /* Logo images – scale inside the box */
@@ -103,14 +125,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel {
-        animation: none;
-        transform: none;
-        will-change: auto;
-    }
-}
-
-@supports (-webkit-touch-callout: none) {
     .client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel {
         animation: none;
         transform: none;

@@ -7,6 +7,21 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.12 - 2026-06-19
+### Added
+- No new features in this release.
+
+### Changed
+- Logos Slider now uses the CSS marquee on iOS/iPadOS WebKit as well as other devices.
+- Logos Slider spacing is fluid, with tighter gaps on narrower viewports.
+- Logos Slider marquee speed is increased on mobile and phone-sized viewports.
+
+### Fixed
+- Restored animated logo movement on iOS without reintroducing Flickity.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test the TravelDoc Pro travel providers page on iOS Safari or Chrome.
+
 ## 1.1.11 - 2026-06-18
 ### Added
 - No new features in this release.
