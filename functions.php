@@ -512,6 +512,76 @@ function enqueue_style_sheet() {
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_style_sheet' );
 
+function get_sentry_dsn() {
+	if ( \defined( 'ICTS_EUROPE_SENTRY_DSN' ) ) {
+		return (string) \constant( 'ICTS_EUROPE_SENTRY_DSN' );
+	}
+
+	return 'https://f394c949dfabab429b80899963762dc3@o4511591817347072.ingest.de.sentry.io/4511591832027216';
+}
+
+function should_enqueue_sentry_monitoring() {
+	if ( \is_admin() || \wp_doing_ajax() ) {
+		return false;
+	}
+
+	if ( \defined( 'ICTS_EUROPE_SENTRY_ENABLED' ) ) {
+		return (bool) \constant( 'ICTS_EUROPE_SENTRY_ENABLED' );
+	}
+
+	$host = (string) \wp_parse_url( \home_url(), \PHP_URL_HOST );
+
+	return \in_array( $host, [ 'ies.aero', 'www.ies.aero' ], true );
+}
+
+function enqueue_sentry_monitoring() {
+	if ( ! should_enqueue_sentry_monitoring() ) {
+		return;
+	}
+
+	$dsn = get_sentry_dsn();
+
+	if ( '' === $dsn ) {
+		return;
+	}
+
+	$theme_version = \wp_get_theme()->get( 'Version' );
+	$script_path   = '/assets/js/sentry-monitoring.js';
+	$script_abs    = get_template_directory() . $script_path;
+	$page_template = \is_singular() ? (string) \get_page_template_slug( \get_queried_object_id() ) : '';
+
+	\wp_enqueue_script(
+		'icts-sentry-browser',
+		'https://browser.sentry-cdn.com/8.55.0/bundle.min.js',
+		[],
+		'8.55.0',
+		true
+	);
+
+	\wp_enqueue_script(
+		'icts-sentry-monitoring',
+		get_template_directory_uri() . $script_path,
+		[ 'icts-sentry-browser' ],
+		\file_exists( $script_abs ) ? (string) \filemtime( $script_abs ) : $theme_version,
+		true
+	);
+
+	\wp_add_inline_script(
+		'icts-sentry-monitoring',
+		'window.ictsSentryConfig = ' . \wp_json_encode(
+			[
+				'dsn'          => $dsn,
+				'environment'  => \defined( 'ICTS_EUROPE_SENTRY_ENVIRONMENT' ) ? (string) \constant( 'ICTS_EUROPE_SENTRY_ENVIRONMENT' ) : 'production',
+				'release'      => 'icts-europe@' . $theme_version,
+				'themeVersion' => $theme_version,
+				'pageTemplate' => '' !== $page_template ? $page_template : 'default',
+			]
+		) . ';',
+		'before'
+	);
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_sentry_monitoring', 30 );
+
 function get_current_queried_post_content() {
 	$queried_object = get_queried_object();
 

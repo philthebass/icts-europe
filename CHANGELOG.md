@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.16 - 2026-06-19
+### Added
+- Front-end Sentry Browser monitoring for production `ies.aero` pages.
+- A lightweight suspected crash or forced-reload signal using session storage page state.
+
+### Changed
+- Sentry events are tagged with the theme version, release, environment, and page template.
+
+### Fixed
+- Added visibility into JavaScript errors and possible iOS page process failures that may not reach PHP/server logs.
+
+### Notes
+- Monitoring is only enabled by default on `ies.aero` and `www.ies.aero`, not Local.
+
 ## 1.1.15 - 2026-06-19
 ### Added
 - No new features in this release.
