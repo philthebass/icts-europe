@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.14 - 2026-06-19
+### Added
+- No new features in this release.
+
+### Changed
+- Counter Band cover images now display on iOS/iPadOS WebKit as well as other devices.
+
+### Fixed
+- Restored the Counter Band visual treatment on iOS after local stability testing.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test the TravelDoc Pro travel providers page on iOS Safari or Chrome around the Counter Band, Logos Slider, and Steps Primary sections.
+
 ## 1.1.13 - 2026-06-19
 ### Added
 - No new features in this release.
