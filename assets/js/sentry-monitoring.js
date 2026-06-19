@@ -8,6 +8,33 @@
 		return;
 	}
 
+	function getExceptionValue( event ) {
+		var values = event && event.exception && event.exception.values;
+		var firstValue = values && values.length ? values[ 0 ] : null;
+
+		return firstValue && firstValue.value ? firstValue.value : '';
+	}
+
+	function eventReferences( event, needle ) {
+		var text;
+
+		try {
+			text = JSON.stringify( event );
+		} catch ( error ) {
+			text = '';
+		}
+
+		return text.indexOf( needle ) !== -1;
+	}
+
+	function isAnalyticsFetchNoise( event ) {
+		return (
+			getExceptionValue( event ) === 'Failed to fetch' &&
+			eventReferences( event, '/wp-admin/admin-ajax.php' ) &&
+			eventReferences( event, 'analyticswp' )
+		);
+	}
+
 	sentry.init( {
 		dsn: config.dsn,
 		environment: config.environment || 'production',
@@ -15,6 +42,10 @@
 		sendDefaultPii: false,
 		tracesSampleRate: 0,
 		beforeSend: function ( event ) {
+			if ( isAnalyticsFetchNoise( event ) ) {
+				return null;
+			}
+
 			if ( event ) {
 				delete event.user;
 			}

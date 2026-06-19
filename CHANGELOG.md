@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.17 - 2026-06-19
+### Added
+- No new features in this release.
+
+### Changed
+- Sentry monitoring now drops known AnalyticsWP `admin-ajax.php` fetch failures before sending them.
+
+### Fixed
+- Prevented blocked AnalyticsWP pageview requests from creating noisy `TypeError: Failed to fetch` Sentry issues.
+
+### Notes
+- Other `Failed to fetch` errors are still reported unless they match the AnalyticsWP `admin-ajax.php` pattern.
+
 ## 1.1.16 - 2026-06-19
 ### Added
 - Front-end Sentry Browser monitoring for production `ies.aero` pages.
