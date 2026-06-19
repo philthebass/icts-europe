@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.13 - 2026-06-19
+### Added
+- No new features in this release.
+
+### Changed
+- Steps Primary now restores the slide/fade reveal on desktop and tablet viewports above 960px.
+- Steps Primary remains static on iOS/iPadOS WebKit, mobile viewports, and reduced-motion environments.
+
+### Fixed
+- Restored visible Steps Primary reveal timing without reintroducing iOS scroll-triggered animation.
+
+### Notes
+- After deploying, purge LiteSpeed and Bunny CDN caches, then test the TravelDoc Pro travel providers page on desktop and iOS Safari or Chrome.
+
 ## 1.1.12 - 2026-06-19
 ### Added
 - No new features in this release.
