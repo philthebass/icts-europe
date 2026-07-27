@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.18 - 2026-07-27
+### Added
+- Deterministic Team Member archive rewrite rules for every active Polylang language and translated archive slug.
+
+### Changed
+- Documented translated archive routing and added multilingual archive checks to the release workflow.
+
+### Fixed
+- Prevented translated Management Team archive URLs from returning 404 after rewrite rules were generated in a different language context.
+
+### Notes
+- After deployment, save **Settings → Permalinks** once, purge LiteSpeed and any CDN caches, then confirm every translated Management Team archive and a translated profile return `200`.
+
 ## 1.1.17 - 2026-06-19
 ### Added
 - No new features in this release.

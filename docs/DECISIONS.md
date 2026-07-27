@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-07-27 — Team Member archives register explicit routes for every Polylang language — Translating the CPT archive slug during post type registration only covered the language active when WordPress stored its rewrite rules, allowing translated Management Team URLs to return 404 until permalinks were flushed in a matching context — The theme now adds deterministic rewrite rules for every active language and translated archive slug; permalink rules still require one controlled flush after deployment or slug changes.
+
 2026-06-15 — Logos Slider renders one logo per partner translation set — Partner logos are shared brand assets like customer logos, and all-language partner queries can return translated copies of the same partner record — `acf/client-logos-slider` now resolves Polylang Partner translations to the default-language partner record and renders each translation set once.
 
 2026-06-12 — Track Lighthouse accessibility, SEO, and best-practices findings in docs — The current production homepage Lighthouse report has actionable findings across slider focus management, ARIA semantics, link naming, descriptive CTA text, and a LinkedIn Insight deprecation warning — Added `docs/LIGHTHOUSE-AUDIT.md` as the working audit/TODO note and linked it from project context and release checks so fixes can be implemented and re-tested without losing the baseline.

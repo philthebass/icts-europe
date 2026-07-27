@@ -28,6 +28,7 @@ Use this checklist when preparing a new ICTS Europe theme release.
 13. Clear cache if needed.
 14. Check the affected pages and features.
 15. For releases touching templates, navigation, sliders, CTAs, tracking scripts, or SEO/schema output, re-run Lighthouse Accessibility, SEO, and Best Practices checks and compare against `docs/LIGHTHOUSE-AUDIT.md`.
+16. For releases touching post type routing or translated archive slugs, save **Settings → Permalinks** once, clear cache, and confirm the English and every translated Management Team archive URL return the correct language with a `200` response.
 
 ## Important Rules
 

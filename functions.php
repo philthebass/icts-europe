@@ -3826,6 +3826,73 @@ function filter_yoast_breadcrumb_links_translation( $links ) {
 }
 add_filter( 'wpseo_breadcrumb_links', __NAMESPACE__ . '\filter_yoast_breadcrumb_links_translation', 20, 1 );
 
+/**
+ * Register deterministic Team Member archive routes for every Polylang language.
+ *
+ * Translating the post type rewrite slug only covers the language active while
+ * WordPress builds its stored rewrite rules. Registering every localized route
+ * here keeps all translated archive URLs available after a permalink flush.
+ */
+function register_team_member_archive_rewrite_rules() {
+	if (
+		! \function_exists( 'pll_languages_list' )
+		|| ! \function_exists( 'pll_home_url' )
+		|| ! \function_exists( 'pll_translate_string' )
+	) {
+		return;
+	}
+
+	$languages = \pll_languages_list( [ 'fields' => 'slug' ] );
+	if ( ! \is_array( $languages ) ) {
+		return;
+	}
+
+	$site_path = \trim( (string) \wp_parse_url( \home_url( '/' ), \PHP_URL_PATH ), '/' );
+
+	foreach ( $languages as $language ) {
+		$language = \sanitize_key( (string) $language );
+		if ( '' === $language ) {
+			continue;
+		}
+
+		$archive_slug = \sanitize_title(
+			(string) \pll_translate_string( 'management-team', $language )
+		);
+		if ( '' === $archive_slug ) {
+			continue;
+		}
+
+		$language_path = \trim(
+			(string) \wp_parse_url( (string) \pll_home_url( $language ), \PHP_URL_PATH ),
+			'/'
+		);
+
+		if ( '' !== $site_path ) {
+			if ( $language_path === $site_path ) {
+				$language_path = '';
+			} elseif ( 0 === \strpos( $language_path, $site_path . '/' ) ) {
+				$language_path = (string) \substr( $language_path, \strlen( $site_path ) + 1 );
+			}
+		}
+
+		$route  = '' !== $language_path ? $language_path . '/' . $archive_slug : $archive_slug;
+		$target = 'index.php?post_type=team-member';
+
+		// Directory-based language URLs need the language query variable.
+		// Domain-based languages are resolved by Polylang from the request host.
+		if ( '' !== $language_path ) {
+			$target .= '&lang=' . \rawurlencode( $language );
+		}
+
+		\add_rewrite_rule(
+			'^' . \preg_quote( $route, '#' ) . '/?$',
+			$target,
+			'top'
+		);
+	}
+}
+\add_action( 'init', __NAMESPACE__ . '\register_team_member_archive_rewrite_rules', 20 );
+
 \add_filter( 'register_post_type_args', function ( $args, $post_type ) {
 	$internal_post_types = [ 'customers', 'partner', 'testimonial', 'faq' ];
 
