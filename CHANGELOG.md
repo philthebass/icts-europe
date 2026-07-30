@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.19 - 2026-07-30
+### Added
+- No new features in this release.
+
+### Changed
+- Removed front-end Sentry Browser monitoring from production pages because the monitoring service is no longer required.
+
+### Fixed
+- Eliminated the unnecessary Sentry CDN bundle and theme initializer from the front-end JavaScript payload.
+
+### Notes
+- After deployment, purge LiteSpeed and Bunny CDN caches, then confirm production HTML no longer contains `icts-sentry-browser`, `icts-sentry-monitoring`, or `browser.sentry-cdn.com`.
+
 ## 1.1.18 - 2026-07-27
 ### Added
 - Deterministic Team Member archive rewrite rules for every active Polylang language and translated archive slug.
