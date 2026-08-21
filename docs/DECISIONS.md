@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-08-21 — Logos Slider uses a measured lightweight JavaScript marquee — The CSS-only marquee reset at a percentage that did not reliably match the duplicated logo boundary and could not support dragging or dependable interaction pausing — The block now measures the duplicate-set boundary, loops without a visible jump, pauses on hover and keyboard focus, supports pointer dragging, and keeps autoplay disabled for reduced-motion users without restoring Flickity.
+
 2026-07-27 — Team Member archives register explicit routes for every Polylang language — Translating the CPT archive slug during post type registration only covered the language active when WordPress stored its rewrite rules, allowing translated Management Team URLs to return 404 until permalinks were flushed in a matching context — The theme now adds deterministic rewrite rules for every active language and translated archive slug; permalink rules still require one controlled flush after deployment or slug changes.
 
 2026-06-15 — Logos Slider renders one logo per partner translation set — Partner logos are shared brand assets like customer logos, and all-language partner queries can return translated copies of the same partner record — `acf/client-logos-slider` now resolves Polylang Partner translations to the default-language partner record and renders each translation set once.

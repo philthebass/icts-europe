@@ -7,6 +7,21 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.20 - 2026-08-21
+### Added
+- Lightweight pointer-drag support for the Logos Slider on mouse, trackpad, and touch devices.
+
+### Changed
+- Logos Slider movement now uses the measured duplicate-set boundary instead of a fixed CSS percentage while retaining the existing 12-logo front-end limit and lightweight non-Flickity implementation.
+- Logos Slider autoplay pauses on pointer hover and keyboard focus and remains disabled when reduced motion is requested.
+
+### Fixed
+- Prevented Logos Sliders from visibly jumping back to the start after only part of the logo sequence.
+- Restored reliable hover-to-pause behavior and prevented a drag gesture from accidentally opening a linked logo.
+
+### Notes
+- After deployment, purge LiteSpeed and Bunny CDN caches, then test continuous looping, hover/focus pause, linked-logo clicks, and mouse/touch dragging on desktop and iOS Safari.
+
 ## 1.1.19 - 2026-07-30
 ### Added
 - No new features in this release.

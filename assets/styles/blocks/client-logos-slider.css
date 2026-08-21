@@ -38,6 +38,27 @@
     will-change: transform;
 }
 
+.client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel.is-marquee-ready {
+    animation: none;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+}
+
+.client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel.is-dragging {
+    cursor: grabbing;
+}
+
+.client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel:focus-within {
+    animation-play-state: paused;
+}
+
+@media (hover: hover) {
+    .client-logos-slider:not(.is-editor-preview) .client-logos-slider__carousel:hover {
+        animation-play-state: paused;
+    }
+}
+
 /* =========================================================
    CORE LAYOUT (front end + editor)
    Match old-site behaviour: fixed cells, centred logos

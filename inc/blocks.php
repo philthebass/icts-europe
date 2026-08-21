@@ -32,7 +32,20 @@ namespace ICTS_Europe;
 					'anchor' => true,
 				],
 				'enqueue_assets'  => function () {
-					// Front-end motion is handled by CSS for this block.
+					if ( \is_admin() ) {
+						return;
+					}
+
+					$script_path = '/assets/js/client-logos-slider.js';
+					$script_abs  = \get_template_directory() . $script_path;
+
+					\wp_enqueue_script(
+						'icts-client-logos-slider',
+						\get_template_directory_uri() . $script_path,
+						[],
+						\file_exists( $script_abs ) ? (string) \filemtime( $script_abs ) : '1.0.0',
+						true
+					);
 				},
 			]
 		);

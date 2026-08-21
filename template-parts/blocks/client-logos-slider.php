@@ -331,7 +331,10 @@ $render_logo_item = static function ( $logo_item, $is_duplicate = false ) {
     <?php if ( ! empty( $logo_items ) ) : ?>
 
 
-        <div class="client-logos-slider__carousel">
+        <div
+            class="client-logos-slider__carousel"
+            data-logo-count="<?php echo esc_attr( (string) count( $logo_items ) ); ?>"
+        >
             <?php
             foreach ( $logo_items as $logo_item ) :
                 $render_logo_item( $logo_item );
