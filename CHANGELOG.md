@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.21 - 2026-08-21
+### Added
+- No new features in this release.
+
+### Changed
+- Mobile mega-menu submenu toggles now control their drawer state directly while preserving synchronized `aria-expanded` values.
+
+### Fixed
+- Restored Industries, Solutions, Company, and nested mobile submenu opening with WordPress 7.1 Interactivity API navigation markup.
+
+### Notes
+- After deployment, purge LiteSpeed and Bunny CDN caches, then test top-level and nested mobile drawers, Back navigation, repeated open/close actions, the main menu close button, and unchanged desktop mega-menu behavior.
+
 ## 1.1.20 - 2026-08-21
 ### Added
 - Lightweight pointer-drag support for the Logos Slider on mouse, trackpad, and touch devices.

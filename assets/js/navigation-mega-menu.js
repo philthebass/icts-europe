@@ -1,7 +1,7 @@
 (function () {
     // Simple runtime marker to confirm the latest script is loaded in the browser.
     // Update when debugging version/caching issues.
-    window.__ICTS_NAV_MEGA_MENU_VERSION = '2026-05-27-ios-scroll-throttle-1';
+    window.__ICTS_NAV_MEGA_MENU_VERSION = '2026-08-21-mobile-toggle-state-1';
 
     var desktopQuery = window.matchMedia('(min-width: 1094px)');
     var mobileQuery = window.matchMedia('(max-width: 1093px)');
@@ -690,8 +690,9 @@
                 panel.prepend(backButton);
             }
 
-            // IMPORTANT: When collapsing, core/navigation sets `[hidden]` immediately, which kills CSS transitions.
-            // Intercept "close" clicks in the capture phase and run our own closing animation.
+            // Own mobile toggle state instead of waiting for core/navigation's Interactivity API.
+            // Newer WordPress releases can update their bound `aria-expanded` state after this
+            // script's click task, which previously left our explicitly hidden panel closed.
             if (toggle.dataset.ictsMobileCloseIntercept !== '1') {
                 toggle.dataset.ictsMobileCloseIntercept = '1';
                 toggle.addEventListener(
@@ -701,34 +702,28 @@
                             return;
                         }
 
-                        // Pre-click state: if expanded, this click intends to close.
-                        if (toggle.getAttribute('aria-expanded') !== 'true') {
-                            return;
-                        }
-
                         event.preventDefault();
                         event.stopPropagation();
                         if (typeof event.stopImmediatePropagation === 'function') {
                             event.stopImmediatePropagation();
                         }
 
-                        // Keep ARIA in sync, but prevent core from immediately hiding the panel.
-                        toggle.setAttribute('aria-expanded', 'false');
-                        closeMobilePanel(item, false, false, true);
+                        var isOpen =
+                            item.classList.contains('is-icts-mobile-open') ||
+                            panel.classList.contains('is-icts-mobile-active');
+
+                        toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+
+                        if (isOpen) {
+                            closeMobilePanel(item, false, false, true);
+                            return;
+                        }
+
+                        syncMobilePanelState();
                     },
                     true
                 );
             }
-
-            toggle.addEventListener('click', function () {
-                if (!mobileQuery.matches) {
-                    return;
-                }
-
-                window.setTimeout(function () {
-                    syncMobilePanelState();
-                }, 0);
-            });
 
             var icon = item.querySelector(':scope > .wp-block-navigation__submenu-icon');
             if (icon) {
