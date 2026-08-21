@@ -3,7 +3,7 @@
 
     var SELECTOR = '.client-logos-slider__carousel';
     var SPEED = 36;
-    var DRAG_THRESHOLD = 5;
+    var DRAG_THRESHOLD = 10;
 
     function initCarousel(carousel) {
         if (carousel.dataset.marqueeInit === '1') {
@@ -26,6 +26,7 @@
         var frame = 0;
         var hovered = false;
         var focused = false;
+        var pointerActive = false;
         var dragging = false;
         var dragged = false;
         var pointerId = null;
@@ -52,7 +53,7 @@
         }
 
         function isPaused() {
-            return reducedMotion.matches || hovered || focused || dragging || document.hidden;
+            return reducedMotion.matches || hovered || focused || pointerActive || document.hidden;
         }
 
         function tick(time) {
@@ -91,32 +92,43 @@
                 return;
             }
 
-            dragging = true;
+            pointerActive = true;
+            dragging = false;
             dragged = false;
             pointerId = event.pointerId;
             pointerStartX = event.clientX;
             pointerStartOffset = offset;
-            carousel.classList.add('is-dragging');
-            carousel.setPointerCapture(pointerId);
         });
 
         carousel.addEventListener('pointermove', function (event) {
-            if (!dragging || event.pointerId !== pointerId) {
+            if (!pointerActive || event.pointerId !== pointerId) {
                 return;
             }
 
             var distance = event.clientX - pointerStartX;
-            dragged = dragged || Math.abs(distance) >= DRAG_THRESHOLD;
+
+            if (!dragging && Math.abs(distance) < DRAG_THRESHOLD) {
+                return;
+            }
+
+            if (!dragging) {
+                dragging = true;
+                dragged = true;
+                carousel.classList.add('is-dragging');
+                carousel.setPointerCapture(pointerId);
+            }
+
             offset = pointerStartOffset - distance;
             normalizeOffset();
             render();
         });
 
         function endDrag(event) {
-            if (!dragging || event.pointerId !== pointerId) {
+            if (!pointerActive || event.pointerId !== pointerId) {
                 return;
             }
 
+            pointerActive = false;
             dragging = false;
             carousel.classList.remove('is-dragging');
 
@@ -127,8 +139,8 @@
             pointerId = null;
         }
 
-        carousel.addEventListener('pointerup', endDrag);
-        carousel.addEventListener('pointercancel', endDrag);
+        window.addEventListener('pointerup', endDrag);
+        window.addEventListener('pointercancel', endDrag);
         carousel.addEventListener('click', function (event) {
             if (dragged) {
                 event.preventDefault();

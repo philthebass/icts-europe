@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-08-21 — Logos Slider delays pointer capture until a deliberate drag — Capturing the pointer immediately on press could retarget or suppress ordinary linked-logo clicks, while a five-pixel movement threshold treated minor hand movement as a drag — The slider now pauses on press but preserves native link behavior until horizontal movement reaches ten pixels; only then does it capture the pointer, enter drag mode, and suppress the resulting click.
+
 2026-08-21 — Page-wires layouts clip document-level horizontal overflow — Full-bleed theme blocks use `100vw`, which includes the classic vertical scrollbar width in Windows Chrome and can make the homepage slightly wider than the visible layout — Pages using `.page-wires-bg` now apply the same root horizontal-overflow guard already used by horizontal-strands layouts; internal component scrolling remains available while unintended document-level scrolling is suppressed.
 
 2026-08-21 — Archive REST titles are normalized to plain text — WordPress title filters can represent typographic punctuation as HTML entities, while the archive's safe DOM renderer assigns REST strings with `textContent`, causing values such as `&#8211;` to appear literally after cards refresh — Archive card titles now strip markup and decode entities in PHP before entering structured REST data, while HTML output continues to escape the resulting plain text normally.

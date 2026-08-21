@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.24 - 2026-08-21
+### Added
+- No new features in this release.
+
+### Changed
+- Logos Slider pointer capture now begins only after a deliberate 10-pixel drag gesture; pressing still pauses movement immediately.
+
+### Fixed
+- Restored reliable native clicks on linked customer and partner logos while continuing to suppress navigation after genuine dragging.
+
+### Notes
+- After deployment, purge LiteSpeed and Bunny CDN caches, then test ordinary and slightly moving clicks, deliberate dragging, linked and unlinked logos, and touch interaction across Windows Chrome/Edge and macOS Safari/Chrome.
+
 ## 1.1.23 - 2026-08-21
 ### Added
 - No new features in this release.
