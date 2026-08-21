@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.23 - 2026-08-21
+### Added
+- No new features in this release.
+
+### Changed
+- Standard page-wires layouts now use the existing root horizontal-overflow guard while preserving intentional component-level scrolling.
+
+### Fixed
+- Removed the homepage horizontal scrollbar caused by full-bleed `100vw` sections including the classic vertical scrollbar width in Windows Chrome and Edge.
+
+### Notes
+- After deployment, purge LiteSpeed and Bunny CDN caches, then verify the homepage and another page-wires layout at normal and enlarged zoom in Windows Chrome and Edge; confirm sliders, mobile navigation, sticky headers, and vertical scrolling remain functional.
+
 ## 1.1.22 - 2026-08-21
 ### Added
 - No new features in this release.
