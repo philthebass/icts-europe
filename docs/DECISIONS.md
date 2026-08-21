@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-08-21 — Archive REST titles are normalized to plain text — WordPress title filters can represent typographic punctuation as HTML entities, while the archive's safe DOM renderer assigns REST strings with `textContent`, causing values such as `&#8211;` to appear literally after cards refresh — Archive card titles now strip markup and decode entities in PHP before entering structured REST data, while HTML output continues to escape the resulting plain text normally.
+
 2026-08-21 — Mobile mega-menu toggles own their open state — WordPress 7.1 navigation uses Interactivity API-bound submenu state whose `aria-expanded` update is not guaranteed to complete before the theme's deferred mobile-panel synchronization, leaving theme panels hidden after a tap — The mobile enhancement now intercepts submenu toggle clicks and deterministically opens or closes its drawer panel while keeping ARIA state synchronized; desktop behavior and the unenhanced core fallback are unchanged.
 
 2026-08-21 — Logos Slider uses a measured lightweight JavaScript marquee — The CSS-only marquee reset at a percentage that did not reliably match the duplicated logo boundary and could not support dragging or dependable interaction pausing — The block now measures the duplicate-set boundary, loops without a visible jump, pauses on hover and keyboard focus, supports pointer dragging, and keeps autoplay disabled for reduced-motion users without restoring Flickity.

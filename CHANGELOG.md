@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.22 - 2026-08-21
+### Added
+- No new features in this release.
+
+### Changed
+- Enhanced News archive card titles are normalized to plain Unicode text before entering REST responses or fallback card HTML.
+
+### Fixed
+- Prevented numeric HTML entities such as `&#8211;` from appearing literally in post titles after archive filtering or pagination across translated archives.
+
+### Notes
+- After deployment, purge LiteSpeed and Bunny CDN caches, then test initial and dynamically refreshed News archive cards in English and translated languages, including titles with dashes, ampersands, apostrophes, quotation marks, accented characters, and non-Latin text.
+
 ## 1.1.21 - 2026-08-21
 ### Added
 - No new features in this release.

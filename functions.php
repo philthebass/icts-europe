@@ -1306,6 +1306,24 @@ function get_post_archive_category_marker_color_slug( $term ) {
 }
 
 /**
+ * Return an archive post title as plain text for HTML and REST consumers.
+ *
+ * WordPress title filters can return typographic characters as HTML entities.
+ * Structured REST data is rendered with textContent, so decode those entities
+ * before the value crosses the PHP-to-JavaScript boundary.
+ *
+ * @param int $post_id Post ID.
+ * @return string
+ */
+function get_post_archive_plain_title( $post_id ) {
+	$title   = (string) \get_the_title( (int) $post_id );
+	$title   = \wp_strip_all_tags( $title );
+	$charset = (string) \get_bloginfo( 'charset' );
+
+	return \html_entity_decode( $title, \ENT_QUOTES | \ENT_HTML5, '' !== $charset ? $charset : 'UTF-8' );
+}
+
+/**
  * Build structured archive card data for one post.
  *
  * @param int $post_id Post ID.
@@ -1327,7 +1345,7 @@ function get_post_archive_card_data( $post_id ) {
 	return [
 		'id'          => $post_id,
 		'className'   => \implode( ' ', array_map( 'sanitize_html_class', $post_classes ) ),
-		'title'       => (string) \get_the_title( $post_id ),
+		'title'       => get_post_archive_plain_title( $post_id ),
 		'permalink'   => (string) \get_permalink( $post_id ),
 		'date'        => get_post_archive_localized_date( $post_id ),
 		'author'      => [
@@ -1359,7 +1377,7 @@ function render_post_archive_card_html( $post_id ) {
 	}
 
 	$permalink = \get_permalink( $post_id );
-	$title     = \get_the_title( $post_id );
+	$title     = get_post_archive_plain_title( $post_id );
 	$date_text = get_post_archive_localized_date( $post_id );
 	$author    = get_post_display_author_data( $post_id );
 	$thumb     = \get_the_post_thumbnail(
