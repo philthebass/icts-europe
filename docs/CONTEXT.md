@@ -50,6 +50,7 @@ Content Model
 Team archive slug:
 - Slug key: `team_member_archive_slug` with default `management-team`.
 - Translate slugs in Polylang → Strings per language (or keep English everywhere).
+- Keep `management-team` as the stable rewrite slug when registering the `team-member` post type. Do not call `pll__()` from `register_post_type_args`; Polylang Pro must translate each destination permalink independently so `hreflang` and language-switcher URLs do not inherit the current page's path.
 
 
 

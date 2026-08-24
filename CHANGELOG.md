@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.25 - 2026-08-24
+### Added
+- No new features in this release.
+
+### Changed
+- Team Member post type registration now keeps the stable `management-team` source rewrite slug and leaves destination-language permalink translation to Polylang Pro.
+
+### Fixed
+- Prevented translated Team Member pages from publishing mixed-language `hreflang` and language-switcher URLs that combined the current page path with another language prefix.
+
+### Notes
+- After deployment, save **Settings → Permalinks** once, purge LiteSpeed and Bunny CDN caches, then verify English, French, and Traditional Chinese Team Member profiles, language-selector links, self-referencing canonicals, and every translated Management Team archive URL.
+
 ## 1.1.24 - 2026-08-21
 ### Added
 - No new features in this release.

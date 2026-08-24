@@ -3855,17 +3855,13 @@ function register_team_member_archive_rewrite_rules() {
 		return $args;
 	}
 
-	if ( 'team-member' !== $post_type ) {
-		return $args;
+	if ( 'team-member' === $post_type ) {
+		$args['has_archive'] = 'management-team';
+		$args['rewrite']     = [
+			'slug'       => 'management-team',
+			'with_front' => true,
+		];
 	}
-
-    if ( \function_exists( 'pll__' ) ) {
-        $args['has_archive'] = \pll__( 'management-team' );
-        $args['rewrite'] = [
-            'slug'       => \pll__( 'management-team' ),
-            'with_front' => true,
-        ];
-    }
 
 	return $args;
 }, 10, 2 );
