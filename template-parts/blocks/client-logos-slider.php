@@ -12,6 +12,10 @@
  * @var array $block
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! isset( $block ) ) {
     return;
 }

@@ -5,6 +5,10 @@
  * @package icts-europe
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $image_id     = isset( $attributes['imageId'] ) ? (int) $attributes['imageId'] : 0;
 $image_url    = isset( $attributes['imageUrl'] ) ? (string) $attributes['imageUrl'] : '';
 $image_alt    = isset( $attributes['imageAlt'] ) ? (string) $attributes['imageAlt'] : '';
@@ -49,9 +53,6 @@ $heading_size_value = '';
 if ( '' !== $heading_size ) {
 	if ( in_array( $heading_size, $allowed_font_size_slugs, true ) ) {
 		$heading_size_value = sprintf( 'var(--wp--preset--font-size--%s)', $heading_size );
-	} else {
-		// Backward compatibility with previously saved free-text values.
-		$heading_size_value = sanitize_text_field( $heading_size );
 	}
 }
 
@@ -59,17 +60,16 @@ $text_size_value = '';
 if ( '' !== $text_size ) {
 	if ( in_array( $text_size, $allowed_font_size_slugs, true ) ) {
 		$text_size_value = sprintf( 'var(--wp--preset--font-size--%s)', $text_size );
-	} else {
-		// Backward compatibility with previously saved free-text values.
-		$text_size_value = sanitize_text_field( $text_size );
 	}
 }
+
+$allowed_font_weights = array( '100', '200', '300', '400', '500', '600', '700', '800', '900', 'normal', 'bold' );
 
 $heading_style = '';
 if ( '' !== $heading_size_value ) {
 	$heading_style .= 'font-size:' . $heading_size_value . ';';
 }
-if ( '' !== $heading_wt ) {
+if ( in_array( $heading_wt, $allowed_font_weights, true ) ) {
 	$heading_style .= 'font-weight:' . sanitize_text_field( $heading_wt ) . ';';
 }
 
@@ -77,7 +77,7 @@ $text_style = '';
 if ( '' !== $text_size_value ) {
 	$text_style .= 'font-size:' . $text_size_value . ';';
 }
-if ( '' !== $text_wt ) {
+if ( in_array( $text_wt, $allowed_font_weights, true ) ) {
 	$text_style .= 'font-weight:' . sanitize_text_field( $text_wt ) . ';';
 }
 

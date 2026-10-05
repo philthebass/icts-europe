@@ -5,6 +5,10 @@
  * @package icts-europe
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! isset( $block ) || ! is_array( $block ) ) {
 	return;
 }

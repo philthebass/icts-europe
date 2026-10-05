@@ -27,6 +27,8 @@ if ( $posts_to_show < 1 ) {
 	$posts_to_show = 9;
 }
 
+$posts_to_show = min( 24, $posts_to_show );
+
 if ( $autoplay < 0 ) {
 	$autoplay = 0;
 }

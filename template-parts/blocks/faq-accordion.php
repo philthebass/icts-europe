@@ -5,6 +5,10 @@
  * @package icts-europe
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! isset( $block ) || ! is_array( $block ) ) {
 	return;
 }
@@ -435,7 +439,7 @@ if ( $output_schema && ! $is_editor_preview && ! empty( $faq_rows ) ) {
 		];
 		?>
 		<script type="application/ld+json" class="icts-faq-accordion__schema">
-			<?php echo wp_json_encode( $faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ); ?>
+			<?php echo wp_json_encode( $faq_schema, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?>
 		</script>
 	<?php endif; ?>
 </section>

@@ -8,6 +8,10 @@
  * @param int    $post_id    The post ID this block is saved to (not used here).
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Work out which post we should render.
 // Inside a Query Loop, WordPress passes the current post ID via block context.
 $loop_post_id = 0;

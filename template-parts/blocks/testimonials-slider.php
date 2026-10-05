@@ -5,6 +5,10 @@
  * @package icts-europe
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // $block is provided by ACF.
 if ( ! isset( $block ) ) {
     return;

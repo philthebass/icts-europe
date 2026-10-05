@@ -7,6 +7,10 @@
 
 namespace ICTS_Europe;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 \add_action(
 	'acf/init',
 	function () {

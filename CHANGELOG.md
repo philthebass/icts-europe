@@ -7,6 +7,20 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.26 - 2026-10-05
+### Fixed
+- Restored FAQ drag handles on WordPress 7.1 checkbox cells and added a visible Move label.
+- Restricted FAQ reordering to users permitted to manage others' published FAQs, checked every affected record, and updated ordering without re-saving answer content.
+- Restricted Sector Card typography to approved font tokens and weights; capped Latest News Slider queries at 24 posts.
+- Escaped FAQ JSON-LD safely, guarded PHP entry points, and preserved literal image text during markup replacement.
+- Corrected pattern allow-list handling and removed obsolete standalone FAQ reorder UI code.
+- Bundled the existing related-content fallback image with the theme so it no longer depends on an environment-specific uploads path.
+
+### Notes
+- Published supporting content remains publicly readable through REST by design.
+- Security maintenance for the already-live site. Validate on Local before any production deployment.
+- See docs/SECURITY-LOCAL-TESTS.md for regression checks and outstanding operational checks.
+
 ## 1.1.25 - 2026-08-24
 ### Added
 - No new features in this release.

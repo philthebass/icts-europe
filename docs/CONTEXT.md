@@ -20,9 +20,11 @@ Audience
 ## Environments
 
 - Local development on macOS via LocalWP.
+- Verified 2026-10-05: the installed LocalWP theme path is a symlink to `/Users/philipevans/Code/icts-europe`, so source changes appear in Local immediately. Preserve this existing setup; edit through the source path only.
 - GitHub repository as the source of truth (default branch: `main`).
-- Final sign-off/testing will use a staging subdomain: `dev.ies.aero` (to be provisioned).
-- The legacy site and its staging remain separate during the rebuild.
+- `ies.aero` is already launched and live (confirmed 2026-10-05). Validate maintenance releases in LocalWP before production deployment.
+- Current staging availability has not been confirmed.
+- The earlier rebuild environment notes are historical; do not assume the legacy site is still the production site.
 
 Tech targets:
 - WordPress: 6.9.x

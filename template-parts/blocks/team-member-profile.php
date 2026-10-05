@@ -8,6 +8,10 @@
  * @param int    $post_id    The post ID this block is saved to (not used here).
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Determine which post to render.
 $profile_post_id = 0;
 

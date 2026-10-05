@@ -7,6 +7,10 @@
 
 namespace ICTS_Europe;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Return the first graph node ID matching a schema type.
  *
