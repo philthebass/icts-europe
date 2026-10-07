@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-10-07 — Preserve Search and 404 runtime patterns separately from the inserter allow-list — Unregistering these patterns left both templates empty because each consists of a core/pattern reference — Keep those two patterns registered with their existing Inserter: false metadata, retain the four approved editor patterns, and check template rendering in Local regression tests.
+
 2026-10-05 — Security maintenance is validated locally before deployment to the already-live site — FAQ ordering requires permissions for others’ published FAQs and every affected record, and changes only menu_order to preserve answer HTML. Sector Card typography accepts preset sizes and approved weights. Schema encoding, PHP guards, image replacement, query limits and pattern curation are hardened. Published Customers, Partners, Testimonials, FAQs and their filter taxonomies remain publicly readable through REST by agreement; internal means no standalone landing pages, not confidential content. No production deployment is included in this work.
 
 2026-08-24 — Team Member post type registration keeps a stable source rewrite slug — Translating `management-team` with `pll__()` inside `register_post_type_args` changed the global CPT rewrite base to the current request language, so Polylang generated cross-language `hreflang` and switcher URLs with mixed language paths — The request-dependent override is removed; ACF continues to register the stable `management-team` source slug, Polylang Pro translates destination permalinks, and the existing deterministic archive rules keep every localized archive route available after one permalink flush.

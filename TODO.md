@@ -10,6 +10,8 @@
 - [ ] Lock down patterns/templates: hide unused ones for editors and expose only the curated set.
 
 ## Deployment
+- [x] Release 1.1.27: automated Local checks passed and Philip confirmed Local testing on 7 October 2026.
+- [ ] Upload release 1.1.27 to production, purge caches and smoke-test Search/404.
 - [ ] Prep staging (dev.ies.aero): document deploy steps and enable ShortPixel + WebP on staging.
 
 ## Accessibility

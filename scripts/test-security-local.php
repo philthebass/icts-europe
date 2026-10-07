@@ -119,9 +119,18 @@ try {
 	remove_action( 'pre_get_posts', $inspect_query, 999 );
 	$assert( 24 === $seen_limit, 'News slider caps excessive query sizes at 24' );
 	$registered = WP_Block_Patterns_Registry::get_instance()->get_all_registered();
-	$theme_patterns = array_values( array_filter( array_column( $registered, 'name' ), static function ( $name ) { return 0 === strpos( $name, 'icts-europe/' ); } ) );
+	$visible_patterns = array_filter( $registered, static function ( $pattern ) {
+		return 0 === strpos( $pattern['name'], 'icts-europe/' ) && ( ! isset( $pattern['inserter'] ) || false !== $pattern['inserter'] );
+	} );
+	$theme_patterns = array_values( array_column( $visible_patterns, 'name' ) );
 	$approved = \ICTS_Europe\get_launch_approved_pattern_slugs(); sort( $approved ); sort( $theme_patterns );
-	$assert( $approved === $theme_patterns, 'Only approved theme patterns are registered' );
+	$assert( $approved === $theme_patterns, 'Only approved theme patterns are visible in the inserter' );
+	foreach ( [ 'search', '404' ] as $template_slug ) {
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'icts-europe/template-page-' . $template_slug );
+		$assert( is_array( $pattern ) && isset( $pattern['inserter'] ) && false === $pattern['inserter'], $template_slug . ' pattern remains registered but hidden from the inserter' );
+		$html = do_blocks( file_get_contents( get_template_directory() . '/templates/' . $template_slug . '.html' ) );
+		$assert( false !== strpos( $html, '<main' ) && false !== strpos( $html, '<header' ) && false !== strpos( $html, '<footer' ), $template_slug . ' template renders its main content, header and footer' );
+	}
 	wp_set_current_user( 0 );
 	$response = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/faq/' . $a ) );
 	$assert( 200 === $response->get_status(), 'Published FAQ remains readable anonymously through REST' );

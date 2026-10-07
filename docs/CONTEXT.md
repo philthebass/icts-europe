@@ -102,6 +102,7 @@ Editor usage (feature card grid)
 
 Editor usage (patterns)
 - The editor inserter is curated for launch handoff. Only the approved pattern slugs listed in `docs/PATTERN-CURATION.md` are visible by default.
+- Search and 404 patterns remain registered for template rendering with `Inserter: false`; they are separate from the four editor-approved patterns.
 - Inherited Ollie-style pattern files remain in the repository for future reuse, but hidden patterns should be modernised before being added to the allow-list.
 
 Performance

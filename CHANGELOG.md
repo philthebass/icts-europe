@@ -7,6 +7,15 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.27 - 2026-10-07
+### Fixed
+- Restored search results and 404 pages by preserving their required runtime patterns during pattern curation.
+- Kept these template patterns hidden from the editor inserter, preserving the four approved editor patterns.
+
+### Notes
+- Regression checks cover Search and 404 template rendering and inserter visibility.
+- Test search with matches, no matches, category filtering and pagination, plus a missing URL on Local before production upload. No database migration or permalink flush is required.
+
 ## 1.1.26 - 2026-10-05
 ### Fixed
 - Restored FAQ drag handles on WordPress 7.1 checkbox cells and added a visible Move label.

@@ -2533,12 +2533,21 @@ function unregister_legacy_patterns() {
 	$registry          = \WP_Block_Patterns_Registry::get_instance();
 	$patterns          = $registry->get_all_registered();
 	$approved_patterns = get_launch_approved_pattern_slugs();
+	// These templates render through patterns that already declare Inserter: false.
+	$template_patterns = [
+		'icts-europe/template-page-search',
+		'icts-europe/template-page-404',
+	];
 
 	foreach ( $patterns as $pattern ) {
 		$slug  = isset( $pattern['name'] ) ? (string) $pattern['name'] : '';
 		$title = isset( $pattern['title'] ) ? wp_strip_all_tags( (string) $pattern['title'] ) : '';
 
-		if ( 0 === strpos( $slug, 'icts-europe/' ) && ! in_array( $slug, $approved_patterns, true ) ) {
+		if (
+			0 === strpos( $slug, 'icts-europe/' ) &&
+			! in_array( $slug, $approved_patterns, true ) &&
+			! in_array( $slug, $template_patterns, true )
+		) {
 			unregister_block_pattern( $slug );
 			continue;
 		}
