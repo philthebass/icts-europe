@@ -7,6 +7,15 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.29 - 2026-10-27
+### Fixed
+- Prevented touch taps from leaving the Logos Slider paused through synthetic hover events. Hover pausing now applies only on devices with hover support.
+- Retained the complete customer and partner logo sets introduced in 1.1.28.
+
+### Notes
+- Isolated WebKit tests cover complete loops with 53 and 100 logos, reduced motion, pointer cancellation and touch-tap recovery. These use repeated public logo images and do not certify physical iOS performance or the full WordPress page.
+- Test on a physical iPhone/iPad after upload and cache purge, including the Airlines page and the TravelDoc Pro travel providers page.
+
 ## 1.1.28 - 2026-10-27
 ### Fixed
 - Removed the public Logos Slider limit of 12 logos so all matching customers and partners can appear, including airlines beyond C.

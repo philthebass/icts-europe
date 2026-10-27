@@ -72,7 +72,8 @@
         }
 
         carousel.addEventListener('mouseenter', function () {
-            hovered = true;
+            // Touch browsers can synthesise mouseenter without a matching mouseleave.
+            hovered = window.matchMedia('(hover: hover)').matches;
         });
 
         carousel.addEventListener('mouseleave', function () {
