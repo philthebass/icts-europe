@@ -7,6 +7,15 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.30 - 2026-10-27
+### Fixed
+- Logos Slider customer and partner images now load eagerly with asynchronous decoding, preventing native lazy loading from deferring images until they enter the moving strip. Other page images retain their existing loading settings.
+
+### Notes
+- Retains all matching logos and the touch-hover fix.
+- Eager loading brings logo downloads forward. The live Airlines page has 53 unique logo URLs totalling approximately 163 KiB according to response headers at verification time.
+- After upload, purge page/CDN caches and check logo appearance, a complete loop, dragging and tapping on physical iOS and desktop devices.
+
 ## 1.1.29 - 2026-10-27
 ### Fixed
 - Prevented touch taps from leaving the Logos Slider paused through synthetic hover events. Hover pausing now applies only on devices with hover support.

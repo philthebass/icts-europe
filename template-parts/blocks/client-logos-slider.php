@@ -65,6 +65,9 @@ if ( ! $product_filter_mode ) {
 
 $product_taxonomy_term = get_field( 'product_taxonomy' ); // Term object or null.
 
+// Logos move through a clipped strip: load the full set before it enters view.
+// Native lazy loading can wait until a moving image is already visible.
+
 // ----- Data collection helpers ------------------------------------------------
 
 /**
@@ -85,7 +88,7 @@ $get_customer_logo_html = static function ( $logo, $title ) {
             $image_id = (int) $logo['id'];
         } elseif ( isset( $logo['url'] ) ) {
             $img_html = sprintf(
-                '<img src="%s" class="client-logos-slider__logo-image" alt="%s" loading="lazy" />',
+                '<img src="%s" class="client-logos-slider__logo-image" alt="%s" loading="eager" decoding="async" />',
                 esc_url( $logo['url'] ),
                 esc_attr( $title )
             );
@@ -94,7 +97,7 @@ $get_customer_logo_html = static function ( $logo, $title ) {
         $image_id = (int) $logo;
     } elseif ( is_string( $logo ) && '' !== $logo ) {
         $img_html = sprintf(
-            '<img src="%s" class="client-logos-slider__logo-image" alt="%s" loading="lazy" />',
+            '<img src="%s" class="client-logos-slider__logo-image" alt="%s" loading="eager" decoding="async" />',
             esc_url( $logo ),
             esc_attr( $title )
         );
@@ -106,9 +109,10 @@ $get_customer_logo_html = static function ( $logo, $title ) {
             'medium',
             false,
             array(
-                'class'   => 'client-logos-slider__logo-image',
-                'loading' => 'lazy',
-                'alt'     => $title,
+                'class'    => 'client-logos-slider__logo-image',
+                'loading'  => 'eager',
+                'decoding' => 'async',
+                'alt'      => $title,
             )
         );
     }
@@ -271,9 +275,10 @@ if ( in_array( $logo_source_mode, array( 'partners', 'both' ), true ) ) {
                     'medium',
                     false,
                     array(
-                        'class'   => 'client-logos-slider__logo-image',
-                        'loading' => 'lazy',
-                        'alt'     => $title,
+                        'class'    => 'client-logos-slider__logo-image',
+                        'loading'  => 'eager',
+                        'decoding' => 'async',
+                        'alt'      => $title,
                     )
                 );
             }
