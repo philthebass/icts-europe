@@ -7,6 +7,15 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.28 - 2026-10-27
+### Fixed
+- Removed the public Logos Slider limit of 12 logos so all matching customers and partners can appear, including airlines beyond C.
+
+### Notes
+- Template regression checks passed for 53, 13, one and zero customers.
+- Local browser, full-loop animation and WordPress integration checks remain outstanding because Local was unavailable and browser automation was blocked by the workspace configuration.
+- After upload, purge page/CDN caches and check the Airlines slider continues beyond Clic Air through the complete available logo set.
+
 ## 1.1.27 - 2026-10-07
 ### Fixed
 - Restored search results and 404 pages by preserving their required runtime patterns during pattern curation.

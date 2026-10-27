@@ -304,9 +304,7 @@ if ( 'both' === $logo_source_mode && ! empty( $logo_items ) ) {
     );
 }
 
-if ( ! is_admin() && count( $logo_items ) > 12 ) {
-    $logo_items = array_slice( $logo_items, 0, 12 );
-}
+// Keep the complete filtered logo set. The editor preview limit is CSS-only.
 
 $render_logo_item = static function ( $logo_item, $is_duplicate = false ) {
     ?>
