@@ -1,6 +1,6 @@
 # Testimonials Slider QA: 1.1.32
 
-Date: 30 October 2026. Candidate: tag `v1.1.32`. Local URL: `https://iesaero.local/`. Automated checks: Codex using Playwright. Local uses the existing source symlink; the packaged ZIP is verified against the tag rather than installed over that symlink.
+Date: 30 October 2026. **Status: live and homepage Testimonials Slider checks passed.** Release tag: `v1.1.32`. Local URL: `https://iesaero.local/`. Automated checks: Codex using Playwright. Local uses the existing source symlink; the packaged ZIP is verified against the tag rather than installed over that symlink.
 
 The Testimonials Slider now retries height recalculation after a viewport resize interrupts a slide transition or drag. Long quotations fit again once movement settles, while the stable height, centred layout and white background introduced in 1.1.31 remain intact.
 
@@ -12,10 +12,20 @@ The Testimonials Slider now retries height recalculation after a viewport resize
 - Rendered Local Search results, no-results and 404 checks passed, including headers and footers.
 - Physical-device rotation, translated pages, Site Editor and fresh Lighthouse checks were not repeated. Desktop WebKit tests do not certify physical iOS behaviour.
 
-## Installation
-Upload `icts-europe-v1.1.32.zip` in WordPress and replace the existing theme. Purge page/CDN caches and hard-refresh. No database migration or permalink flush is needed.
+## Live deployment and verification
 
-Check the homepage while resizing or rotating the screen during a testimonial transition, then smoke-test Search and 404. Production upload is separate and remains with Philip.
+- Philip confirmed uploading 1.1.32 to production and clearing caches on 30 October 2026.
+- Verified `https://ies.aero/` serves the theme stylesheet with `ver=1.1.32` and the updated Testimonials Slider script.
+- Read-only Playwright checks passed in Chromium and WebKit at 1440 × 1000 and 390 × 844, using the same regression scenarios as Local.
+- Resizing during a slide transition and while dragging now recalculates the tallest-slide height once movement settles. Long quotations are no longer clipped. Resizing back to desktop also passed.
+- Chromium measured approximately 438px at desktop width and 581px at mobile width; WebKit measured approximately 438px and 578px respectively, matching their tallest testimonial within rounding tolerance.
+- Autoplay and all five navigation dots passed. The logos below did not move between slides; the white background and vertical centring were preserved.
+- Reduced motion disabled autoplay, and resizing during manual transitions still passed. No JavaScript page errors occurred.
+- GitHub release and verified theme ZIP: [1.1.32](https://github.com/philthebass/icts-europe/releases/tag/v1.1.32).
+
+## Remaining checks
+
+Physical-device rotation, translated pages, Site Editor and a fresh Lighthouse comparison remain outstanding. Live Search/404 smoke checks have not been recorded for this deployment; their Local checks passed. These are separate from the completed live homepage Testimonials Slider checks.
 
 ## Previous release record
 

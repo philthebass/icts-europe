@@ -23,6 +23,7 @@ Audience
 - Verified 2026-10-05: the installed LocalWP theme path is a symlink to `/Users/philipevans/Code/icts-europe`, so source changes appear in Local immediately. Preserve this existing setup; edit through the source path only.
 - GitHub repository as the source of truth (default branch: `main`).
 - `ies.aero` is already launched and live (confirmed 2026-10-05). Validate maintenance releases in LocalWP before production deployment.
+- Current live theme release: **1.1.32**, uploaded and caches cleared by Philip on 30 October 2026. Live homepage Testimonials Slider checks passed in Chromium and WebKit, including resizing during transitions and dragging. See [Testimonials Slider QA](TESTIMONIALS-SLIDER-QA.md) for results and remaining checks.
 - Current staging availability has not been confirmed.
 - The earlier rebuild environment notes are historical; do not assume the legacy site is still the production site.
 
