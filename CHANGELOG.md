@@ -7,6 +7,15 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.32 - 2026-10-30
+### Fixed
+- Testimonials Slider now retries a resize skipped during a slide transition or drag once movement settles, preventing long quotations from being clipped after a viewport change.
+- Preserved the stable tallest-slide height, centred content and solid white background from 1.1.31, including when reduced motion is enabled.
+
+### Notes
+- After upload, purge page/CDN caches and test resizing or rotating the screen while testimonials move.
+- No database migration or permalink flush is required.
+
 ## 1.1.31 - 2026-10-30
 ### Fixed
 - Testimonials Slider now reserves the height of its tallest slide, preventing content below from shifting as short and long testimonials rotate.

@@ -48,6 +48,25 @@
                 pauseAutoPlayOnHover: !!autoPlayMs
             });
 
+            // Flickity skips resizing while animating or dragging. Retry once
+            // it settles, unless its normal resize handler already succeeded.
+            var resizePending = false;
+            function queueResize() {
+                resizePending = true;
+            }
+            window.addEventListener('resize', queueResize);
+            flkty.on('resize', function () {
+                resizePending = false;
+            });
+            flkty.on('settle', function () {
+                if (resizePending) {
+                    flkty.resize();
+                }
+            });
+            flkty.on('destroy', function () {
+                window.removeEventListener('resize', queueResize);
+            });
+
             if (!autoPlayMs) {
                 return;
             }

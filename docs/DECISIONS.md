@@ -219,3 +219,5 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-10-30: Testimonials Slider reserves the tallest slide height at the current viewport width. Disable Flickity adaptiveHeight so switching between short and long quotations does not move the content below. Flickity recalculates the height on window resize; shorter testimonials leave spare space below their content.
 
 2026-10-30: Testimonials Slider uses an opaque white section background and vertically centres each natural-height slide within the tallest-slide viewport. This hides the decorative page strands throughout the section, including its padding and indicators, while preserving stable height and Flickity horizontal movement.
+
+2026-10-30: Testimonials Slider retries viewport resizes after Flickity settles. Flickity ignores resize calls during animation or dragging; track pending window resizes, clear them after a successful resize and retry on settle. Register this before the autoplay early return so reduced-motion and editor instances receive the same correction; remove the window listener on destruction.
