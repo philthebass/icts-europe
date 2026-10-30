@@ -1,6 +1,6 @@
 # Category marker colour synchronisation
 
-Date: 30 October 2026. Release candidate: `v1.1.33`. Status: accepted by Philip on Local; production deployment remains separate.
+Date: 30 October 2026. Release: `v1.1.33`. **Status: live; category swatches and colour synchronisation confirmed working by Philip.**
 
 ## Behaviour
 
@@ -21,7 +21,7 @@ Run `scripts/test-category-marker-sync-local.php` using WP-CLI `eval-file` again
 
 ## Manual acceptance
 
-In Local, open Posts → Categories, edit a translated category and save a different Marker colour token. Open its other language versions and confirm the selected token matches. Repeat from a different language and test Default. Check the marker in the Latest News slider or news archive. Philip confirmed the synchronisation works well in Local. Philip also accepted the new swatch picker and list column on 30 October 2026; no production data has been changed.
+In Local, open Posts → Categories, edit a translated category and save a different Marker colour token. Open its other language versions and confirm the selected token matches. Repeat from a different language and test Default. Check the marker in the Latest News slider or news archive. Philip confirmed the synchronisation works well in Local. Philip also accepted the new swatch picker and list column on 30 October 2026. This acceptance preceded production deployment.
 
 ## Swatch selector and category list
 
@@ -35,4 +35,14 @@ Chromium and WebKit tests passed against WordPress-rendered add/edit/list fixtur
 
 On 30 October 2026, all 24 category assertions, both browser suites and all 36 WordPress regression assertions passed again for the candidate. Fixture transactions rolled back. PHP/JavaScript syntax, PHPCS and whitespace checks passed. The Local homepage, Search results, no-results and 404 pages rendered their expected content, including headers and footers. Philip accepted both synchronisation and swatches in Local.
 
-The release ZIP is built from `v1.1.33`; verify its integrity, version, theme folder and tagged runtime contents before publication. Local uses the existing source symlink, which is preserved. Full navigation, Site Editor and screen-reader checks were not repeated. Production upload and post-deployment checks remain separate.
+The release ZIP was built from `v1.1.33`. Integrity, version, theme folder and tagged runtime contents were verified before publication; the downloaded GitHub asset matched the verified local ZIP. Local uses the existing source symlink, which is preserved. Full navigation, Site Editor and screen-reader checks were not repeated. Production deployment and category checks are recorded below.
+
+## Live deployment and acceptance
+
+- Philip uploaded 1.1.33 to `https://ies.aero/` and cleared caches on 30 October 2026.
+- Codex verified the homepage serves version 1.1.33 and that the live stylesheet, swatch JavaScript and swatch CSS match the tagged release files exactly.
+- Chromium and WebKit checks using the deployed assets with rendered test forms passed. These were fixture checks, not an authenticated live admin test.
+- The live Categories screen required login in Codex’s browser. Philip subsequently checked the actual live Categories screen and confirmed that the swatches and colour synchronisation work correctly. This completes the category feature’s live acceptance.
+- Codex did not change live category data during verification.
+
+Full navigation, Site Editor, screen-reader and live Search/404 checks have not been recorded for this deployment and remain separate from the completed category feature checks.

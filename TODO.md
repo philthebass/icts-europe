@@ -12,7 +12,7 @@
 ## Deployment
 - [x] Release 1.1.27: automated Local checks passed and Philip confirmed Local testing on 7 October 2026.
 - [x] Release 1.1.32 is live: Philip uploaded the theme and cleared caches; Codex verified the live homepage Testimonials Slider on 30 October 2026.
-- [ ] Complete live Search/404 smoke checks for 1.1.32 (Local checks passed).
+- [ ] Complete live Search/404 smoke checks for the current release, 1.1.33 (Local checks passed).
 - [ ] Prep staging (dev.ies.aero): document deploy steps and enable ShortPixel + WebP on staging.
 
 ## Accessibility
@@ -29,4 +29,5 @@
 - [x] Philip confirmed category marker translation synchronisation works well in Local.
 - [x] Add swatches to the selector and Categories list; pass 24 Local integration checks and Chromium/WebKit rendered-control checks.
 - [x] Philip accepted the category colour swatches in Local on 30 October 2026 for release 1.1.33.
-- [ ] Upload 1.1.33 to production, clear caches and check category swatches and translation synchronisation.
+- [x] Release 1.1.33 is live and caches are cleared. Philip confirmed the live Categories swatches and colour synchronisation work correctly on 30 October 2026.
+- Results: [Category Marker QA](docs/CATEGORY-MARKER-QA.md).
