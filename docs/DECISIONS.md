@@ -2,6 +2,8 @@
 
 Format: YYYY-MM-DD — Decision — Context — Consequences
 
+2026-10-07 — Use a reusable pre-release test checklist for every release — The 1.1.26 pattern-curation regression passed registry-only assertions but left Search and 404 blank — docs/PRE-RELEASE-TESTS.md requires rendered Search/404 checks alongside inserter visibility, automated coverage and a recorded manual test result; release workflow documents link to it.
+
 2026-10-07 — Preserve Search and 404 runtime patterns separately from the inserter allow-list — Unregistering these patterns left both templates empty because each consists of a core/pattern reference — Keep those two patterns registered with their existing Inserter: false metadata, retain the four approved editor patterns, and check template rendering in Local regression tests.
 
 2026-10-05 — Security maintenance is validated locally before deployment to the already-live site — FAQ ordering requires permissions for others’ published FAQs and every affected record, and changes only menu_order to preserve answer HTML. Sector Card typography accepts preset sizes and approved weights. Schema encoding, PHP guards, image replacement, query limits and pattern curation are hardened. Published Customers, Partners, Testimonials, FAQs and their filter taxonomies remain publicly readable through REST by agreement; internal means no standalone landing pages, not confidential content. No production deployment is included in this work.
@@ -215,6 +217,8 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-03-27 — Feature card markup now expects explicit title/body classes for predictable styling — Reusable cards appear on multiple pages with different parent grids, so styling by anonymous paragraph position is too fragile — Use `feature-card__title` on the heading text and `feature-card__body` on the body copy inside `feature-card__content`; industries cards do not require an icon class, while USP cards use `feature-card__icon` on the icon block.
 
 2026-04-29 — Two-line feature-card title alignment uses an explicit grid modifier — A global taller title min-height fixed wrapped titles but created excessive title/body spacing on grids where all titles fit on one line — Keep `feature-card__title` compact by default and add `feature-card-grid--title-2-lines` to the parent Grid block only when a card set needs two-line title equalisation.
+
+2026-10-27: Logos Slider renders the complete filtered set. The previous public limit of 12 discarded customers after Clic Air on the Airlines page. Retain translation deduplication, filters and the duplicate set used for continuous scrolling; keep the compact preview limit in editor CSS only.
 
 2026-10-30: Testimonials Slider reserves the tallest slide height at the current viewport width. Disable Flickity adaptiveHeight so switching between short and long quotations does not move the content below. Flickity recalculates the height on window resize; shorter testimonials leave spare space below their content.
 

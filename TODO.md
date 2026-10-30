@@ -18,6 +18,14 @@
 ## Accessibility
 - [ ] Slider sweep: keyboard focus order, contrast on indicators/buttons, and reduced‑motion behavior (ticker/autoplay off or paused by default when prefers-reduced-motion).
 
+## Logos Slider verification
+- [x] Logo-limit, touch-hover and eager-loading fixes are included in live 1.1.33; Philip confirmed deployment and cache clearing.
+- [x] Local image-loading and template checks passed; historical live full-loop results are recorded in [Logos Slider QA](docs/LOGOS-SLIDER-QA.md).
+- [ ] Check the current live Airlines and TravelDoc Pro travel providers pages: compare unique logo counts with matching records and confirm complete loops with no missing logos or unexpected jumps.
+- [ ] Complete physical iPhone/iPad acceptance and slow-network checks. Desktop WebKit results do not certify physical iOS performance.
+- [ ] Record dragging, logo-link clicks/taps, hover/focus pausing and reduced-motion checks on the current slider; do not treat implementation or unrelated slider tests as acceptance.
+- [ ] Complete Site Editor manual checks and a fresh Lighthouse comparison.
+
 ## Testimonials Slider verification
 - [x] Local and live homepage checks passed in Chromium and WebKit at desktop and mobile widths: autoplay, all five navigation dots, stable logos, centred testimonials and a solid white background.
 - [x] Version 1.1.32 resize regression passed on Local and live: resizing during transitions and dragging, desktop-to-mobile and back, and resizing with reduced motion enabled. Long quotations fit; no JavaScript page errors occurred.
