@@ -49,6 +49,7 @@ Content Model
 - Active Polylang languages per current site:
   - en_GB, es_ES, fr_FR, nl_NL, pt_BR, pt_PT, ar, zh_CN (Simplified), zh_HK (Traditional)
 - Translation workflow: Polylang Pro + DeepL; editors review outputs.
+- Category marker colour is shared across linked Polylang translations through `pll_copy_term_metas`. Saving any category language version synchronises its `icts_category_color_slug`; selecting Default clears the token across the group. To reconcile existing differences, save the category version containing the desired token. Unrelated categories keep their own colours. The category add/edit selector displays named colour swatches, and the Categories list includes a Marker colour swatch/name column. See [Category Marker QA](CATEGORY-MARKER-QA.md).
 
 Team archive slug:
 - Slug key: `team_member_archive_slug` with default `management-team`.

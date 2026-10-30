@@ -7,6 +7,19 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.33 - 2026-10-30
+### Added
+- Named colour swatches in the category marker selector, with keyboard controls and a native-select fallback.
+- A Marker colour column in the Categories list showing the selected swatch and token name.
+
+### Fixed
+- Category marker tokens now synchronise across linked Polylang translations when any language version is saved. Selecting Default resets the translation group; unrelated categories keep their own colours.
+
+### Notes
+- Philip confirmed category synchronisation and the swatch interface work well in Local.
+- To reconcile existing differences, save the category language version containing the desired token. Installation does not bulk-change existing category colours.
+- After uploading, clear caches and refresh Posts → Categories. No database migration or permalink flush is required.
+
 ## 1.1.32 - 2026-10-30
 ### Fixed
 - Testimonials Slider now retries a resize skipped during a slide transition or drag once movement settles, preventing long quotations from being clipped after a viewport change.

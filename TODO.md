@@ -23,3 +23,10 @@
 - [x] Version 1.1.32 resize regression passed on Local and live: resizing during transitions and dragging, desktop-to-mobile and back, and resizing with reduced motion enabled. Long quotations fit; no JavaScript page errors occurred.
 - [ ] Check physical-device rotation and translated pages; repeat Site Editor and Lighthouse checks. Desktop WebKit testing does not certify physical iOS behaviour.
 - Results: [Testimonials Slider QA](docs/TESTIMONIALS-SLIDER-QA.md), 30 October 2026.
+
+## Category marker colour synchronisation
+- [x] Implement native Polylang synchronisation and pass 18 transactional Local assertions across all nine languages, including reverse-language changes, Default, existing mismatches and unrelated metadata isolation.
+- [x] Philip confirmed category marker translation synchronisation works well in Local.
+- [x] Add swatches to the selector and Categories list; pass 24 Local integration checks and Chromium/WebKit rendered-control checks.
+- [x] Philip accepted the category colour swatches in Local on 30 October 2026 for release 1.1.33.
+- [ ] Upload 1.1.33 to production, clear caches and check category swatches and translation synchronisation.

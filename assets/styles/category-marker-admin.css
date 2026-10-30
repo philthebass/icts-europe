@@ -1,0 +1,55 @@
+.icts-category-colour-swatch {
+    display: inline-block;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 0 / 8px 8px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+.icts-category-colour-swatch > span { display: block; width: 100%; height: 100%; }
+.icts-category-colour-value { display: inline-flex; align-items: center; gap: 8px; }
+.column-icts_marker_colour { width: 160px; }
+.icts-category-colour-picker { position: relative; width: 100%; max-width: 360px; }
+.icts-category-colour-select[hidden], .icts-category-colour-options[hidden] { display: none; }
+.icts-category-colour-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 32px;
+    padding: 4px 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    background: #fff;
+    color: #2c3338;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+}
+.icts-category-colour-button::after { content: ''; margin-inline-start: auto; border: 4px solid transparent; border-top-color: currentColor; transform: translateY(2px); }
+.icts-category-colour-button:focus { outline: 2px solid #2271b1; outline-offset: 1px; }
+.icts-category-colour-options {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(100% + 4px);
+    z-index: 1000;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    background: #fff;
+    color: #2c3338;
+    box-shadow: 0 3px 10px #0002;
+}
+.opens-above .icts-category-colour-options { top: auto; bottom: calc(100% + 4px); }
+.icts-category-colour-option { display: flex; align-items: center; gap: 8px; min-height: 30px; padding: 3px 8px; cursor: pointer; }
+.icts-category-colour-option:hover, .icts-category-colour-option.is-active { background: #f0f6fc; outline: 1px solid #2271b1; outline-offset: -1px; }
+.icts-category-colour-option[aria-selected="true"]::after { content: '✓'; margin-inline-start: auto; }
+@media (max-width: 782px) {
+    .icts-category-colour-button, .icts-category-colour-option { min-height: 40px; }
+}

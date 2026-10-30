@@ -2851,44 +2851,123 @@ function get_category_color_palette_choices() {
     );
 }
 
-function render_category_color_field_add() {
+/**
+ * Share the marker token when Polylang copies or synchronises category metadata.
+ * Other taxonomy metadata keeps its existing translation rules.
+ *
+ * @param string[] $metas Meta keys selected by Polylang and other integrations.
+ * @param bool     $sync  Whether this is a synchronisation rather than a copy.
+ * @param int      $from  Source term ID.
+ * @param int      $to    Destination term ID.
+ * @return string[]
+ */
+function sync_category_marker_color_meta( $metas, $sync, $from, $to ) {
+    if ( \get_term( $from, 'category' ) instanceof \WP_Term && \get_term( $to, 'category' ) instanceof \WP_Term ) {
+        $metas[] = 'icts_category_color_slug';
+    }
+
+    return array_values( array_unique( $metas ) );
+}
+\add_filter( 'pll_copy_term_metas', __NAMESPACE__ . '\\sync_category_marker_color_meta', 10, 4 );
+
+/**
+ * Resolve the stored token for admin display, including the default choice.
+ */
+function get_category_marker_color_choice( $slug ) {
+    $effective_slug = '' === $slug ? 'brand-secondary' : $slug;
+    foreach ( get_category_color_palette_choices() as $choice ) {
+        if ( $choice['slug'] === $effective_slug ) {
+            return [
+                'name'  => '' === $slug ? __( 'Default (Brand Secondary)', 'icts-europe' ) : $choice['name'],
+                'color' => isset( $choice['color'] ) ? $choice['color'] : '',
+            ];
+        }
+    }
+
+    return [ 'name' => $slug ?: __( 'Default (Brand Secondary)', 'icts-europe' ), 'color' => '' ];
+}
+
+/**
+ * Keep a native selector as the form value and no-JavaScript fallback.
+ */
+function render_category_color_control( $selected = '' ) {
     $choices = get_category_color_palette_choices();
+    $default = get_category_marker_color_choice( '' );
+    ?>
+    <select name="icts_category_color_slug" id="icts_category_color_slug" class="icts-category-colour-select" aria-describedby="icts-category-colour-description">
+        <option value="" data-color="<?php echo esc_attr( $default['color'] ); ?>"><?php echo esc_html( $default['name'] ); ?></option>
+        <?php foreach ( $choices as $choice ) : ?>
+            <option value="<?php echo esc_attr( $choice['slug'] ); ?>" data-color="<?php echo esc_attr( $choice['color'] ?? '' ); ?>" <?php selected( $selected, $choice['slug'] ); ?>><?php echo esc_html( $choice['name'] ); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <p class="description" id="icts-category-colour-description"><?php esc_html_e( 'Used by category markers in the Latest News slider and news archives. Saving a category shares this token with all its linked language versions.', 'icts-europe' ); ?></p>
+    <?php
+}
+
+function render_category_color_field_add() {
     ?>
     <div class="form-field term-icts-category-color-wrap">
-        <label for="icts_category_color_slug"><?php esc_html_e( 'Marker color token', 'icts-europe' ); ?></label>
-        <select name="icts_category_color_slug" id="icts_category_color_slug">
-            <option value=""><?php esc_html_e( 'Default (Brand Secondary)', 'icts-europe' ); ?></option>
-            <?php foreach ( $choices as $choice ) : ?>
-                <option value="<?php echo esc_attr( $choice['slug'] ); ?>"><?php echo esc_html( $choice['name'] ); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <p><?php esc_html_e( 'Used by the Latest News slider category marker.', 'icts-europe' ); ?></p>
+        <label id="icts-category-colour-label" for="icts_category_color_slug"><?php esc_html_e( 'Marker colour token', 'icts-europe' ); ?></label>
+        <?php render_category_color_control(); ?>
     </div>
     <?php
 }
 
 function render_category_color_field_edit( $term ) {
-    $choices  = get_category_color_palette_choices();
-    $selected = (string) \get_term_meta( $term->term_id, 'icts_category_color_slug', true );
     ?>
     <tr class="form-field term-icts-category-color-wrap">
         <th scope="row">
-            <label for="icts_category_color_slug"><?php esc_html_e( 'Marker color token', 'icts-europe' ); ?></label>
+            <label id="icts-category-colour-label" for="icts_category_color_slug"><?php esc_html_e( 'Marker colour token', 'icts-europe' ); ?></label>
         </th>
         <td>
-            <select name="icts_category_color_slug" id="icts_category_color_slug">
-                <option value=""><?php esc_html_e( 'Default (Brand Secondary)', 'icts-europe' ); ?></option>
-                <?php foreach ( $choices as $choice ) : ?>
-                    <option value="<?php echo esc_attr( $choice['slug'] ); ?>" <?php selected( $selected, $choice['slug'] ); ?>>
-                        <?php echo esc_html( $choice['name'] ); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <p class="description"><?php esc_html_e( 'Used by the Latest News slider category marker.', 'icts-europe' ); ?></p>
+            <?php render_category_color_control( (string) \get_term_meta( $term->term_id, 'icts_category_color_slug', true ) ); ?>
         </td>
     </tr>
     <?php
 }
+
+/**
+ * Add a category-only column without disturbing Polylang's language columns.
+ */
+function add_category_marker_color_column( $columns ) {
+    $result = [];
+    foreach ( $columns as $key => $label ) {
+        $result[ $key ] = $label;
+        if ( 'name' === $key ) {
+            $result['icts_marker_colour'] = __( 'Marker colour', 'icts-europe' );
+        }
+    }
+    return $result;
+}
+\add_filter( 'manage_edit-category_columns', __NAMESPACE__ . '\add_category_marker_color_column', 20 );
+
+function render_category_marker_color_column( $content, $column, $term_id ) {
+    if ( 'icts_marker_colour' !== $column ) {
+        return $content;
+    }
+    $choice = get_category_marker_color_choice( (string) \get_term_meta( $term_id, 'icts_category_color_slug', true ) );
+    // Restrict to colour values; WordPress's general CSS filter strips rgb()/rgba().
+    $valid_color = preg_match( '/\A(?:#[a-f0-9]{3,8}|rgba?\([0-9.,%\s\/]+\)|hsla?\([0-9.,%\s\/]+\)|[a-z]+)\z/i', $choice['color'] );
+    $style = $valid_color ? 'background-color:' . $choice['color'] : '';
+    return '<span class="icts-category-colour-value"><span class="icts-category-colour-swatch" aria-hidden="true"><span style="' . esc_attr( $style ) . '"></span></span><span title="' . esc_attr( $choice['color'] ) . '">' . esc_html( $choice['name'] ) . '</span></span>';
+}
+\add_filter( 'manage_category_custom_column', __NAMESPACE__ . '\render_category_marker_color_column', 10, 3 );
+
+function enqueue_category_marker_color_assets() {
+    $screen = \get_current_screen();
+    if ( ! $screen || 'category' !== $screen->taxonomy || ! in_array( $screen->base, [ 'edit-tags', 'term' ], true ) ) {
+        return;
+    }
+    foreach ( [ 'style' => '/assets/styles/category-marker-admin.css', 'script' => '/assets/js/category-marker-admin.js' ] as $type => $path ) {
+        $version = (string) filemtime( \get_template_directory() . $path );
+        if ( 'style' === $type ) {
+            \wp_enqueue_style( 'icts-category-marker-admin', \get_template_directory_uri() . $path, [], $version );
+        } else {
+            \wp_enqueue_script( 'icts-category-marker-admin', \get_template_directory_uri() . $path, [], $version, true );
+        }
+    }
+}
+\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_category_marker_color_assets' );
 
 function save_category_color_field( $term_id ) {
     // WordPress core taxonomy forms submit with core nonce protection.
