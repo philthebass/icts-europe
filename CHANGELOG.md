@@ -7,6 +7,16 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.1.31 - 2026-10-30
+### Fixed
+- Testimonials Slider now reserves the height of its tallest slide, preventing content below from shifting as short and long testimonials rotate.
+- Vertically centred testimonials within the stable slider height and added a solid white background across the section so decorative strands do not show through.
+
+### Notes
+- Philip confirmed the height fix and final appearance work well in Local.
+- After upload, purge page/CDN caches and hard-refresh. Check the homepage slider at desktop and mobile widths, including long testimonials and the logos below.
+- No database migration or permalink flush is required.
+
 ## 1.1.30 - 2026-10-27
 ### Fixed
 - Logos Slider customer and partner images now load eagerly with asynchronous decoding, preventing native lazy loading from deferring images until they enter the moving strip. Other page images retain their existing loading settings.

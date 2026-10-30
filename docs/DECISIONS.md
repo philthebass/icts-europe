@@ -215,3 +215,7 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-03-27 — Feature card markup now expects explicit title/body classes for predictable styling — Reusable cards appear on multiple pages with different parent grids, so styling by anonymous paragraph position is too fragile — Use `feature-card__title` on the heading text and `feature-card__body` on the body copy inside `feature-card__content`; industries cards do not require an icon class, while USP cards use `feature-card__icon` on the icon block.
 
 2026-04-29 — Two-line feature-card title alignment uses an explicit grid modifier — A global taller title min-height fixed wrapped titles but created excessive title/body spacing on grids where all titles fit on one line — Keep `feature-card__title` compact by default and add `feature-card-grid--title-2-lines` to the parent Grid block only when a card set needs two-line title equalisation.
+
+2026-10-30: Testimonials Slider reserves the tallest slide height at the current viewport width. Disable Flickity adaptiveHeight so switching between short and long quotations does not move the content below. Flickity recalculates the height on window resize; shorter testimonials leave spare space below their content.
+
+2026-10-30: Testimonials Slider uses an opaque white section background and vertically centres each natural-height slide within the tallest-slide viewport. This hides the decorative page strands throughout the section, including its padding and indicators, while preserving stable height and Flickity horizontal movement.

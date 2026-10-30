@@ -40,7 +40,8 @@
                 wrapAround: true,
                 pageDots: true,
                 prevNextButtons: false,
-                adaptiveHeight: true,
+                // Keep content below stationary by using the tallest slide.
+                adaptiveHeight: false,
                 selectedAttraction: 0.01,
                 friction: 0.18,
                 autoPlay: false,

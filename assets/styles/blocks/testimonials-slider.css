@@ -4,6 +4,7 @@
 .block-testimonials-slider {
     position: relative;
     isolation: isolate;
+    background-color: var(--wp--preset--color--white, #fff);
     padding: 4rem 0 5rem;
     overflow-x: hidden;
     overflow-x: clip;
@@ -40,6 +41,13 @@
 .block-testimonials-slider .testimonials-slider .testimonial-slide {
     width: 100%;
     box-sizing: border-box;
+}
+
+/* Centre natural-height cells without changing Flickity's height measurements.
+   Individual translate preserves Flickity's inline horizontal transform. */
+.block-testimonials-slider .testimonials-slider.flickity-enabled .testimonial-slide {
+    top: 50%;
+    translate: 0 -50%;
 }
 
 /* Inner layout for each testimonial (text + logo + quotes) */

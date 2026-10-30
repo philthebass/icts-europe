@@ -16,3 +16,7 @@
 
 ## Accessibility
 - [ ] Slider sweep: keyboard focus order, contrast on indicators/buttons, and reduced‑motion behavior (ticker/autoplay off or paused by default when prefers-reduced-motion).
+
+## Testimonials Slider verification
+- [ ] Check short and long testimonials on the Local homepage at desktop and mobile widths: the logos below should remain stationary through autoplay, dot navigation and dragging. Confirm the longest quotation fits after resizing and in translated pages.
+- [ ] Confirm the white testimonial section hides the strands and short/long testimonials remain vertically centred on desktop and mobile.
