@@ -7,9 +7,14 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
-## Unreleased
+## 1.2.0 - 2026-11-09
 ### Added
 - Case Studies Cards is available in the theme pattern inserter. Each copy uses the Latest News card design and shows posts matching every selected category.
+- The section includes a full-width blue background, a white heading and up to three cards. Editors can change the categories independently on each page.
+
+### Notes
+- The pattern selects the destination site's Case Studies category by slug when available. Check the category selection on translated pages and on sites that use a different slug.
+- No database migration or permalink flush is required.
 
 ## 1.1.33 - 2026-10-30
 ### Added
