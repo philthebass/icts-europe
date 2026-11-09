@@ -229,3 +229,7 @@ Format: YYYY-MM-DD — Decision — Context — Consequences
 2026-10-30: Category marker colour is shared across translated categories through Polylang’s native term-metadata synchronisation filter. Register only `icts_category_color_slug` for category-to-category copies and syncs; retain Polylang’s permission and recursion handling. Saving any language version reconciles that group, including resetting to Default. No bulk migration of existing categories is performed.
 
 2026-10-30: Category marker controls use a progressively enhanced swatch selector and a category-only list column. Native option rendering cannot reliably show swatches across browsers, so a keyboard-accessible combobox enhances the existing select without changing its submitted value; the native selector remains the no-JavaScript fallback. Keep token names visible, show alpha colours over a chequered backdrop and preserve the Polylang columns.
+
+2026-11-09: Scope category intersection to the Case Studies pattern using a custom query argument passed to both the editor REST request and the front-end query. Ordinary Query Loops retain the core category behaviour. The Local user pattern holds the layout independently of the theme release.
+
+2026-11-09: Ship Case Studies Cards as an approved theme pattern. Resolve the default category by slug on the destination site so production installs can use it without importing the Local user pattern.

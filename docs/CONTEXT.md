@@ -105,7 +105,7 @@ Editor usage (feature card grid)
 
 Editor usage (patterns)
 - The editor inserter is curated for launch handoff. Only the approved pattern slugs listed in `docs/PATTERN-CURATION.md` are visible by default.
-- Search and 404 patterns remain registered for template rendering with `Inserter: false`; they are separate from the four editor-approved patterns.
+- Search and 404 patterns remain registered for template rendering with `Inserter: false`; they are separate from the editor-approved patterns.
 - Inherited Ollie-style pattern files remain in the repository for future reuse, but hidden patterns should be modernised before being added to the allow-list.
 
 Performance
@@ -158,3 +158,5 @@ Non-goals:
 - Polylang Pro is a fixed dependency
 - Content migrations may occur from production into local/staging
 - Local and production ACF schemas may be temporarily out of sync
+
+The theme includes Case Studies Cards in its Posts pattern category. Each insertion creates an independent copy. Each inserted copy has an editable Query Loop using the same linked card template and styles as the Latest News Slider. Its included categories must all match. Select the page language’s categories on translated pages.

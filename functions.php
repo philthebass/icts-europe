@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/inc/blocks.php';
 // Extend Yoast schema output for theme-owned content types.
 require_once __DIR__ . '/inc/seo-schema.php';
+require_once __DIR__ . '/inc/case-study-query.php';
 // Register native (JS) blocks assets.
 \add_action( 'init', function () {
     $theme_dir = get_template_directory();
@@ -298,6 +299,14 @@ require_once __DIR__ . '/inc/seo-schema.php';
     \register_block_type_from_metadata( __DIR__ . '/blocks/steps-primary' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/steps-primary-step' );
     \register_block_type_from_metadata( __DIR__ . '/blocks/latest-news-slider' );
+    \wp_register_script(
+        'icts-news-card-editor',
+        get_template_directory_uri() . '/blocks/news-card/editor.js',
+        [ 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render' ],
+        $asset_ver( '/blocks/news-card/editor.js' ),
+        true
+    );
+    \register_block_type_from_metadata( __DIR__ . '/blocks/news-card' );
     \register_block_type(
         'icts-europe/post-author-card',
         [
@@ -2512,6 +2521,7 @@ add_action( 'init', __NAMESPACE__ . '\register_counter_band_pattern', 25 );
 function get_launch_approved_pattern_slugs() {
 	return [
 		'icts-europe/benefits',
+		'icts-europe/case-studies-cards',
 		'icts-europe/contact-map-static',
 		'icts-europe/counter-band',
 		'icts-europe/icts-card',

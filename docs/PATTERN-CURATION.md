@@ -13,9 +13,11 @@ The allow-list is managed in `get_launch_approved_pattern_slugs()` in `functions
 - `icts-europe/contact-map-static` (`patterns/contact-map-static.php`): cookie-safe static contact map link.
 - `icts-europe/counter-band` (`patterns/counter-band.php`): reusable metrics band using the current counter workflow.
 
+- `icts-europe/case-studies-cards` (`patterns/case-studies-cards.php`): full-width Case Studies section with Latest News cards. Insert a copy, select its Query Loop and choose categories. Every included category must match. The default comes from the destination site’s `case-studies` slug. If that slug is absent, select the desired categories before publishing.
+
 ## Retained Legacy Patterns
 
-The `icts-europe/template-page-search` and `icts-europe/template-page-404` patterns must stay registered: the Search and 404 templates render through them. Both declare `Inserter: false`, so they remain hidden from editors. Keep this runtime exception separate from the four-pattern inserter allow-list.
+The `icts-europe/template-page-search` and `icts-europe/template-page-404` patterns must stay registered: the Search and 404 templates render through them. Both declare `Inserter: false`, so they remain hidden from editors. Keep this runtime exception separate from the editor allow-list.
 
 All other `patterns/*.php` files remain in source control but are unregistered and hidden from the editor inserter. They are retained as implementation references or future starting points, not as launch-ready editor choices.
 

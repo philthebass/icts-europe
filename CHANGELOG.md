@@ -7,6 +7,10 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## Unreleased
+### Added
+- Case Studies Cards is available in the theme pattern inserter. Each copy uses the Latest News card design and shows posts matching every selected category.
+
 ## 1.1.33 - 2026-10-30
 ### Added
 - Named colour swatches in the category marker selector, with keyboard controls and a native-select fallback.

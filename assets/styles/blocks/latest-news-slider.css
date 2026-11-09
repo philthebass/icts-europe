@@ -322,3 +322,12 @@
 .icts-latest-news-slider-block.alignfull > .icts-latest-news-slider__inner {
 	margin: 0 auto;
 }
+
+.wp-block-icts-news-card {
+	height: 100%;
+}
+
+.wp-block-icts-news-card .icts-latest-news-slider__card:focus-visible {
+	outline: 3px solid var(--wp--preset--color--brand-secondary);
+	outline-offset: 3px;
+}
