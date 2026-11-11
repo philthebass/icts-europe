@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 $post_id = (int) $args['post_id'];
 $show_date = $args['show_date'];
 $show_author = $args['show_author'];
+$excerpt = ! empty( $args['show_excerpt'] ) && has_excerpt( $post_id )
+	? trim( wp_strip_all_tags( get_the_excerpt( $post_id ) ) )
+	: '';
 $permalink  = get_permalink( $post_id );
 $title      = get_the_title( $post_id );
 $date_text  = get_the_date( 'F j, Y', $post_id );
@@ -74,6 +77,10 @@ $category_marker_style = sprintf( 'background-color:var(--wp--preset--color--%s)
 		<?php endif; ?>
 
 		<h3 class="icts-latest-news-slider__title"><?php echo esc_html( $title ); ?></h3>
+
+		<?php if ( '' !== $excerpt ) : ?>
+			<p class="icts-latest-news-slider__excerpt"><?php echo esc_html( $excerpt ); ?></p>
+		<?php endif; ?>
 
 		<?php if ( $show_date || $show_author ) : ?>
 			<p class="icts-latest-news-slider__meta">

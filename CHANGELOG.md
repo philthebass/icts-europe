@@ -7,6 +7,18 @@ This project uses a simple release format:
 - Minor release: notable new sections, templates, or features, for example `1.0.1` -> `1.1.0`
 - Major release: breaking structural changes only, for example `1.0.1` -> `2.0.0`
 
+## 1.2.1 - 2026-11-11
+### Added
+- Case Studies cards display the saved post excerpt beneath the title, limited visually to three lines. Posts without a saved excerpt omit this element.
+
+### Fixed
+- Removed the oversized gap before the date and author in Case Studies cards. Content now follows a compact, consistent flow.
+
+### Notes
+- Existing Case Studies patterns receive the updated card rendering automatically. Latest News slider content and spacing are unchanged.
+- After uploading, clear caches and check the cards on desktop, mobile and translated pages. No database migration or permalink flush is required.
+- When translating a page with DeepL, reselect the Query Loop categories in the destination language. Translation does not currently remap those category selections.
+
 ## 1.2.0 - 2026-11-09
 ### Added
 - Case Studies Cards is available in the theme pattern inserter. Each copy uses the Latest News card design and shows posts matching every selected category.

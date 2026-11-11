@@ -15,9 +15,10 @@ if ( ! defined( 'ABSPATH' ) || empty( $block->context['postId'] ) ) {
 		'parts/news-card',
 		null,
 		[
-			'post_id'     => $block->context['postId'],
-			'show_author' => true,
-			'show_date'   => true,
+			'post_id'      => $block->context['postId'],
+			'show_author'  => true,
+			'show_date'    => true,
+			'show_excerpt' => true,
 		]
 	);
 	?>

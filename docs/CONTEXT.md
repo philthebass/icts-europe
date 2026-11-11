@@ -19,6 +19,9 @@ Audience
 
 ## Environments
 
+- 2026-11-11: Philip confirmed production installation of 1.2.0 and cache clearance. Version 1.2.1 packages the subsequent compact Case Studies card/excerpt update; production installation remains Philip's responsibility. Existing saved patterns use the dynamic card block and will pick up the rendering change after the theme update.
+- Case Studies translation workflow: DeepL translates the section heading, but a live draft test retained English category IDs. Reselect matching destination-language categories in each translated Query Loop. The displayed case-study posts require their own published translations and category assignments.
+
 - Local development on macOS via LocalWP.
 - Verified 2026-10-05: the installed LocalWP theme path is a symlink to `/Users/philipevans/Code/icts-europe`, so source changes appear in Local immediately. Preserve this existing setup; edit through the source path only.
 - GitHub repository as the source of truth (default branch: `main`).

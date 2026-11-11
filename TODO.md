@@ -10,6 +10,9 @@
 - [ ] Lock down patterns/templates: hide unused ones for editors and expose only the curated set.
 
 ## Deployment
+- [x] Philip installed release 1.2.0 on production and cleared caches on 11 November 2026.
+- [x] Prepare 1.2.1 with compact Case Studies cards and saved excerpts. Local desktop and 393px emulated mobile visual checks, PHP syntax checks and 15 Local rendering assertions passed, including translated text and the editor preview endpoint.
+- [ ] Philip to install 1.2.1 on production, clear caches and check existing Case Studies sections while logged out on desktop, mobile and translated pages.
 - [x] Release 1.1.27: automated Local checks passed and Philip confirmed Local testing on 7 October 2026.
 - [x] Release 1.1.32 is live: Philip uploaded the theme and cleared caches; Codex verified the live homepage Testimonials Slider on 30 October 2026.
 - [ ] Complete live Search/404 smoke checks for the current release, 1.1.33 (Local checks passed).

@@ -327,6 +327,25 @@
 	height: 100%;
 }
 
+/* Keep Query Loop cards compact, including when only one post matches. */
+.wp-block-icts-news-card .icts-latest-news-slider__content {
+	grid-template-rows: none;
+	grid-auto-rows: max-content;
+	min-height: 0;
+	height: auto;
+}
+
+.wp-block-icts-news-card .icts-latest-news-slider__excerpt {
+	margin: 0;
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.45;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
 .wp-block-icts-news-card .icts-latest-news-slider__card:focus-visible {
 	outline: 3px solid var(--wp--preset--color--brand-secondary);
 	outline-offset: 3px;
